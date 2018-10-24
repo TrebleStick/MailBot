@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">mailbot</string>
+    <string name="mainactivityspeech">Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!</string>
+    <string name="endSpeech">Thank you for giving me your mail! It will be delivered in the next delivery slot time, and a confirmation e-mail with the security code for the recipient to open the locker has been sent to both you and the recipient.</string>
+
+
 </resources>

@@ -31,7 +31,7 @@
             android:layout_width="350dp"
             android:layout_height="320dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="70dp"
             android:src="@mipmap/mailbot_nocap"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,7 +39,7 @@
             android:id="@+id/relativeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="40dp"
             android:layout_toEndOf="@id/mailbotmain">
 
@@ -51,24 +51,25 @@
 
             <TextView
 
-                android:layout_width="360dp"
+                android:layout_width="380dp"
                 android:layout_height="160dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="65dp"
-                android:text="Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!"
+                android:text="@string/mainactivityspeech"
                 android:textColor="@color/postRed"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
 
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/letter"
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginTop="340dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="350dp"
             android:layout_toEndOf="@id/mailbotmain"
             android:src="@mipmap/email_smashicons" />
 
@@ -78,29 +79,30 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/relativeLayout"
             android:layout_below="@+id/letter"
-            android:layout_marginStart="49dp"
-            android:layout_marginTop="10dp"
-            android:text="Letter (up to A4)"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="20dp"
+            android:text="Letter\n(Standard size)"
+            android:textAlignment="center"
             android:textColor="#ffffff"/>
 
         <ImageView
-            android:id="@+id/smallparcel"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:id="@+id/largeletter"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="350dp"
+            android:layout_marginTop="340dp"
             android:layout_toEndOf="@id/letter"
-            android:src="@mipmap/box_freepik" />
+            android:src="@mipmap/email_smashicons" />
 
         <TextView
-            android:id="@+id/textsmallparcel"
+            android:id="@+id/textlargeletter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/letter"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/textletter"
-            android:text="Small Parcel\n(up to 00x00cm)"
+            android:text="Large Letter\n(around A4)"
             android:textAlignment="center"
             android:textColor="#ffffff"/>
 
@@ -111,7 +113,7 @@
             android:layout_height="80dp"
             android:layout_marginStart="60dp"
             android:layout_marginTop="340dp"
-            android:layout_toEndOf="@id/smallparcel"
+            android:layout_toEndOf="@id/largeletter"
             android:src="@mipmap/box_freepik" />
 
         <TextView
@@ -119,10 +121,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/letter"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="6dp"
-            android:layout_toEndOf="@+id/textsmallparcel"
-            android:text="Large Parcel\n(up to 00x00cm)"
+            android:layout_marginStart="49dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/textlargeletter"
+            android:text="Parcel\n(up to 00x00cm)"
             android:textAlignment="center"
             android:textColor="#ffffff"/>
 
