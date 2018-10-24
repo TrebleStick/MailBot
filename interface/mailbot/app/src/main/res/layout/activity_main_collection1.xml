@@ -7,32 +7,125 @@
     android:layout_height="match_parent"
     android:background="@color/postRed"
     tools:context="com.extcord.jg3215.mailbot.MainActivity_Collection1">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <!-- collection1 means 'one mail item at a time' algorithm -->
-        <TextView
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="testboiiiiii"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+
+        tools:layout_editor_absoluteY="345dp">
+        <!-- collection1 means 'one mail item at a time' algorithm -->
+
 
         <ImageView
-            android:layout_width="350sp"
-            android:layout_height="320sp"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="100dp"
+            android:id="@+id/mailbotmain"
+            android:layout_width="350dp"
+            android:layout_height="320dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="50dp"
             android:src="@mipmap/mailbot_nocap"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            />
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="40dp"
+            android:layout_toEndOf="@id/mailbotmain">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/speechbubblemain"
+                android:layout_width="450dp"
+                android:layout_height="320dp"
+                android:src="@mipmap/speechbubble" />
+
+            <TextView
+
+                android:layout_width="360dp"
+                android:layout_height="160dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="65dp"
+                android:text="Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!"
+                android:textColor="@color/postRed"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/letter"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="340dp"
+            android:layout_toEndOf="@id/mailbotmain"
+            android:src="@mipmap/email_smashicons" />
+
+        <TextView
+            android:id="@+id/textletter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/relativeLayout"
+            android:layout_below="@+id/letter"
+            android:layout_marginStart="49dp"
+            android:layout_marginTop="10dp"
+            android:text="Letter (up to A4)"
+            android:textColor="#ffffff"/>
+
+        <ImageView
+            android:id="@+id/smallparcel"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="350dp"
+            android:layout_toEndOf="@id/letter"
+            android:src="@mipmap/box_freepik" />
+
+        <TextView
+            android:id="@+id/textsmallparcel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/letter"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="6dp"
+            android:layout_toEndOf="@+id/textletter"
+            android:text="Small Parcel\n(up to 00x00cm)"
+            android:textAlignment="center"
+            android:textColor="#ffffff"/>
+
+
+        <ImageView
+            android:id="@+id/largeparcel"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="340dp"
+            android:layout_toEndOf="@id/smallparcel"
+            android:src="@mipmap/box_freepik" />
+
+        <TextView
+            android:id="@+id/textlargeparcel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/letter"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="6dp"
+            android:layout_toEndOf="@+id/textsmallparcel"
+            android:text="Large Parcel\n(up to 00x00cm)"
+            android:textAlignment="center"
+            android:textColor="#ffffff"/>
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
