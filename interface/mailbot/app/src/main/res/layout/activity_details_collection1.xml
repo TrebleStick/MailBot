@@ -6,31 +6,146 @@
     android:layout_height="match_parent"
     android:background="@color/postRed"
     tools:context="com.extcord.jg3215.mailbot.MainActivity_Collection1">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="350sp"
+            android:id="@+id/botFace"
+            android:layout_width="359dp"
             android:layout_height="320sp"
             android:layout_marginStart="80dp"
             android:layout_marginTop="100dp"
-            android:src="@mipmap/mailbot_nocap"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@mipmap/mailbot_nocap" />
 
-            />
+        <RelativeLayout
+            android:id="@+id/speechBubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="60dp"
+            android:layout_marginTop="40dp">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/speechBubbleMain"
+                android:layout_width="450dp"
+                android:layout_height="200dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:src="@mipmap/speechbubble" />
 
+            <TextView
+                android:layout_width="380dp"
+                android:layout_height="75dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="35dp"
+                android:text="@string/infoDetailsActivity"
+                android:textAlignment="center"
+                android:textColor="@color/postRed"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/textFieldAndEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speechBubble"
+            android:layout_toRightOf="@+id/botFace"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="30dp">
+
+            <LinearLayout
+                android:id="@+id/topFieldPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/topField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userName"
+                    android:textSize="30sp" />
+
+                <EditText
+                    android:id="@+id/topEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="65dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/midFieldPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topFieldPanel"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/midField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userEmail"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/midEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bottomFieldPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/midFieldPanel"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/bottomField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userChoosePhoto"
+                    android:textSize="20sp" />
+
+                <CheckBox
+                    android:id="@+id/choosePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"/>
+
+                <EditText
+                    android:id="@+id/deliveryLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/speechBubble"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:text="GO" />
+
+        <Button
+            android:id="@+id/buttonForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/botFace"
+            android:layout_marginBottom="30dp"
+            android:text="Cancel" />
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

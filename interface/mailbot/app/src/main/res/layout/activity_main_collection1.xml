@@ -8,7 +8,7 @@
     android:background="@color/postRed"
     tools:context="com.extcord.jg3215.mailbot.MainActivity_Collection1">
 
-
+    <!--Can we get rid of the Constraint Layout? Seems redundant-->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:layout_width="fill_parent"
@@ -27,7 +27,7 @@
 
 
         <ImageView
-            android:id="@+id/mailbotmain"
+            android:id="@+id/mailbotMain"
             android:layout_width="350dp"
             android:layout_height="320dp"
             android:layout_centerVertical="true"
@@ -38,30 +38,28 @@
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="320dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="40dp"
-            android:layout_toEndOf="@id/mailbotmain">
+            android:layout_toEndOf="@id/mailbotMain">
 
             <ImageView
-                android:id="@+id/speechbubblemain"
+                android:id="@+id/speechBubbleMain"
                 android:layout_width="450dp"
-                android:layout_height="320dp"
+                android:layout_height="293dp"
                 android:src="@mipmap/speechbubble" />
 
             <TextView
-
                 android:layout_width="380dp"
                 android:layout_height="160dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="65dp"
-                android:text="@string/mainactivityspeech"
+                android:text="@string/mainActivitySpeech"
+                android:textAlignment="center"
                 android:textColor="@color/postRed"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textAlignment="center"/>
-
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <ImageView
@@ -70,23 +68,23 @@
             android:layout_height="60dp"
             android:layout_marginStart="70dp"
             android:layout_marginTop="350dp"
-            android:layout_toEndOf="@id/mailbotmain"
+            android:layout_toEndOf="@id/mailbotMain"
             android:src="@mipmap/email_smashicons" />
 
         <TextView
-            android:id="@+id/textletter"
+            android:id="@+id/textLetter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/relativeLayout"
             android:layout_below="@+id/letter"
             android:layout_marginStart="45dp"
             android:layout_marginTop="20dp"
-            android:text="Letter\n(Standard size)"
+            android:text="@string/letterStandardText"
             android:textAlignment="center"
             android:textColor="#ffffff"/>
 
         <ImageView
-            android:id="@+id/largeletter"
+            android:id="@+id/largeLetter"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="60dp"
@@ -95,39 +93,37 @@
             android:src="@mipmap/email_smashicons" />
 
         <TextView
-            android:id="@+id/textlargeletter"
+            android:id="@+id/textLargeLetter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/letter"
             android:layout_marginStart="55dp"
             android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/textletter"
-            android:text="Large Letter\n(around A4)"
+            android:layout_toEndOf="@+id/textLetter"
+            android:text="@string/letterLargeText"
             android:textAlignment="center"
             android:textColor="#ffffff"/>
 
 
         <ImageView
-            android:id="@+id/largeparcel"
+            android:id="@+id/largeParcel"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="60dp"
             android:layout_marginTop="340dp"
-            android:layout_toEndOf="@id/largeletter"
+            android:layout_toEndOf="@id/largeLetter"
             android:src="@mipmap/box_freepik" />
 
         <TextView
-            android:id="@+id/textlargeparcel"
+            android:id="@+id/textLargeParcel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/letter"
             android:layout_marginStart="49dp"
             android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/textlargeletter"
-            android:text="Parcel\n(up to 00x00cm)"
+            android:layout_toEndOf="@+id/textLargeLetter"
+            android:text="@string/parcelText"
             android:textAlignment="center"
             android:textColor="#ffffff"/>
-
     </RelativeLayout>
-
 </android.support.constraint.ConstraintLayout>

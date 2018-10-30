@@ -2,9 +2,49 @@ package com.extcord.jg3215.mailbot;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 public class DetailsActivity_Collection1 extends AppCompatActivity {
+
+    // Denotes what kind of package is being sent: small letter, large letter or parcel
+    private int packageType;
+
+    // Denotes the state the activity is in at that moment in time
+    private int state;
+
+    // Represents the three states this activity can be in:
+        // 1. Input user details
+        // 2. Input recipient details
+        // 3. Confirm details
+    private static final int STATE_USER_DETAILS = 1;
+    private static final int STATE_RECIPIENT_DETAILS = 2;
+    private static final int STATE_CONFIRMATION = 3;
+
+    private static final String TAG = "DetailsActivity";
+
+    // Sends the user back to the main menu
+    Button cancelButton;
+
+    // Sends the user to the next state
+    Button goButton;
+
+    // Used for sender name, recipient name
+    // TODO: Should not be used in confirmation state
+    EditText topEntry;
+
+    // Used for sender email address, recipient email address
+    // TODO: Should not be used in confirmation state
+    EditText midEntry;
+
+    // Used to give recipient location -> 2nd state only
+    EditText btmEntry;
+
+    // Used to allow the sender to say whether or not they want to take a photo -> 1st state only
+    CheckBox takePhotoOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -12,14 +52,57 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_collection1);
 
-        View decorView = getWindow().getDecorView();
-// Hide both the navigation bar and the status bar.
-// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-// a general rule, you should design your app to hide the status bar whenever you
-// hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        // Removed the navigation bar code because it makes this activity look weird as it is created
 
+        // Gets the package type that is being delivered from the intent
+        packageType = this.getIntent().getIntExtra("packageType", 0);
+        Log.i(TAG, "Package Type: " + String.valueOf(packageType));
+
+        // Keeps track of which mode the activity is in:
+            // 1. User entering their own details
+            // 2. User entering recipient details
+            // 3. Confirming details with user
+        state = 1;
+
+        cancelButton = (Button) findViewById(R.id.buttonCancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            // Method that is called once click listener registers that button has been clicked
+            public void onClick(View view) {
+                // TODO: Tell Robot that the process has been cancelled
+                // TODO: Go back to main menu - NOT to previous state
+            }
+        });
+
+        goButton = (Button) findViewById(R.id.buttonForward);
+        goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            // Method that is called once click listener registers that button has been clicked
+            public void onClick(View view) {
+                switch (state) {
+                    case STATE_USER_DETAILS:
+                        // TODO: Check that name is legitimate
+                        // TODO: Check that email address is legitimate (or assume that it is)
+                        // Maybe put these in a function
+
+                        // TODO: Change layout to recipient details stuff
+                        state++;
+                        break;
+                    case STATE_RECIPIENT_DETAILS:
+                        // TODO: Check that name is legitimate
+                        // TODO: Check that email address is legitimate (or assume that it is)
+                        // Maybe put these in a function
+
+                        // TODO: Change layout to confirmation
+                        state++;
+                        break;
+                    case STATE_CONFIRMATION:
+                        // TODO: Go to the next activity - pass on details
+                        // TODO: Send information to the Robot
+                        // TODO: Kill this activity (mwuha)
+                        break;
+                }
+            }
+        });
     }
 }

@@ -1,7 +1,26 @@
 <resources>
     <string name="app_name">mailbot</string>
-    <string name="mainactivityspeech">Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!</string>
+
+    <!--Main Activity Strings-->
+    <string name="mainActivitySpeech">Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!</string>
     <string name="endSpeech">Thank you for giving me your mail! It will be delivered in the next delivery slot time, and a confirmation e-mail with the security code for the recipient to open the locker has been sent to both you and the recipient.</string>
+    <string name="letterStandardText">Letter\n(Standard size)</string>
+    <string name="letterLargeText">Large Letter\n(around A4)</string>
+    <string name="parcelText">Parcel\n(up to 00x00cm)</string>
 
+    <!--Details Activity Strings-->
+    <string name="infoDetailsActivity">That\'s great! I just need to know a little bit about you...</string>
 
+    <string name="userName">Name: </string>
+    <string name="userEmail">Email Address: </string>
+    <string name="userChoosePhoto">Take a photo? </string>
+
+    <string name="recipientName">Name: </string>
+    <string name="recipientEmail">Email Address: </string>
+    <!--Will this need multiple lines?-->
+    <string name="recipientLocation">Delivery Location: </string>
+
+    <!--Locker Activity Strings-->
+
+    <!--End Activity Strings-->
 </resources>
