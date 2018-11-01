@@ -1,8 +1,10 @@
-package com.extcord.jg3215.mailbot;
+package com.extcord.jg3215.mailbot.CollectionMode;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import com.extcord.jg3215.mailbot.R;
 
 public class LockerActivity_Collection1 extends AppCompatActivity {
 

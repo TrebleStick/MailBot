@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/postRed"
-    tools:context="com.extcord.jg3215.mailbot.MainActivity_Collection1">
+    tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
@@ -131,7 +131,7 @@
         </RelativeLayout>
 
         <Button
-            android:id="@+id/buttonCancel"
+            android:id="@+id/buttonForward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/speechBubble"
@@ -140,7 +140,7 @@
             android:text="GO" />
 
         <Button
-            android:id="@+id/buttonForward"
+            android:id="@+id/buttonCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot;
+package com.extcord.jg3215.mailbot.CollectionMode;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.extcord.jg3215.mailbot.R;
 
 public class MainActivity_Collection1 extends AppCompatActivity {
 
@@ -49,8 +52,8 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // TODO: Communicate to the robot (via Serial) that a small letter is being delivered
                 // if (robot says there is space) {
                     setDetailsIntent(LETTER_STANDARD);
-                // else {
-                    // inform the user that there is no space using a Toast }
+                // else { tell the user that no lockers of that size are available
+                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -62,8 +65,8 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // TODO: Communicate to the robot (via Serial) that a small letter is being delivered
                 // if (robot says there is space) {
                     setDetailsIntent(LETTER_LARGE);
-                // else {
-                    // inform the user that there is no space using a Toast }
+                // else { tell the user that no lockers of that size are available
+                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -75,19 +78,21 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // TODO: Communicate to the robot (via Serial) that a small letter is being delivered
                 // if (robot says there is space) {
                     setDetailsIntent(PARCEL);
-                // else {
-                    // inform the user that there is no space using a Toast }
+                // else { tell the user that no lockers of that size are available
+                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void setDetailsIntent(int packageType) {
         // TODO: Check that this activity is starting when you want it to (use Logging)
+        Log.i(TAG, "setDetailsIntent() method called");
         String intentTag = "packageType";
         Intent detailActivityIntent = new Intent(this, DetailsActivity_Collection1.class);
 
         // Adds this extra detail to the intent which indicates what kind of package the user is sending
         detailActivityIntent.putExtra(intentTag, packageType);
         startActivity(detailActivityIntent);
+        Log.i(TAG, "Detail Activity started with the extra=packageType");
     }
 }

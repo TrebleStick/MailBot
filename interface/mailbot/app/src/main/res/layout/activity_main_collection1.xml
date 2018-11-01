@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/postRed"
-    tools:context="com.extcord.jg3215.mailbot.MainActivity_Collection1">
+    tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
 
     <!--Can we get rid of the Constraint Layout? Seems redundant-->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,10 +51,10 @@
 
             <TextView
                 android:layout_width="380dp"
-                android:layout_height="160dp"
+                android:layout_height="180dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="65dp"
+                android:layout_marginTop="45dp"
                 android:text="@string/mainActivitySpeech"
                 android:textAlignment="center"
                 android:textColor="@color/postRed"

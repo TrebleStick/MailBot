@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot;
+package com.extcord.jg3215.mailbot.CollectionMode;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import com.extcord.jg3215.mailbot.R;
 
 public class DetailsActivity_Collection1 extends AppCompatActivity {
 
@@ -69,8 +71,11 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             @Override
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
-                // TODO: Tell Robot that the process has been cancelled
-                // TODO: Go back to main menu - NOT to previous state
+            Log.i(TAG, "Cancel button pressed");
+            // TODO: Tell Robot that the process has been cancelled
+
+            // Takes the user back to the main menu - not the previous state
+            finish();
             }
         });
 
@@ -79,6 +84,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             @Override
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
+                Log.i(TAG, "Go button pressed");
+
                 switch (state) {
                     case STATE_USER_DETAILS:
                         // TODO: Check that name is legitimate
@@ -97,9 +104,13 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         state++;
                         break;
                     case STATE_CONFIRMATION:
-                        // TODO: Go to the next activity - pass on details
-                        // TODO: Send information to the Robot
-                        // TODO: Kill this activity (mwuha)
+                        // TODO: Send a serial message to the computer requesting locker opening
+
+                        // TODO: Make a separate Broadcast receiver for the serial communication
+                            // Serial communcation to open the MailBot for mail item
+                            // TODO: Go to the next activity - pass on details
+                            // TODO: Send information to the Robot
+                            // TODO: Kill this activity
                         break;
                 }
             }

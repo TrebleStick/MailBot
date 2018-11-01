@@ -8,6 +8,8 @@
     <string name="letterLargeText">Large Letter\n(around A4)</string>
     <string name="parcelText">Parcel\n(up to 00x00cm)</string>
 
+    <string name="lockerSizeUnavailable">All lockers of this size are full</string>
+
     <!--Details Activity Strings-->
     <string name="infoDetailsActivity">That\'s great! I just need to know a little bit about you...</string>
 
