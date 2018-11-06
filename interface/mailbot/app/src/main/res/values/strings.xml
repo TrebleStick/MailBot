@@ -3,7 +3,7 @@
 
     <!--Main Activity Strings-->
     <string name="mainActivitySpeech">Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!</string>
-    <string name="endSpeech">Thank you for giving me your mail! It will be delivered in the next delivery slot time, and a confirmation e-mail with the security code for the recipient to open the locker has been sent to both you and the recipient.</string>
+
     <string name="letterStandardText">Letter\n(Standard size)</string>
     <string name="letterLargeText">Large Letter\n(around A4)</string>
     <string name="parcelText">Parcel\n(up to 00x00cm)</string>
@@ -13,16 +13,26 @@
     <!--Details Activity Strings-->
     <string name="infoDetailsActivity">That\'s great! I just need to know a little bit about you...</string>
 
-    <string name="userName">Name: </string>
-    <string name="userEmail">Email Address: </string>
+    <string name="fieldName">Name: </string>
+    <string name="fieldEmail">Email Address: </string>
     <string name="userChoosePhoto">Take a photo? </string>
 
-    <string name="recipientName">Name: </string>
-    <string name="recipientEmail">Email Address: </string>
+    <string name="emailError">Please give a valid email address</string>
+    <string name="emptyNameField">Please enter a name</string>
+    <string name="emptyEmailField">Please enter an email adddres</string>
+
     <!--Will this need multiple lines?-->
     <string name="recipientLocation">Delivery Location: </string>
 
     <!--Locker Activity Strings-->
+    <string name="lockerActivitySpeech">I have opened locker X for your mail item! Please store it there so I can deliver it, and close the locker before continuing.</string>
+    <string name="lockerActivityBadFit">It doesn\'t fit!</string>
+    <string name="lockerActivityGoodFit">I put the parcel in and closed the locker!</string>
+    <string name="packageTooBig">The mail item is too big to fit in MailBot</string>
 
     <!--End Activity Strings-->
+    <string name="endActivitySpeech">Thank you for giving me your mail! It will be delivered in the next delivery slot time, and a confirmation e-mail with the security code for the recipient to open the locker has been sent to both you and the recipient.
+    Use the buttons below to send another mail item to the same recipient, or begin again!</string>
+    <string name="toSameRecipient">Same recipient</string>
+    <string name="startAgain">Return</string>
 </resources>

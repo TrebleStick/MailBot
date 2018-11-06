@@ -1,12 +1,12 @@
 package com.extcord.jg3215.mailbot;
 
-/**
- * Created by IChinweze on 30/10/2018.
- */
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class PackageData {
+// Make it parcelable so that its instances can be passed as extras between activities
+public class PackageData implements Parcelable{
     // TODO: Check that is/is not the best way to format data to be sent along
-    private String Name;
+    private String name;
     private String emailAddress;
 
     // TODO: Check what the format of the delivery location is going to be
@@ -15,20 +15,19 @@ public class PackageData {
     private boolean photoOptionState;
 
     // Constructor
-    public PackageData(String userName, String userEmail, boolean optionState) {
-        Name = userName;
+    public PackageData(String userName, String userEmail) { // }, boolean optionState) {
+        name = userName;
         emailAddress = userEmail;
-        photoOptionState = optionState;
+        // photoOptionState = optionState;
     }
 
-    // TODO: Check if the set methods are unnecessary
-    // Might only be necessary for delivery location
+    // Set methods might only be necessary for delivery location
     public void setName(String nameToSet) {
-        nameToSet = this.Name;
+        nameToSet = this.name;
     }
 
     public String getName() {
-        return this.Name;
+        return this.name;
     }
 
     public void setEmailAddress(String addressToSet) {
@@ -48,4 +47,39 @@ public class PackageData {
     }
 
     public boolean getPhotoOptionState() {  return photoOptionState;}
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(name);
+        out.writeString(emailAddress);
+
+        if (deliveryLocation != null) {
+            // should only take delivery location for recipient data object
+            out.writeString(deliveryLocation);
+        }
+    }
+
+    public static final Parcelable.Creator<PackageData> CREATOR = new Parcelable.Creator<PackageData>() {
+        @Override
+        public PackageData createFromParcel(Parcel parcel) {
+            return new PackageData(parcel);
+        }
+
+        @Override
+        public PackageData[] newArray(int size) {
+            return new PackageData[size];
+        }
+    };
+
+    public PackageData(Parcel parcel) {
+        name = parcel.readString();
+        emailAddress = parcel.readString();
+
+        if (deliveryLocation != null) {
+            deliveryLocation = parcel.readString();
+        }
+    }
 }

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/postRed"
     tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -25,9 +26,7 @@
             android:layout_height="320sp"
             android:layout_centerVertical="true"
             android:layout_marginStart="70dp"
-            android:src="@mipmap/mailbot_nocap"
-
-            />
+            android:src="@mipmap/mailbot_nocap"/>
 
         <RelativeLayout
             android:id="@+id/relativeLayoutLocker"
@@ -41,7 +40,7 @@
                 android:id="@+id/speechbubblelocker"
                 android:layout_width="450dp"
                 android:layout_height="320dp"
-                android:src="@mipmap/speechbubble" />
+                android:src="@mipmap/speechbubble"/>
 
             <TextView
 
@@ -50,7 +49,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="75dp"
-                android:text="I have opened locker X for your mail item! Please store it there so I can deliver it, and close the locker before continuing."
+                android:text="@string/lockerActivitySpeech"
                 android:textColor="@color/postRed"
                 android:textSize="25sp"
                 android:textAlignment="center"
@@ -59,30 +58,28 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textnotfit"
+            android:id="@+id/textBadFit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
             android:layout_marginTop="420dp"
             android:layout_toEndOf="@id/mailbotlocker"
-            android:text="It doesn't fit!"
+            android:text="@string/lockerActivityBadFit"
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textSize="25sp"/>
 
         <TextView
-            android:id="@+id/textcontinue"
+            android:id="@+id/textGoodFit"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="400dp"
-            android:layout_toEndOf="@id/textnotfit"
-            android:text="I put the parcel in and closed the locker!"
+            android:layout_toEndOf="@id/textBadFit"
+            android:text="@string/lockerActivityGoodFit"
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textSize="25sp"
             android:textStyle="bold"/>
-
     </RelativeLayout>
-
 </android.support.constraint.ConstraintLayout>

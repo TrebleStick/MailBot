@@ -40,21 +40,22 @@
 
             <ImageView
                 android:id="@+id/speechbubbleEnd"
-                android:layout_width="450dp"
-                android:layout_height="320dp"
+                android:layout_width="480dp"
+                android:layout_height="360dp"
                 android:src="@mipmap/speechbubble" />
 
             <TextView
 
-                android:layout_width="360dp"
-                android:layout_height="160dp"
+                android:layout_width="427dp"
+                android:layout_height="188dp"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="65dp"
-                android:text="@string/endSpeech"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="69dp"
+                android:text="@string/endActivitySpeech"
+                android:textAlignment="center"
                 android:textColor="@color/postRed"
                 android:textSize="21sp"
-                android:textAlignment="center"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -70,7 +71,25 @@
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/btnToSameRecipient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/relativeLayoutEnd"
+            android:layout_marginBottom="41dp"
+            android:text="@string/toSameRecipient" />
+
+        <Button
+            android:id="@+id/btnStartAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/relativeLayoutEnd"
+            android:layout_alignTop="@+id/btnToSameRecipient"
+            android:text="@string/startAgain" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

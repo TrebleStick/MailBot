@@ -71,7 +71,7 @@
                     android:id="@+id/topField"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/userName"
+                    android:text="@string/fieldName"
                     android:textSize="30sp" />
 
                 <EditText
@@ -92,7 +92,7 @@
                     android:id="@+id/midField"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/userEmail"
+                    android:text="@string/fieldEmail"
                     android:textSize="20sp" />
 
                 <EditText
