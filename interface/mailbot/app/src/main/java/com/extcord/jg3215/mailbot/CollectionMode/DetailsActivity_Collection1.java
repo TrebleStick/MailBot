@@ -24,6 +24,8 @@ import org.w3c.dom.Text;
 
 public class DetailsActivity_Collection1 extends AppCompatActivity {
 
+    // TODO: Change text of speech bubble
+
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
 
@@ -67,6 +69,11 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     // What are you going to do if they check this option?
     // TODO: Check if photo is still happening?
     CheckBox takePhotoOption;
+
+    // TextViews shown when confirming given details
+    TextView confirmTopEnt;
+    TextView confirmMidEnt;
+    TextView confirmBtmEnt;
 
     Spinner inputDetails;
     private int spinnerListItem;
@@ -117,12 +124,62 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
         btmEntry = (EditText) findViewById(R.id.deliveryLocation);
+
+        // Bottom field in state 1 -> Take Photo?
         takePhotoOption = (CheckBox) findViewById(R.id.choosePhoto);
+        // Bottom field in state 2 -> Delivery Location
+        // Bottom field only visible for recipient details spinner
         btmField = (TextView) findViewById(R.id.bottomField);
+
+        confirmTopEnt = (TextView) findViewById(R.id.confirmTopEntry);
+        confirmMidEnt = (TextView) findViewById(R.id.confirmMidEntry);
+        confirmBtmEnt = (TextView) findViewById(R.id.confirmBtmEntry);
 
         inputDetails = (Spinner) findViewById(R.id.detailSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, inputDetailList);
         inputDetails.setAdapter(adapter);
+        inputDetails.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // i refers to the index of the adapter list
+
+                switch (i) {
+                    case 0:
+                        // item 0 in the adapter list should present sender details
+                        spinnerListItem = 0;
+                        Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
+                        confirmTopEnt.setText(senderData.getName());
+                        confirmTopEnt.setVisibility(View.VISIBLE);
+
+                        confirmMidEnt.setText(senderData.getEmailAddress());
+                        confirmMidEnt.setVisibility(View.VISIBLE);
+
+                        btmField.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        // item 1 in the adapter list should present the recipient details
+                        spinnerListItem = 1;
+                        Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
+                        confirmTopEnt.setText(recipientData.getName());
+                        confirmTopEnt.setVisibility(View.VISIBLE);
+
+                        confirmMidEnt.setText(recipientData.getEmailAddress());
+                        confirmMidEnt.setVisibility(View.VISIBLE);
+
+                        confirmBtmEnt.setText(recipientData.getDeliveryLocation());
+                        confirmBtmEnt.setVisibility(View.VISIBLE);
+                        btmField.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        Log.i(TAG, "Item list exception: i = " + String.valueOf(i));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
 
         cancelButton = (Button) findViewById(R.id.buttonCancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +193,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             }
         });
 
+        // TODO: FINISH
         problemButton = (Button) findViewById(R.id.buttonProblem);
         problemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,9 +255,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         senderData = new PackageData(userName, userEmailAddress);
 
                         // Change view to what you expect next
-
                         toLayoutStateTwo(topEntry, midEntry, takePhotoOption, btmEntry, btmField);
-                        Log.i(TAG, "Layout changed to state 2");
+                        Log.i(TAG, "toLayoutStateTwo() method called.");
 
                         // Change state of the activity
                         state++;
@@ -237,8 +294,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         recipientData = new PackageData(recipientName, recipientEmailAddress);
 
                         // Change view to what you expect next
-                        toLayoutStateThree(topEntry, midEntry, btmEntry, btmField);
-                        Log.i(TAG, "Layout change to state 3");
+                        toLayoutStateThree(topEntry, midEntry, btmEntry);
+                        Log.i(TAG, "toLayoutStateThree() method called");
 
                         // Change state of the activity
                         state++;
@@ -315,12 +372,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         Log.i(TAG, "Layout changed to state two.");
     }
 
-    private void toLayoutStateThree(EditText topText, EditText midText, EditText btmText, final TextView botField) {
-        // TODO: There is probably a better way to do this method. Fix it later
-        final TextView confirmTopEnt = (TextView) findViewById(R.id.confirmTopEntry);
-        final TextView confirmMidEnt = (TextView) findViewById(R.id.confirmMidEntry);
-        final TextView confirmBtmEnt = (TextView) findViewById(R.id.confirmBtmEntry);
-
+    private void toLayoutStateThree(EditText topText, EditText midText, EditText btmText) {
         topText.setText("");
         topText.setVisibility(View.GONE);
 
@@ -334,41 +386,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         bubbleText.setText(getResources().getString(R.string.confirmSpeechBubble));
 
         inputDetails.setVisibility(View.VISIBLE);
-        inputDetails.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // i refers to the index of the adapter list
-
-                if (i == 0) {
-                    // item 0 in the adapter list should present sender details
-                    spinnerListItem = 0;
-                    Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
-                    confirmTopEnt.setText(senderData.getName());
-                    confirmTopEnt.setVisibility(View.VISIBLE);
-
-                    confirmMidEnt.setText(senderData.getEmailAddress());
-                    confirmMidEnt.setVisibility(View.VISIBLE);
-
-                    botField.setVisibility(View.GONE);
-                } else if (i == 1) {
-                    // item 1 in the adapter list should present the recipient details
-                    spinnerListItem = 1;
-                    Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
-                    confirmTopEnt.setText(recipientData.getName());
-                    confirmTopEnt.setVisibility(View.VISIBLE);
-
-                    confirmMidEnt.setText(recipientData.getEmailAddress());
-                    confirmMidEnt.setVisibility(View.VISIBLE);
-
-                    confirmBtmEnt.setText(recipientData.getDeliveryLocation());
-                    confirmBtmEnt.setVisibility(View.VISIBLE);
-                    botField.setVisibility(View.VISIBLE);
-                } else {
-                    Log.i(TAG, "Item list exception: i = " + String.valueOf(i));
-                }
-            }
-        });
-
         Log.i(TAG, "Layout changed to state three.");
     }
 
