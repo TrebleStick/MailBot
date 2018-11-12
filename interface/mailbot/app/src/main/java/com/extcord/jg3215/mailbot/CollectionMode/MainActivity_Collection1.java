@@ -119,21 +119,26 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         Log.i(TAG, "Detail Activity started with the extra=packageType");
     }
 
+    // Should be called on return to MainActivity from another activity via an intent
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
 
+        // Get the recipient data to pass to the Details Activity
         try {
             recipientData = intent.getParcelableExtra("recipientData");
             Log.i(TAG, "Recipient Data Object retrieved: Recipient Name: " + recipientData.getName() + " : Recipient Email Address: " + recipientData.getEmailAddress());
         } catch (NullPointerException e) {
+            // Recipient data not passed on correctly
             Log.i(TAG, "Null reference to recipient data object: " + e.getMessage());
         }
 
+        // Get the sender data to pass to the Details Activity
         try {
             senderData = intent.getParcelableExtra("senderData");
             Log.i(TAG, "Sender Data Object retrieved: sender Name: " + senderData.getName() + " : Sender Email Address: " + senderData.getEmailAddress());
         } catch (NullPointerException e) {
+            // Sender data not passed on correctly
             Log.i(TAG, "Null reference to sender data object: " + e.getMessage());
         }
     }

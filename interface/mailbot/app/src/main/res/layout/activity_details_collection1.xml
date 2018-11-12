@@ -16,6 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <Spinner
+            android:id="@+id/detailSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speechBubble"
+            android:layout_alignLeft="@id/speechBubble"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/botFace"
             android:layout_width="359dp"
@@ -41,6 +49,7 @@
                 android:src="@mipmap/speechbubble" />
 
             <TextView
+                android:id="@+id/speechBubbleText"
                 android:layout_width="380dp"
                 android:layout_height="75dp"
                 android:layout_alignParentTop="true"
@@ -79,6 +88,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="65dp"/>
+
+                <TextView
+                    android:id="@+id/confirmTopEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="65dp"
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <LinearLayout
@@ -100,6 +116,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:id="@+id/confirmMidEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <LinearLayout
@@ -126,6 +149,14 @@
                     android:id="@+id/deliveryLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/confirmBtmEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
                     android:visibility="gone"/>
             </LinearLayout>
         </RelativeLayout>
@@ -147,5 +178,16 @@
             android:layout_alignStart="@+id/botFace"
             android:layout_marginBottom="30dp"
             android:text="Cancel" />
+
+        <Button
+            android:id="@+id/buttonProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/buttonForward"
+            android:layout_marginEnd="429dp"
+            android:text="Problem"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

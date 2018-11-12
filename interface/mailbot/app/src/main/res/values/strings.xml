@@ -24,6 +24,11 @@
     <!--Will this need multiple lines?-->
     <string name="recipientLocation">Delivery Location: </string>
 
+    <string name="confirmSpeechBubble">Please confirm that the details below are correct</string>
+
+    <string name="senderDetailsSpinner">Sender Details</string>
+    <string name="recipientDetailsSpinner">Recipient Details</string>
+
     <!--Locker Activity Strings-->
     <string name="lockerActivitySpeech">I have opened locker X for your mail item! Please store it there so I can deliver it, and close the locker before continuing.</string>
     <string name="lockerActivityBadFit">It doesn\'t fit!</string>
