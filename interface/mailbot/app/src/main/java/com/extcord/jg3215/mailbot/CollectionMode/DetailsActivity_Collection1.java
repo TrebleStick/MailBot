@@ -116,7 +116,12 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         try {
             // If a null point exception does not occur, user has requested to mail another item to same recipient
             recipientData = this.getIntent().getParcelableExtra("recipientData");
+        } catch (NullPointerException e) {
+            Log.i(TAG, "No recipientData object available: " + e.getMessage());
+        }
 
+        try {
+            senderData = this.getIntent().getParcelableExtra("senderData");
         } catch (NullPointerException e) {
             Log.i(TAG, "No recipientData object available: " + e.getMessage());
         }
@@ -209,7 +214,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         break;
                     case 1:
                         state = 2;
-                        // toLayoutStateTwo();
+                        // This method does not need any arguments tbh
+                        toLayoutStateTwo(1);
                         break;
                 }
             }
@@ -255,7 +261,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         senderData = new PackageData(userName, userEmailAddress);
 
                         // Change view to what you expect next
-                        toLayoutStateTwo(topEntry, midEntry, takePhotoOption, btmEntry, btmField);
+                        toLayoutStateTwo(0);
                         Log.i(TAG, "toLayoutStateTwo() method called.");
 
                         // Change state of the activity
@@ -267,7 +273,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         String recipientName = topEntry.getText().toString();
                         String recipientEmailAddress = midEntry.getText().toString();
 
-                        // TODO: Add a variable for delivery Location ples -> btmEntry
+                        // TODO: Ensure that delivery Location is in the right format
+                        String deliveryLocation = btmEntry.getText().toString();
 
                         if (recipientName.equals("")) {
                             Log.i(TAG, "Name Field is empty");
@@ -292,6 +299,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
 
                         // Create a class containing data about the recipient
                         recipientData = new PackageData(recipientName, recipientEmailAddress);
+                        recipientData.setDeliveryLocation(deliveryLocation);
 
                         // Change view to what you expect next
                         toLayoutStateThree(topEntry, midEntry, btmEntry);
@@ -339,39 +347,73 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     }
 
     private void toLayoutStateOne() {
+        // TextViews should not be visible
+        confirmTopEnt.setVisibility(View.GONE);
+        confirmMidEnt.setVisibility(View.GONE);
+        confirmBtmEnt.setVisibility(View.GONE);
 
+        // Bottom TextView text should have take photo
+        btmField.setText(getResources().getString(R.string.userChoosePhoto));
+        btmField.setVisibility(View.VISIBLE);
+        // Take Photo checkBox should be visible
+        takePhotoOption.setVisibility(View.VISIBLE);
+
+        // Top and Mid EditTexts should be visible
+        topEntry.setText("");
+        topEntry.setVisibility(View.VISIBLE);
+        midEntry.setText("");
+        midEntry.setVisibility(View.VISIBLE);
+
+        // Problem button should not be visible
+        problemButton.setVisibility(View.GONE);
+
+        // Spinner should not be visible
+        inputDetails.setVisibility(View.GONE);
     }
 
-    private void toLayoutStateTwo(EditText topText, EditText midText, CheckBox photoOption, EditText btmText, TextView botField) {
-        if (topText.getVisibility() == View.VISIBLE) {
-            topText.setText("");
-            TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
-            bubbleText.setText("Perfect! Now please tell us the details of the recipient of your mail item.");
-        } else {
-            // should only be here if this method is called from problem button click listener
-            // toLayoutStateTwo means that you are preparing the activity to receive recipient details
+    // TODO: Change this method so it does not take arguments
+    private void toLayoutStateTwo(int callCase) {
+        // callCase refers to whether this method is called from problem Button or go Button listener
 
-            topText.setText(recipientData.getName());
-            topText.setVisibility(View.VISIBLE);
+        // toLayoutStateTwo means that you are preparing the activity to receive recipient details
+        TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
+        bubbleText.setText(getResources().getString(R.string.bubbleRecipientDetails));
+
+        // Bottom field set to read "Delivery Location: "
+        btmField.setText(getResources().getString(R.string.recipientLocation));
+
+        switch (callCase) {
+            case 0:
+                // case 0 is from the go button listener ie from state 1
+                topEntry.setText("");
+                midEntry.setText("");
+
+                // Gets rid of take photo checkbox
+                takePhotoOption.setVisibility(View.GONE);
+                // Brings up EditText for inserting delivery location
+                btmEntry.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                // should only be here if this method is called from problem button click listener
+                // TODO: Check if the View.VISIBLE commands are necessary for the Entry EditTexts
+                topEntry.setText(recipientData.getName());
+                topEntry.setVisibility(View.VISIBLE);
+
+                midEntry.setText(recipientData.getEmailAddress());
+                midEntry.setVisibility(View.VISIBLE);
+
+                btmEntry.setText(recipientData.getDeliveryLocation());
+                btmEntry.setVisibility(View.VISIBLE);
+
+                // TextViews should not be visible
+                confirmTopEnt.setVisibility(View.GONE);
+                confirmMidEnt.setVisibility(View.GONE);
+                confirmBtmEnt.setVisibility(View.GONE);
+
+                // Problem button should not be visible
+                problemButton.setVisibility(View.GONE);
+                break;
         }
-
-        if (midText.getVisibility() == View.VISIBLE) {
-            midText.setText("");
-        } else {
-            // Similar to above if-else clause
-            midText.setText(recipientData.getEmailAddress());
-            midText.setVisibility(View.VISIBLE);
-        }
-
-        photoOption.setVisibility(View.GONE);
-
-        if (!(botField.getVisibility() == View.VISIBLE)) {
-            botField.setVisibility(View.VISIBLE);
-        }
-
-        botField.setText(getResources().getString(R.string.recipientLocation));
-        btmText.setVisibility(View.VISIBLE);
-
         Log.i(TAG, "Layout changed to state two.");
     }
 
@@ -382,13 +424,19 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         midText.setText("");
         midText.setVisibility(View.GONE);
 
-        // TODO: Set-up a variable for delivery location
         btmText.setVisibility(View.GONE);
+        // When confirming details, user cannot edit their entries -> EditTexts are hidden
 
+        // Button allows user to flag an issue with a set of details given (sender or recipient)
+        problemButton.setVisibility(View.VISIBLE);
+
+        // Edits the text of the speech bubble
         TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
         bubbleText.setText(getResources().getString(R.string.confirmSpeechBubble));
 
+        // Makes spinner visible
         inputDetails.setVisibility(View.VISIBLE);
+
         Log.i(TAG, "Layout changed to state three.");
     }
 

@@ -17,6 +17,8 @@
     <string name="fieldEmail">Email Address: </string>
     <string name="userChoosePhoto">Take a photo? </string>
 
+    <string name="bubbleRecipientDetails">Perfect! Now please tell us the details of the recipient of your mail item.</string>
+
     <string name="emailError">Please give a valid email address</string>
     <string name="emptyNameField">Please enter a name</string>
     <string name="emptyEmailField">Please enter an email adddres</string>

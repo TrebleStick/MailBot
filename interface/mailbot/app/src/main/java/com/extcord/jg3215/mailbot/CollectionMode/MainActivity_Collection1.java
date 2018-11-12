@@ -119,6 +119,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     }
 
     // Should be called on return to MainActivity from another activity via an intent
+    // TODO: Complete this. To be used if user wants to send something else to the same person
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
