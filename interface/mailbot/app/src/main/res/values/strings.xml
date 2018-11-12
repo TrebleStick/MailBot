@@ -21,12 +21,12 @@
 
     <string name="emailError">Please give a valid email address</string>
     <string name="emptyNameField">Please enter a name</string>
-    <string name="emptyEmailField">Please enter an email adddres</string>
+    <string name="emptyEmailField">Please enter an email address</string>
 
     <!--Will this need multiple lines?-->
     <string name="recipientLocation">Delivery Location: </string>
 
-    <string name="confirmSpeechBubble">Please confirm that the details below are correct</string>
+    <string name="confirmSpeechBubble">Please confirm to me that the details below are correct.</string>
 
     <string name="senderDetailsSpinner">Sender Details</string>
     <string name="recipientDetailsSpinner">Recipient Details</string>
