@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class DetailsActivity_Collection1 extends AppCompatActivity {
 
     // TODO: Handle the case of if the user wants to send another mail item to same person
+    // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
 
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
@@ -53,6 +54,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     // User selects this button if there is an error with the details entered
     Button problemButton;
 
+    // indicates whether user is in a state because they came from problem button listener
     private boolean fromProblemButtonListener = false;
 
     // Used for sender name, recipient name -> not in confirmation state
@@ -77,6 +79,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     TextView confirmMidEnt;
     TextView confirmBtmEnt;
 
+    // Spinner is a dropdown list that presents loads up details associated with selected person (sender or recipient)
     Spinner inputDetails;
     private int spinnerListItem;
 
@@ -120,7 +123,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         packageType = this.getIntent().getIntExtra("packageType", 0);
         Log.i(TAG, "Package Type: " + String.valueOf(packageType));
 
-        try {
+        // TODO: Implement this check properly - might even be better off going to confirmation state
+        /* try {
             // If a null point exception does not occur, user has requested to mail another item to same recipient
             recipientData = this.getIntent().getParcelableExtra("recipientData");
         } catch (NullPointerException e) {
@@ -131,7 +135,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             senderData = this.getIntent().getParcelableExtra("senderData");
         } catch (NullPointerException e) {
             Log.i(TAG, "No recipientData object available: " + e.getMessage());
-        }
+        } */
 
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
@@ -183,6 +187,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         break;
                     default:
                         Log.i(TAG, "Item list exception: i = " + String.valueOf(i));
+                        break;
                 }
             }
 
@@ -197,10 +202,10 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             @Override
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
-            Log.i(TAG, "Cancel button pressed");
-            // TODO: Tell Robot that the process has been cancelled
-            // Takes the user back to the main menu - not the previous state
-            finish();
+                Log.i(TAG, "Cancel button pressed");
+                // TODO: Tell Robot that the process has been cancelled
+                // Takes the user back to the main menu - not the previous state
+                finish();
             }
         });
 
@@ -331,16 +336,22 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
 
         Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection1.class);
 
+        // Create a bundle for holding the extras
+        Bundle extras = new Bundle();
+
         // Adds this extra detail to the intent which indicates:
             // The kind of package the user is sending
             // The data given to MailBot about the sender
             // The data given to MailBot about the recipient
-        lockerActivityIntent.putExtra(packageTag, packageType);
-        lockerActivityIntent.putExtra(senderDataTag, senderData);
-        lockerActivityIntent.putExtra(recipientDataTag, recipientData);
+        extras.putInt(packageTag, packageType);
+        extras.putParcelable(senderDataTag, senderData);
+        extras.putParcelable(recipientDataTag, recipientData);
+
+        // Add all the extras content to the intent
+        lockerActivityIntent.putExtras(extras);
 
         startActivity(lockerActivityIntent);
-        Log.i(TAG, "Locker Activity started with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag);
+        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag);
         finish();
     }
 

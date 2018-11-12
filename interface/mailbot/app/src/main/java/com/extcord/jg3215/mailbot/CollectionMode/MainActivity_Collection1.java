@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
@@ -119,26 +120,27 @@ public class MainActivity_Collection1 extends AppCompatActivity {
 
     // Should be called on return to MainActivity from another activity via an intent
     // TODO: Complete this. To be used if user wants to send something else to the same person
-    protected void onNewIntent(Intent intent) {
+    /* protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
 
-        // Get the recipient data to pass to the Details Activity
-        try {
-            recipientData = intent.getParcelableExtra("recipientData");
-            Log.i(TAG, "Recipient Data Object retrieved: Recipient Name: " + recipientData.getName() + " : Recipient Email Address: " + recipientData.getEmailAddress());
-        } catch (NullPointerException e) {
-            // Recipient data not passed on correctly
-            Log.i(TAG, "Null reference to recipient data object: " + e.getMessage());
-        }
+        // Prompt the user to pick a locker size
+        Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizePrompt), Toast.LENGTH_LONG).show();
 
-        // Get the sender data to pass to the Details Activity
-        try {
-            senderData = intent.getParcelableExtra("senderData");
-            Log.i(TAG, "Sender Data Object retrieved: sender Name: " + senderData.getName() + " : Sender Email Address: " + senderData.getEmailAddress());
-        } catch (NullPointerException e) {
-            // Sender data not passed on correctly
-            Log.i(TAG, "Null reference to sender data object: " + e.getMessage());
+        // Get data from previous activity stored in a bundle
+        Bundle endActivityData = this.getIntent().getExtras();
+
+        if (endActivityData != null) {
+            // Get the sender data to pass to the Details Activity
+            senderData = endActivityData.getParcelable("senderData");
+            Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+
+            // Get the recipient data to pass to the Details Activity
+            recipientData = endActivityData.getParcelable("recipientData");
+            Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+        } else {
+            // throw some exception/error
+            Log.i(TAG, "No data sent from previous activity");
         }
-    }
+    } */
 }

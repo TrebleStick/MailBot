@@ -10,6 +10,8 @@
 
     <string name="lockerSizeUnavailable">All lockers of this size are full</string>
 
+    <string name="lockerSizePrompt">Please select a locker size as before!</string>
+
     <!--Details Activity Strings-->
     <string name="infoDetailsActivity">That\'s great! I just need to know a little bit about you...</string>
 

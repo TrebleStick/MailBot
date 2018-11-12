@@ -30,23 +30,31 @@ public class EndActivity_Collection1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.collection1_activity_end);
 
-        View decorView = getWindow().getDecorView();
+        /* View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.
         // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
         // a general rule, you should design your app to hide the status bar whenever you
         // hide the navigation bar.
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        decorView.setSystemUiVisibility(uiOptions); */
 
-        packageType = this.getIntent().getIntExtra("packageType", 0);
-        Log.i(TAG, "Package Type: " + String.valueOf(packageType));
+        // Get data from previous activity stored in a bundle
+        Bundle lockerActivityData = this.getIntent().getExtras();
 
-        senderData = this.getIntent().getParcelableExtra("userData");
-        Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+        if (lockerActivityData != null) {
+            packageType = lockerActivityData.getInt("packageType");
+            Log.i(TAG, "Package Type: " + String.valueOf(packageType));
 
-        recipientData = this.getIntent().getParcelableExtra("recipientData");
-        Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress());
+            senderData = lockerActivityData.getParcelable("senderData");
+            Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+
+            recipientData = lockerActivityData.getParcelable("recipientData");
+            Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+        } else {
+            // throw some exception/error
+            Log.i(TAG, "No data sent from previous activity");
+        }
 
         toSameRecipientButton = (Button) findViewById(R.id.btnToSameRecipient);
         toSameRecipientButton.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +62,20 @@ public class EndActivity_Collection1 extends AppCompatActivity {
             public void onClick(View view) {
                 String senderDataTag = "senderData";
                 String recipientDataTag = "recipientData";
-                Intent returnToMainActivityIntent = new Intent(EndActivity_Collection1.this, DetailsActivity_Collection1.class);
+                Intent returnToMainActivityIntent = new Intent(EndActivity_Collection1.this, MainActivity_Collection1.class);
+
+                // Create a bundle for holding the extras
+                Bundle extras = new Bundle();
+
+                // Adds this extra detail to the intent which indicates:
+                // The kind of package the user is sending
+                // The data given to MailBot about the sender
+                // The data given to MailBot about the recipient
+                extras.putParcelable(senderDataTag, senderData);
+                extras.putParcelable(recipientDataTag, recipientData);
+
+                // Add all the extras content to the intent
+                returnToMainActivityIntent.putExtras(extras);
 
                 // Loads up sender and recipientData
                 returnToMainActivityIntent.putExtra(recipientDataTag, recipientData);

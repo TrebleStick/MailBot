@@ -53,12 +53,15 @@ public class PackageData implements Parcelable{
     }
 
     public void writeToParcel(Parcel out, int flags) {
-        out.writeString(name);
-        out.writeString(emailAddress);
+        out.writeString(this.name);
+        out.writeString(this.emailAddress);
 
+        // leaving deliveryLocation as null -> crashing
         if (deliveryLocation != null) {
             // should only take delivery location for recipient data object
-            out.writeString(deliveryLocation);
+            out.writeString(this.deliveryLocation);
+        } else {
+            out.writeString("");
         }
     }
 
@@ -74,12 +77,10 @@ public class PackageData implements Parcelable{
         }
     };
 
+    // It needs to read stuff in the order that it was written in
     public PackageData(Parcel parcel) {
-        name = parcel.readString();
-        emailAddress = parcel.readString();
-
-        if (deliveryLocation != null) {
-            deliveryLocation = parcel.readString();
-        }
+        this.name = parcel.readString();
+        this.emailAddress = parcel.readString();
+        this.deliveryLocation = parcel.readString();
     }
 }
