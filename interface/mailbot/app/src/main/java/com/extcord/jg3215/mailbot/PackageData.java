@@ -15,7 +15,7 @@ public class PackageData implements Parcelable{
     private boolean photoOptionState;
 
     // Constructor
-    public PackageData(String userName, String userEmail) { // }, boolean optionState) {
+    public PackageData(String userName, String userEmail) {
         name = userName;
         emailAddress = userEmail;
         // photoOptionState = optionState;
@@ -23,7 +23,7 @@ public class PackageData implements Parcelable{
 
     // Set methods might only be necessary for delivery location
     public void setName(String nameToSet) {
-        nameToSet = this.name;
+        this.name = nameToSet;
     }
 
     public String getName() {
@@ -31,7 +31,7 @@ public class PackageData implements Parcelable{
     }
 
     public void setEmailAddress(String addressToSet) {
-        addressToSet = this.emailAddress;
+        this.emailAddress = addressToSet;
     }
 
     public String getEmailAddress() {
@@ -39,7 +39,7 @@ public class PackageData implements Parcelable{
     }
 
     public void setDeliveryLocation(String deliveryLocationToSet) {
-        deliveryLocationToSet = this.deliveryLocation;
+        this.deliveryLocation = deliveryLocationToSet;
     }
 
     public String getDeliveryLocation() {

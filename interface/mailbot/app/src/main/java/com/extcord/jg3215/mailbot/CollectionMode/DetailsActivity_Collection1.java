@@ -51,6 +51,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     // User selects this button if there is an error with the details entered
     Button problemButton;
 
+    private boolean fromProblemButtonListener;
+
     // Used for sender name, recipient name -> not in confirmation state
     EditText topEntry;
 
@@ -151,18 +153,22 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         // item 0 in the adapter list should present sender details
                         spinnerListItem = 0;
                         Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
+                        Log.i(TAG, "Sender data, Name: " + senderData.getName() + ", Email Address" + senderData.getEmailAddress());
                         confirmTopEnt.setText(senderData.getName());
                         confirmTopEnt.setVisibility(View.VISIBLE);
 
                         confirmMidEnt.setText(senderData.getEmailAddress());
                         confirmMidEnt.setVisibility(View.VISIBLE);
 
+                        confirmBtmEnt.setVisibility(View.GONE);
                         btmField.setVisibility(View.GONE);
                         break;
                     case 1:
                         // item 1 in the adapter list should present the recipient details
                         spinnerListItem = 1;
                         Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
+                        Log.i(TAG, "Recipient data, Name: " + recipientData.getName() + ", Email Address: " + recipientData.getEmailAddress() + ", Delivery Location: " + recipientData.getDeliveryLocation());
+
                         confirmTopEnt.setText(recipientData.getName());
                         confirmTopEnt.setVisibility(View.VISIBLE);
 
@@ -171,6 +177,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
 
                         confirmBtmEnt.setText(recipientData.getDeliveryLocation());
                         confirmBtmEnt.setVisibility(View.VISIBLE);
+
                         btmField.setVisibility(View.VISIBLE);
                         break;
                     default:
@@ -196,6 +203,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             }
         });
 
+        fromProblemButtonListener = false;
+
         // TODO: FINISH
         problemButton = (Button) findViewById(R.id.buttonProblem);
         problemButton.setOnClickListener(new View.OnClickListener() {
@@ -204,11 +213,12 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
 
                 TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
                 bubbleText.setText(getResources().getString(R.string.infoDetailsActivity));
+                fromProblemButtonListener = true;
 
                 switch (spinnerListItem) {
                     case 0:
                         state = 1;
-                        toLayoutStateOne();
+                        toLayoutStateOne(1);
                         break;
                     case 1:
                         state = 2;
@@ -228,42 +238,32 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 switch (state) {
                     case STATE_USER_DETAILS:
                         Log.i(TAG, "Sender details entered");
+                        String senderName = topEntry.getText().toString();
+                        String senderEmailAddress = midEntry.getText().toString();
 
-                        String userName = topEntry.getText().toString();
-                        String userEmailAddress = midEntry.getText().toString();
-
-                        // TODO: Check that this forces you to quit the switch as expected
-                        // TODO: Make the checks below a function
-                        if (userName.equals("")) {
-                            Log.i(TAG, "Name Field is empty");
-                            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
+                        if (!entryChecks(senderName, senderEmailAddress)) {
                             return;
                         }
 
-                        if (userEmailAddress.equals("")) {
-                            Log.i(TAG, "Email Address Field is empty");
-                            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
+                        if (!fromProblemButtonListener) {
+                            // Create class containing data about the user
+                            senderData = new PackageData(senderName, senderEmailAddress);
+
+                            // Change view to what you expect next
+                            toLayoutStateTwo(0);
+                            Log.i(TAG, "toLayoutStateTwo() method called.");
+                        } else {
+                            // not entering this state from the problem button listener method
+                            // senderData class instance already exists
+                            senderData.setName(topEntry.getText().toString());
+                            senderData.setEmailAddress(midEntry.getText().toString());
+
+                            // return to final state
+                            toLayoutStateThree(topEntry, midEntry, btmEntry);
                             return;
                         }
-
-                        // The user will have to insert a valid email address before they can progress beyond this point
-                        if (!isValidEmail(userEmailAddress)) {
-                            Log.i(TAG, "Invalid email address format given");
-                            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
-
-                            // TODO: Check that this makes you escape the switch statement as expected - alternatively, use break;
-                            return;
-                        }
-
-                        // Create class containing data about the user
-                        senderData = new PackageData(userName, userEmailAddress);
-
-                        // Change view to what you expect next
-                        toLayoutStateTwo(0);
-                        Log.i(TAG, "toLayoutStateTwo() method called.");
 
                         // Change state of the activity
-                        state++;
                         Log.i(TAG, "State variable updated. State = " + String.valueOf(state));
                         break;
                     case STATE_RECIPIENT_DETAILS:
@@ -272,39 +272,33 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         String recipientEmailAddress = midEntry.getText().toString();
 
                         // TODO: Ensure that delivery Location is in the right format
-                        String deliveryLocation = btmEntry.getText().toString();
+                        String recipientLocation = btmEntry.getText().toString();
 
-                        if (recipientName.equals("")) {
-                            Log.i(TAG, "Name Field is empty");
-                            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
+                        if (!entryChecks(recipientName, recipientEmailAddress)) {
                             return;
                         }
 
-                        if (recipientEmailAddress.equals("")) {
-                            Log.i(TAG, "Email Address Field is empty");
-                            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
+                        if (!fromProblemButtonListener) {
+                            // Create a class containing data about the recipient
+                            recipientData = new PackageData(recipientName, recipientEmailAddress);
+                            recipientData.setDeliveryLocation(recipientLocation);
+
+                            // Change view to what you expect next
+                            toLayoutStateThree(topEntry, midEntry, btmEntry);
+                            Log.i(TAG, "toLayoutStateThree() method called");
+                        } else {
+                            // not entering this state from the problem button listener method
+                            // senderData class instance already exists
+                            recipientData.setName(topEntry.getText().toString());
+                            recipientData.setEmailAddress(midEntry.getText().toString());
+                            recipientData.setDeliveryLocation(btmEntry.getText().toString());
+
+                            // return to final state
+                            toLayoutStateThree(topEntry, midEntry, btmEntry);
                             return;
                         }
-
-                        // The user will have to insert a valid email address before they can progress beyond this point
-                        if (!isValidEmail(recipientEmailAddress)) {
-                            Log.i(TAG, "Invalid email address format given");
-                            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
-
-                            // TODO: Check that return; makes you escape the switch statement as expected - alternatively, use break;
-                            return;
-                        }
-
-                        // Create a class containing data about the recipient
-                        recipientData = new PackageData(recipientName, recipientEmailAddress);
-                        recipientData.setDeliveryLocation(deliveryLocation);
-
-                        // Change view to what you expect next
-                        toLayoutStateThree(topEntry, midEntry, btmEntry);
-                        Log.i(TAG, "toLayoutStateThree() method called");
 
                         // Change state of the activity
-                        state++;
                         Log.i(TAG, "State variable updated. State = " + String.valueOf(state));
                         break;
                     case STATE_CONFIRMATION:
@@ -344,41 +338,76 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         return (inputEmailAddress != null) && (Patterns.EMAIL_ADDRESS.matcher(inputEmailAddress).matches());
     }
 
-    private void toLayoutStateOne() {
-        // TextViews should not be visible
-        confirmTopEnt.setVisibility(View.GONE);
-        confirmMidEnt.setVisibility(View.GONE);
-        confirmBtmEnt.setVisibility(View.GONE);
+    private boolean entryChecks(String name, String emailAddress) {
+        // TODO: Make the checks below a function
+        if (name.equals("")) {
+            Log.i(TAG, "Name Field is empty");
+            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
+            return false;
+        }
 
-        // Bottom TextView text should have take photo
+        if (emailAddress.equals("")) {
+            Log.i(TAG, "Email Address Field is empty");
+            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // The user will have to insert a valid email address before they can progress beyond this point
+        if (!isValidEmail(emailAddress)) {
+            Log.i(TAG, "Invalid email address format given");
+            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void toLayoutStateOne(int callCase) {
+
+        // Bottom TextView text should have "Take photo"
         btmField.setText(getResources().getString(R.string.userChoosePhoto));
-        btmField.setVisibility(View.VISIBLE);
-        // Take Photo checkBox should be visible
-        takePhotoOption.setVisibility(View.VISIBLE);
-
-        // Top and Mid EditTexts should be visible
-        topEntry.setText("");
-        topEntry.setVisibility(View.VISIBLE);
-        midEntry.setText("");
-        midEntry.setVisibility(View.VISIBLE);
 
         // Problem button should not be visible
         problemButton.setVisibility(View.GONE);
 
         // Spinner should not be visible
         inputDetails.setVisibility(View.GONE);
+
+        switch (callCase) {
+            case 0:
+                // if this method needs to be called from elsewhere
+                break;
+            case 1:
+                // called from problem button
+
+                // Entry TextViews should not be visible
+                confirmTopEnt.setVisibility(View.GONE);
+                confirmMidEnt.setVisibility(View.GONE);
+                confirmBtmEnt.setVisibility(View.GONE);
+
+                // Take Photo checkBox should be visible
+                takePhotoOption.setVisibility(View.VISIBLE);
+
+                // Bottom field textView should be visible
+                    // It would not be if problem button was selected on Sender Details
+                btmField.setVisibility(View.VISIBLE);
+
+                // Top and Mid EditTexts need to be made visible and should display name and email address data
+                topEntry.setText(recipientData.getName());
+                topEntry.setVisibility(View.VISIBLE);
+
+                midEntry.setText(recipientData.getEmailAddress());
+                midEntry.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
-    // TODO: Change this method so it does not take arguments
     private void toLayoutStateTwo(int callCase) {
         // callCase refers to whether this method is called from problem Button or go Button listener
 
         // toLayoutStateTwo means that you are preparing the activity to receive recipient details
         TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
         bubbleText.setText(getResources().getString(R.string.bubbleRecipientDetails));
-
-        // Bottom field set to read "Delivery Location: "
-        btmField.setText(getResources().getString(R.string.recipientLocation));
 
         switch (callCase) {
             case 0:
@@ -388,12 +417,20 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
 
                 // Gets rid of take photo checkbox
                 takePhotoOption.setVisibility(View.GONE);
+
+                // Bottom field set to read "Delivery Location: "
+                btmField.setText(getResources().getString(R.string.recipientLocation));
                 // Brings up EditText for inserting delivery location
                 btmEntry.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 // should only be here if this method is called from problem button click listener
                 // TODO: Check if the View.VISIBLE commands are necessary for the Entry EditTexts
+                // TextViews should not be visible
+                confirmTopEnt.setVisibility(View.GONE);
+                confirmMidEnt.setVisibility(View.GONE);
+                confirmBtmEnt.setVisibility(View.GONE);
+
                 topEntry.setText(recipientData.getName());
                 topEntry.setVisibility(View.VISIBLE);
 
@@ -403,27 +440,23 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 btmEntry.setText(recipientData.getDeliveryLocation());
                 btmEntry.setVisibility(View.VISIBLE);
 
-                // TextViews should not be visible
-                confirmTopEnt.setVisibility(View.GONE);
-                confirmMidEnt.setVisibility(View.GONE);
-                confirmBtmEnt.setVisibility(View.GONE);
-
                 // Problem button should not be visible
                 problemButton.setVisibility(View.GONE);
+
+                // Spinner should not be visible
+                inputDetails.setVisibility(View.GONE);
                 break;
         }
-        Log.i(TAG, "Layout changed to state two.");
+
+        state = 2;
+        Log.i(TAG, "Layout changed to state: " + String.valueOf(state));
     }
 
     private void toLayoutStateThree(EditText topText, EditText midText, EditText btmText) {
-        topText.setText("");
-        topText.setVisibility(View.GONE);
-
-        midText.setText("");
-        midText.setVisibility(View.GONE);
-
-        btmText.setVisibility(View.GONE);
         // When confirming details, user cannot edit their entries -> EditTexts are hidden
+        topText.setVisibility(View.GONE);
+        midText.setVisibility(View.GONE);
+        btmText.setVisibility(View.GONE);
 
         // Button allows user to flag an issue with a set of details given (sender or recipient)
         problemButton.setVisibility(View.VISIBLE);
@@ -435,7 +468,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         // Makes spinner visible
         inputDetails.setVisibility(View.VISIBLE);
 
-        Log.i(TAG, "Layout changed to state three.");
+        state = 3;
+        Log.i(TAG, "Layout changed to state: "+ String.valueOf(state));
     }
 
     protected void onDestroy() {
