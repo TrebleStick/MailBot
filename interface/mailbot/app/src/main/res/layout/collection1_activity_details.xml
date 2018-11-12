@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/speechBubble"
             android:layout_alignLeft="@id/speechBubble"
-            android:visibility="gone"/>
+            android:layout_marginLeft="30dp"
+            android:visibility=""/>
 
         <ImageView
             android:id="@+id/botFace"

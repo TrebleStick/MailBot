@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
@@ -50,7 +49,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_collection1);
+        setContentView(R.layout.collection1_activity_main);
 
         View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.
