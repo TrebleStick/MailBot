@@ -1,13 +1,16 @@
-// global variables
-int baud_rate = 9600;
-int latch_delay_ms = 2000;
+//General Defines
+#define BAUD_RATE 9600
+
+
+// Global vars
+const int LATCH_DELAY_MS = 2000;
 int pin = 0;
 // --------------------------------------------//
 //-------------global functions---------------//
 
 //---------------------------------------------//
 void setup(){
-  //set 7 digital output pins.
+  //set 7 digital output pins with the correspnding wire colour
   pinMode(1, OUTPUT); //brown
   pinMode(2, OUTPUT); //orange
   pinMode(3, OUTPUT); //grey
@@ -16,10 +19,10 @@ void setup(){
   pinMode(6, OUTPUT); //blue
   pinMode(7, OUTPUT); //green
 
-  pinMode(9, OUTPUT); //RESET
+  pinMode(9, OUTPUT); //RESET ?
 
 
-  Serial.begin(baud_rate);
+  Serial.begin(BAUD_RATE);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -39,21 +42,13 @@ void loop(){
       digitalWrite(9, HIGH);
     }
     else if(pin != 0){
-      digitalWrite(9, HIGH);
       digitalWrite(pin, HIGH);
-      delay(latch_delay_ms);
+      delay(LATCH_DELAY_MS);
       digitalWrite(pin, LOW);
-      digitalWrite(9, LOW);
     }
 
     // Serial.write(pin);
 
     Serial.println(pin, HEX);
   }
-
-  // digitalWrite(3, HIGH);
-  // delay(500);
-  // digitalWrite(3, LOW);
-  // delay(500);
-
 }
