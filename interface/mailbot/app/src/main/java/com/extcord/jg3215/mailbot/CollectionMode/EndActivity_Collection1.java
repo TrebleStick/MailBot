@@ -28,7 +28,7 @@ public class EndActivity_Collection1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_end_collection1);
+        setContentView(R.layout.collection1_activity_end);
 
         View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.

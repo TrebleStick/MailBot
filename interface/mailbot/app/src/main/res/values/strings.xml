@@ -42,4 +42,6 @@
     Use the buttons below to send another mail item to the same recipient, or begin again!</string>
     <string name="toSameRecipient">Same recipient</string>
     <string name="startAgain">Return</string>
+    <string name="enRouteActivitySpeech">I am now delivering the mail items that have been handed to me! If you want to send your own mail item, find me in reception at the next collection time!</string>
+    <string name="openLockerActivitySpeech">That\'s the correct password! A locker for your mail item has been opened! Please retrieve your item, and then close the locker.</string>
 </resources>

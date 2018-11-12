@@ -29,7 +29,7 @@ public class LockerActivity_Collection1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_locker_collection1);
+        setContentView(R.layout.collection1_activity_locker);
 
         View decorView = getWindow().getDecorView();
 // Hide both the navigation bar and the status bar.

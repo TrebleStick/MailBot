@@ -20,8 +20,6 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-import org.w3c.dom.Text;
-
 public class DetailsActivity_Collection1 extends AppCompatActivity {
 
     // TODO: Change text of speech bubble
@@ -99,7 +97,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details_collection1);
+        setContentView(R.layout.collection1_activity_details);
 
         // Removed the navigation bar code because it makes this activity look weird as it is created
 
