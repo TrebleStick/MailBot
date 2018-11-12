@@ -33,15 +33,20 @@ void setup(){
 void loop(){
 
   if( Serial.available() > 0){
+
+    pin = Serial.parseInt();
+    Serial.println(pin);
     // pin = Serial.read() - 48; // remove ASCII encoding
     pin = Serial.parseInt();
     //might need some pre processing here etc
 
     //Reset device cmd
     if(pin == 9){
+      Serial.println(pin, HEX);
       digitalWrite(9, HIGH);
     }
-    else if(pin != 0){
+    else {
+      Serial.println(pin, HEX);
       digitalWrite(pin, HIGH);
       delay(LATCH_DELAY_MS);
       digitalWrite(pin, LOW);
@@ -49,6 +54,5 @@ void loop(){
 
     // Serial.write(pin);
 
-    Serial.println(pin, HEX);
   }
 }
