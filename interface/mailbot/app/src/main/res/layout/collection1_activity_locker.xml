@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/postRed"
+    tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+
+        <ImageView
+            android:id="@+id/mailbotlocker"
+            android:layout_width="350sp"
+            android:layout_height="320sp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="70dp"
+            android:src="@mipmap/mailbot_nocap"/>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutLocker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="80dp"
+            android:layout_toEndOf="@id/mailbotlocker">
+
+            <ImageView
+                android:id="@+id/speechbubblelocker"
+                android:layout_width="450dp"
+                android:layout_height="320dp"
+                android:src="@mipmap/speechbubble"/>
+
+            <TextView
+
+                android:layout_width="360dp"
+                android:layout_height="160dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="75dp"
+                android:text="@string/lockerActivitySpeech"
+                android:textColor="@color/postRed"
+                android:textSize="25sp"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textBadFit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="420dp"
+            android:layout_toEndOf="@id/mailbotlocker"
+            android:text="@string/lockerActivityBadFit"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="25sp"/>
+
+        <TextView
+            android:id="@+id/textGoodFit"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="400dp"
+            android:layout_toEndOf="@id/textBadFit"
+            android:text="@string/lockerActivityGoodFit"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
