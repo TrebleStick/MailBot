@@ -345,9 +345,12 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     private void toLayoutStateTwo(EditText topText, EditText midText, CheckBox photoOption, EditText btmText, TextView botField) {
         if (topText.getVisibility() == View.VISIBLE) {
             topText.setText("");
+            TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
+            bubbleText.setText("Perfect! Now please tell us the details of the recipient of your mail item.");
         } else {
             // should only be here if this method is called from problem button click listener
             // toLayoutStateTwo means that you are preparing the activity to receive recipient details
+
             topText.setText(recipientData.getName());
             topText.setVisibility(View.VISIBLE);
         }
