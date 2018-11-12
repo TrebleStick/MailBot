@@ -22,8 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/speechBubble"
             android:layout_alignLeft="@id/speechBubble"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="10dp"
             android:visibility="gone"/>
 
         <ImageView
@@ -80,7 +80,7 @@
                 <TextView
                     android:id="@+id/topField"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="@string/fieldName"
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
@@ -110,7 +110,7 @@
                 <TextView
                     android:id="@+id/midField"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="@string/fieldEmail"
                     android:textSize="20sp"
                     android:textColor="#ffffff"/>
@@ -136,13 +136,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/midFieldPanel"
-                android:textColor="#ffffff"
-                android:layout_marginTop="10dp">
+                android:textColor="#ffffff">
 
                 <TextView
                     android:id="@+id/bottomField"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:text="@string/userChoosePhoto"
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
@@ -151,14 +150,14 @@
                     android:id="@+id/choosePhoto"
                     android:layout_width="wrap_content"
                     android:textColor="#ffffff"
-                    android:layout_height="wrap_content"
+                    android:layout_height="45dp"
                     android:layout_marginStart="140dp"/>
 
                 <EditText
                     android:id="@+id/deliveryLocation"
-                    android:layout_width="wrap_content"
+                    android:layout_width="242dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="10dp"
                     android:textColor="#ffffff"
                     android:visibility="gone"/>
 
