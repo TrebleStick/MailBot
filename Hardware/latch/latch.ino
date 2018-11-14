@@ -42,7 +42,7 @@ void loop(){
 
     //Reset device cmd
     if(pin == 9){
-      Serial.println(pin, HEX);
+      // Serial.println(pin, HEX);
       digitalWrite(9, HIGH);
     }
     else {
