@@ -1,15 +1,23 @@
 import serial
 import time
 #----------------ROS-NOT TESTED-------------#
-# import roslib as ros
+import roslib as ros
 # ros.load_manifest('node_example')
-# #check the sourc file provided for this
-# #http://wiki.ros.org/ROSNodeTutorialPython
-# import rospy
-#
-# def callback(data):
-#     rospy.loginfo(rospy.get_name())
+#check the sourc file provided for this
+#http://wiki.ros.org/ROSNodeTutorialPython
+import rospy
 
+def callback(data):
+    rospy.loginfo(rospy.get_name())
+
+
+def listener():
+    #create a uniqe name for the listener so multiple listeners can be used
+    rospy.init_node('listener', anonymus=True)
+    # subscribe to info "chatter" may need re-naming
+    rospy.Subscriber("chatter", String, callback)
+    # stop the python script from terminating after callback
+    rospy.spin()
 #------------------------------------#
 #change ports for system
 Linux_port = '/dev/ttyUSB0'
@@ -38,8 +46,9 @@ if (data[0]-48) == 9 :
 
 for i in pins :
     channel.write(i.encode('utf-8'))
-    time.sleep(0.5)
-    print(channel.readline()[0] - 48)
+    time.sleep(1)
+    print(i)
+    # print(channel.readline()[0] - 48)
 # channel.write('3'.encode('utf-8'))
 
 # data = channel.readline()
