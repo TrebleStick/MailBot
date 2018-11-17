@@ -46,13 +46,9 @@ public class LockerActivity_Collection1 extends AppCompatActivity {
             recipientData = detailActivityData.getParcelable("recipientData");
             Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
         } else {
-            // throw some exception/error
+            // throw some exception/error -> there should be data from the previous activity
             Log.i(TAG, "No data sent from previous activity");
         }
-
-        // packageType = this.getIntent().getIntExtra("packageType", 0);
-        // senderData = this.getIntent().getParcelableExtra("senderData");
-        // recipientData = this.getIntent().getParcelableExtra("recipientData");
 
         badFitView = (TextView) findViewById(R.id.textBadFit);
         badFitView.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +72,7 @@ public class LockerActivity_Collection1 extends AppCompatActivity {
             public void onClick(View view) {
                 Log.i(TAG, "goodFitView text pressed");
                 // TODO: Tell the computer that the locker is closed?
-                // The computer updates the availability of that locker
+                // TODO: Update the availability of that locker size
                 // Is there any data that needs to passed on as an extra?
                 toEndActivity();
             }

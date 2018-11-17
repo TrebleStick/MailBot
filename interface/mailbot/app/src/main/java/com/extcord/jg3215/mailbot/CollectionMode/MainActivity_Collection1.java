@@ -15,9 +15,7 @@ import com.extcord.jg3215.mailbot.R;
 
 public class MainActivity_Collection1 extends AppCompatActivity {
 
-    // TODO: Do not forget to account (in robot) for what happens if user cancels midway
-    // TODO: Check if skipping frames is a problem to do with the emulator
-        // TODO: Make images smaller sizes (memory-wise)
+    // TODO: Fix issue - if you send another mail item, you cannot exit or cancel (object persists through intents)
 
     // The image views that are being used like buttons
     ImageView letterView;
@@ -34,6 +32,8 @@ public class MainActivity_Collection1 extends AppCompatActivity {
 
     private PackageData recipientData;
     private PackageData senderData;
+
+    private boolean entryFromOtherActivity = false;
 
     // Listen for response (Serial communication) to space query
     // TODO: Get information on space in all locker types - may come in handy later
@@ -69,9 +69,9 @@ public class MainActivity_Collection1 extends AppCompatActivity {
 
                 // Might to put the below in a broadcast receiver
                 // if (robot says there is space) {
-                toDetailsActivity(LETTER_STANDARD);
+                    toDetailsActivity(LETTER_STANDARD);
                 // else { tell the user that no lockers of that size are available
-                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -86,7 +86,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(LETTER_LARGE);
                 // else { tell the user that no lockers of that size are available
-                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -101,7 +101,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(PARCEL);
                 // else { tell the user that no lockers of that size are available
-                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -109,28 +109,74 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     private void toDetailsActivity(int packageType) {
         // TODO: Check that this activity is starting when you want it to (use Logging)
         Log.i(TAG, "setDetailsIntent() method called");
-        String intentTag = "packageType";
-        Intent detailActivityIntent = new Intent(this, DetailsActivity_Collection1.class);
+        String packageTag = "packageType";
 
-        // Adds this extra detail to the intent which indicates what kind of package the user is sending
-        detailActivityIntent.putExtra(intentTag, packageType);
-        startActivity(detailActivityIntent);
-        Log.i(TAG, "Detail Activity started with the extra=packageType");
+        Intent toDetailActivity = new Intent(this, DetailsActivity_Collection1.class);
+        Bundle extras = new Bundle();
+
+        // Adds this extra detail to bundle
+        // Bundle added to the intent and contains data indicating what kind of package the user is sending
+        extras.putInt(packageTag, packageType);
+
+        String dataProvidedTag = "dataProvided";
+        if (entryFromOtherActivity) {
+            addExtras(extras);
+            // TODO: Make sure that it does not get here if the objects are empty
+            extras.putBoolean(dataProvidedTag, true);
+        } else {
+            extras.putBoolean(dataProvidedTag, false);
+        }
+
+        toDetailActivity.putExtras(extras);
+        startActivity(toDetailActivity);
+
+        // Empty the objects again
+        senderData = null;
+        recipientData = null;
+
+        Log.i(TAG, "Detail Activity started with the extra=" + packageTag);
     }
 
-    // Should be called on return to MainActivity from another activity via an intent
-    // TODO: Complete this. To be used if user wants to send something else to the same person
-    /* protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
+    // Add data objects to the bundle that is passed to the next activity
+    private void addExtras(Bundle extrasBundle) {
+        if (senderData != null) {
+            String senderDataTag = "senderData";
+            extrasBundle.putParcelable(senderDataTag, senderData);
+        } else {
+            // throw an exception - this object should not be empty
+            Log.i(TAG, "Sender data object empty");
+            // finish();
+            return;
+        }
 
-        // Prompt the user to pick a locker size
-        Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizePrompt), Toast.LENGTH_LONG).show();
+        if (recipientData != null) {
+            String recipientDataTag = "recipientData";
+            extrasBundle.putParcelable(recipientDataTag, recipientData);
+        } else {
+            // throw an exception - this object should not be empty
+            Log.i(TAG, "Recipient data object empty");
+            // finish();
+            return;
+        }
+    }
 
+    // Accesses data passed to MainActivity from other activities
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /*
         // Get data from previous activity stored in a bundle
         Bundle endActivityData = this.getIntent().getExtras();
 
         if (endActivityData != null) {
+            Log.i(TAG, "Entered this activity from another activity intent");
+
+            entryFromOtherActivity = true;
+
+            // Prompt the user to pick a locker size
+            Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizePrompt), Toast.LENGTH_LONG).show();
+
             // Get the sender data to pass to the Details Activity
             senderData = endActivityData.getParcelable("senderData");
             Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
@@ -139,8 +185,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
             recipientData = endActivityData.getParcelable("recipientData");
             Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
         } else {
-            // throw some exception/error
-            Log.i(TAG, "No data sent from previous activity");
-        }
-    } */
+            Log.i(TAG, "No data sent from previous activity: Method called following onCreate().");
+        } */
+    }
 }

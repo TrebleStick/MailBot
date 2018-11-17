@@ -1,7 +1,9 @@
 package com.extcord.jg3215.mailbot.CollectionMode;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +12,7 @@ import android.widget.Button;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-public class EndActivity_Collection1 extends AppCompatActivity {
+public class EndActivity_Collection1 extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
 
     // TODO: Implement a way for user to send another mail item from the same person? -> send that data as extra too
 
@@ -60,30 +62,13 @@ public class EndActivity_Collection1 extends AppCompatActivity {
         toSameRecipientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String senderDataTag = "senderData";
-                String recipientDataTag = "recipientData";
+                // TODO: Check if there is still space
+
+                showDialog();
+
+                /* Go back to main screen and wait for user to select a locker size
                 Intent returnToMainActivityIntent = new Intent(EndActivity_Collection1.this, MainActivity_Collection1.class);
-
-                // Create a bundle for holding the extras
-                Bundle extras = new Bundle();
-
-                // Adds this extra detail to the intent which indicates:
-                // The kind of package the user is sending
-                // The data given to MailBot about the sender
-                // The data given to MailBot about the recipient
-                extras.putParcelable(senderDataTag, senderData);
-                extras.putParcelable(recipientDataTag, recipientData);
-
-                // Add all the extras content to the intent
-                returnToMainActivityIntent.putExtras(extras);
-
-                // Loads up sender and recipientData
-                returnToMainActivityIntent.putExtra(recipientDataTag, recipientData);
-                returnToMainActivityIntent.putExtra(senderDataTag, senderData);
-
-                // Go back to main activity
-                startActivity(returnToMainActivityIntent);
-                finish();
+                startActivityForResult(returnToMainActivityIntent, 1); */
             }
         });
 
@@ -91,8 +76,49 @@ public class EndActivity_Collection1 extends AppCompatActivity {
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                senderData = null;
+                recipientData = null;
                 finish();
             }
         });
+    }
+
+    // Produces the dialogFragment on the screen
+    // IT WORKS HOW YOU EXPECTED YAY
+    public void showDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialogFragment = new EndActivityDialogFragment();
+        dialogFragment.show(getFragmentManager(), "EndActivityDialogFragment");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the Fragment.onAttach()
+    // It uses the reference to call the following methods defined by the EndActivityDialogFragment listener interface
+    @Override
+    public void onSmallLockerSelect(DialogFragment dialogFragment) {
+        Log.i(TAG, "Small locker selected to send to the same recipient");
+        // TODO: Check if there is space for small locker
+        // TODO: Take the user to the confirmation screen
+            // TODO: Add a field that tells the user how many items they are delivering
+    }
+
+    @Override
+    public void onMediumLockerSelect(DialogFragment dialogFragment) {
+        Log.i(TAG, "Medium locker selected to send to the same recipient");
+        // TODO: Check if there is space for small locker
+        // TODO: Take the user to the confirmation screen
+            // TODO: Add a field that tells the user how many items they are delivering
+    }
+
+    @Override
+    public void onLargeLockerSelect(DialogFragment dialogFragment) {
+        Log.i(TAG, "Large locker selected to send to the same recipient");
+        // TODO: Check if there is space for small locker
+        // TODO: Take the user to the confirmation screen
+            // TODO: Add a field that tells the user how many items they are delivering
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialogFragment) {
+        // TODO: Take the user to the confirmation screen
     }
 }

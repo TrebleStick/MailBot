@@ -178,7 +178,7 @@
             android:layout_alignEnd="@+id/speechBubble"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30dp"
-            android:text="NEXT" />
+            android:text="@string/btnNext" />
 
         <Button
             android:id="@+id/buttonCancel"
@@ -187,7 +187,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/botFace"
             android:layout_marginBottom="30dp"
-            android:text="Cancel" />
+            android:text="@string/btnCancel" />
 
         <Button
             android:id="@+id/buttonProblem"
@@ -196,7 +196,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/buttonForward"
             android:layout_marginEnd="429dp"
-            android:text="Problem"
+            android:text="@string/btnProblem"
             android:visibility="gone"/>
 
     </RelativeLayout>

@@ -62,7 +62,7 @@
 
         </RelativeLayout>
 
-        <TextView
+        <!--<TextView
             android:id="@+id/textEnd"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             android:textColor="#ffffff"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:visibility="invisible"/>
+            android:visibility="invisible"/>-->
 
         <Button
             android:id="@+id/btnToSameRecipient"
@@ -83,7 +83,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/relativeLayoutEnd"
             android:layout_marginBottom="100dp"
-            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
             android:text="@string/toSameRecipient" />
 
         <Button
@@ -91,9 +91,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/relativeLayoutEnd"
-            android:layout_marginRight="100dp"
+            android:layout_marginEnd="100dp"
             android:layout_alignTop="@+id/btnToSameRecipient"
-            android:text="@string/startAgain" />
+            android:text="@string/exitProcess" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

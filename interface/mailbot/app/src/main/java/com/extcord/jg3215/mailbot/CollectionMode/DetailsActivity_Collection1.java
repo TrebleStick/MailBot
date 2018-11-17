@@ -24,8 +24,10 @@ import java.util.ArrayList;
 
 public class DetailsActivity_Collection1 extends AppCompatActivity {
 
-    // TODO: Handle the case of if the user wants to send another mail item to same person
     // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
+        // It is a bug that seems to appear in random places and I cannot figure out why
+        // Can be fixed by changing the string's value and then changing it back after building
+    // TODO: Make enter take user to next field
 
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
@@ -119,24 +121,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             // 3. Confirming details with user
         state = 1;
 
-        // Gets the package type that is being delivered from the intent
-        packageType = this.getIntent().getIntExtra("packageType", 0);
-        Log.i(TAG, "Package Type: " + String.valueOf(packageType));
-
-        // TODO: Implement this check properly - might even be better off going to confirmation state
-        /* try {
-            // If a null point exception does not occur, user has requested to mail another item to same recipient
-            recipientData = this.getIntent().getParcelableExtra("recipientData");
-        } catch (NullPointerException e) {
-            Log.i(TAG, "No recipientData object available: " + e.getMessage());
-        }
-
-        try {
-            senderData = this.getIntent().getParcelableExtra("senderData");
-        } catch (NullPointerException e) {
-            Log.i(TAG, "No recipientData object available: " + e.getMessage());
-        } */
-
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
         btmEntry = (EditText) findViewById(R.id.deliveryLocation);
@@ -225,7 +209,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         break;
                     case 1:
                         state = 2;
-                        // This method does not need any arguments tbh
                         toLayoutStateTwo(3);
                         break;
                 }
@@ -326,6 +309,41 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 }
             }
         });
+
+        Bundle mainActivityData = this.getIntent().getExtras();
+        if (mainActivityData != null) {
+            // Gets the package type that is being delivered from the intent
+            packageType = mainActivityData.getInt("packageType");
+            Log.i(TAG, "Package Type: " + String.valueOf(packageType));
+
+            if (mainActivityData.getBoolean("dataProvided")) {
+                // Object data already provided by the user
+                Log.i(TAG, "Data has already been provided by the user");
+
+                senderData = mainActivityData.getParcelable("senderData");
+                Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+
+                // Update string array that is used to present object data
+                storedData[0] = senderData.getName();
+                storedData[1] = senderData.getEmailAddress();
+
+                recipientData = mainActivityData.getParcelable("recipientData");
+                Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+
+                // Update string array that is used to present object data
+                storedData[2] = recipientData.getName();
+                storedData[3] = recipientData.getEmailAddress();
+                storedData[4] = recipientData.getDeliveryLocation();
+
+                // Takes the user to the third state of this activity
+                toLayoutStateThree(2);
+                // Needs to be done or the checkBox will be there, haunting you
+                takePhotoOption.setVisibility(View.GONE);
+            }
+        } else {
+            // throw an exception
+            Log.i(TAG, "No data from previous activity");
+        }
     }
 
     private void toLockerActivity() {
@@ -440,7 +458,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 midEntry.setText("");
 
                 // Bottom field set to read "Delivery Location: "
-                btmField.setText(getResources().getString(R.string.recipientLocation));
+                btmField.setText(getResources().getString(R.string.fieldLocation));
+                Log.i(TAG, "Bottom Field set to: " + getResources().getString(R.string.fieldLocation));
 
                 // Gets rid of take photo checkbox
                 takePhotoOption.setVisibility(View.GONE);
@@ -507,7 +526,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 Log.i(TAG, "toLayoutStateThree() method called from state: " + String.valueOf(callCase));
 
                 // Bottom field text altered to be "Delivery Location"
-                btmField.setText(getResources().getString(R.string.recipientLocation));
+                btmField.setText(getResources().getString(R.string.fieldLocation));
                 // If you are going to state three from state one, you registered a problem in Sender details
                 // Bottom field should not be visible in this case
                 btmField.setVisibility(View.GONE);
