@@ -15,8 +15,6 @@ import com.extcord.jg3215.mailbot.R;
 
 public class MainActivity_Collection1 extends AppCompatActivity {
 
-    // TODO: Fix issue - if you send another mail item, you cannot exit or cancel (object persists through intents)
-
     // The image views that are being used like buttons
     ImageView letterView;
     ImageView largeLetterView;
@@ -33,8 +31,6 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     private PackageData recipientData;
     private PackageData senderData;
 
-    private boolean entryFromOtherActivity = false;
-
     // Listen for response (Serial communication) to space query
     // TODO: Get information on space in all locker types - may come in handy later
     BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
@@ -42,7 +38,6 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("spaceQueryResponse");
             Log.i(TAG, "Received: " + text);
-
         }
     };
 
@@ -118,6 +113,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         // Bundle added to the intent and contains data indicating what kind of package the user is sending
         extras.putInt(packageTag, packageType);
 
+        /*
         String dataProvidedTag = "dataProvided";
         if (entryFromOtherActivity) {
             addExtras(extras);
@@ -125,7 +121,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
             extras.putBoolean(dataProvidedTag, true);
         } else {
             extras.putBoolean(dataProvidedTag, false);
-        }
+        } */
 
         toDetailActivity.putExtras(extras);
         startActivity(toDetailActivity);
@@ -134,10 +130,11 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         senderData = null;
         recipientData = null;
 
-        Log.i(TAG, "Detail Activity started with the extra=" + packageTag);
+        Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
     }
 
     // Add data objects to the bundle that is passed to the next activity
+    // TODO: Verify if redundant or not
     private void addExtras(Bundle extrasBundle) {
         if (senderData != null) {
             String senderDataTag = "senderData";
@@ -158,34 +155,5 @@ public class MainActivity_Collection1 extends AppCompatActivity {
             // finish();
             return;
         }
-    }
-
-    // Accesses data passed to MainActivity from other activities
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        /*
-        // Get data from previous activity stored in a bundle
-        Bundle endActivityData = this.getIntent().getExtras();
-
-        if (endActivityData != null) {
-            Log.i(TAG, "Entered this activity from another activity intent");
-
-            entryFromOtherActivity = true;
-
-            // Prompt the user to pick a locker size
-            Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizePrompt), Toast.LENGTH_LONG).show();
-
-            // Get the sender data to pass to the Details Activity
-            senderData = endActivityData.getParcelable("senderData");
-            Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
-
-            // Get the recipient data to pass to the Details Activity
-            recipientData = endActivityData.getParcelable("recipientData");
-            Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
-        } else {
-            Log.i(TAG, "No data sent from previous activity: Method called following onCreate().");
-        } */
     }
 }

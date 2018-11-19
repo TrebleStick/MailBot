@@ -21,8 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/speechBubble"
-            android:layout_alignLeft="@id/speechBubble"
-            android:layout_marginLeft="21dp"
+            android:layout_alignStart="@id/speechBubble"
+            android:layout_marginStart="21dp"
             android:layout_marginTop="10dp"
             android:visibility="gone"/>
 
@@ -90,7 +90,10 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:textColor="#ffffff"
-                    android:layout_marginStart="100dp"/>
+                    android:layout_marginStart="100dp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:imeOptions="actionNext"/>
 
                 <TextView
                     android:id="@+id/confirmTopEntry"
@@ -120,7 +123,9 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:maxLines="1"
+                    android:inputType="textEmailAddress"/>
 
                 <TextView
                     android:id="@+id/confirmMidEntry"
@@ -159,7 +164,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:textColor="#ffffff"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:singleLine="true"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:id="@+id/confirmBtmEntry"

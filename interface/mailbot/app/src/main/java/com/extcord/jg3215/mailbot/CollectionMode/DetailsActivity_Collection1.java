@@ -27,8 +27,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
         // Can be fixed by changing the string's value and then changing it back after building
-    // TODO: Make enter take user to next field
-
+    
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
 
@@ -310,39 +309,56 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             }
         });
 
-        Bundle mainActivityData = this.getIntent().getExtras();
-        if (mainActivityData != null) {
+        Bundle endActivityData = this.getIntent().getExtras();
+        if (endActivityData != null) {
             // Gets the package type that is being delivered from the intent
-            packageType = mainActivityData.getInt("packageType");
-            Log.i(TAG, "Package Type: " + String.valueOf(packageType));
+            try {
+                packageType = endActivityData.getInt("packageType");
+                Log.i(TAG, "Package Type: " + String.valueOf(packageType));
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No package data provided from endActivity: " + e.getMessage());
+            }
 
-            if (mainActivityData.getBoolean("dataProvided")) {
+            if (endActivityData.getBoolean("dataProvided")) {
                 // Object data already provided by the user
                 Log.i(TAG, "Data has already been provided by the user");
 
-                senderData = mainActivityData.getParcelable("senderData");
-                Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+                try {
+                    senderData = endActivityData.getParcelable("senderData");
 
-                // Update string array that is used to present object data
-                storedData[0] = senderData.getName();
-                storedData[1] = senderData.getEmailAddress();
+                    if (senderData != null) {
+                        Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
 
-                recipientData = mainActivityData.getParcelable("recipientData");
-                Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+                        // Update string array that is used to present object data
+                        storedData[0] = senderData.getName();
+                        storedData[1] = senderData.getEmailAddress();
+                    }
+                } catch (NullPointerException e) {
+                    throw new NullPointerException("No sender data provided from endActivity: " + e.getMessage());
+                }
 
-                // Update string array that is used to present object data
-                storedData[2] = recipientData.getName();
-                storedData[3] = recipientData.getEmailAddress();
-                storedData[4] = recipientData.getDeliveryLocation();
+                try {
+                    recipientData = endActivityData.getParcelable("recipientData");
+
+                    if (recipientData != null) {
+                        Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+
+                        // Update string array that is used to present object data
+                        storedData[2] = recipientData.getName();
+                        storedData[3] = recipientData.getEmailAddress();
+                        storedData[4] = recipientData.getDeliveryLocation();
+                    }
+                } catch (NullPointerException e) {
+                    throw new NullPointerException("No recipient data provided from endActivity: " + e.getMessage());
+                }
 
                 // Takes the user to the third state of this activity
-                toLayoutStateThree(2);
+                toLayoutStateThree(1);
                 // Needs to be done or the checkBox will be there, haunting you
                 takePhotoOption.setVisibility(View.GONE);
             }
         } else {
-            // throw an exception
-            Log.i(TAG, "No data from previous activity");
+            throw new NullPointerException("No data provided from endActivity");
         }
     }
 
@@ -379,7 +395,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     }
 
     private boolean entryChecks(String name, String emailAddress) {
-        // TODO: Make the checks below a function
         if (name.equals("")) {
             Log.i(TAG, "Name Field is empty");
             Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
@@ -403,7 +418,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     }
 
     private void toLayoutStateOne(int callCase) {
-
         // Bottom TextView text should have "Take photo"
         btmField.setText(getResources().getString(R.string.userChoosePhoto));
 
