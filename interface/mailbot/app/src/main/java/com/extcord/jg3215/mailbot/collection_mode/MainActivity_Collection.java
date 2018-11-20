@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,14 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-public class MainActivity_Collection1 extends AppCompatActivity {
-
-    // TODO: Do not forget to account (in robot) for what happens if user cancels midway
-    // TODO: Check if skipping frames is a problem to do with the emulator
-        // TODO: Make images smaller sizes (memory-wise)
+public class MainActivity_Collection extends AppCompatActivity {
 
     // The image views that are being used like buttons
     ImageView letterView;
@@ -31,9 +26,6 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     // Tag for debugging
     private static final String TAG = "MainActivity";
 
-    private PackageData recipientData;
-    private PackageData senderData;
-
     // Listen for response (Serial communication) to space query
     // TODO: Get information on space in all locker types - may come in handy later
     BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
@@ -41,7 +33,6 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("spaceQueryResponse");
             Log.i(TAG, "Received: " + text);
-
         }
     };
 
@@ -68,9 +59,9 @@ public class MainActivity_Collection1 extends AppCompatActivity {
 
                 // Might to put the below in a broadcast receiver
                 // if (robot says there is space) {
-                toDetailsActivity(LETTER_STANDARD);
+                    toDetailsActivity(LETTER_STANDARD);
                 // else { tell the user that no lockers of that size are available
-                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -85,7 +76,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(LETTER_LARGE);
                 // else { tell the user that no lockers of that size are available
-                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -100,45 +91,25 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(PARCEL);
                 // else { tell the user that no lockers of that size are available
-                // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void toDetailsActivity(int packageType) {
-        // TODO: Check that this activity is starting when you want it to (use Logging)
         Log.i(TAG, "setDetailsIntent() method called");
-        String intentTag = "packageType";
-        Intent detailActivityIntent = new Intent(this, DetailsActivity_Collection1.class);
+        String packageTag = "packageType";
 
-        // Adds this extra detail to the intent which indicates what kind of package the user is sending
-        detailActivityIntent.putExtra(intentTag, packageType);
-        startActivity(detailActivityIntent);
-        Log.i(TAG, "Detail Activity started with the extra=packageType");
-    }
+        Intent toDetailActivity = new Intent(this, DetailsActivity_Collection.class);
+        Bundle extras = new Bundle();
 
-    // Should be called on return to MainActivity from another activity via an intent
-    // TODO: Complete this. To be used if user wants to send something else to the same person
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
+        // Adds this extra detail to bundle
+        extras.putInt(packageTag, packageType);
 
-        // Get the recipient data to pass to the Details Activity
-        try {
-            recipientData = intent.getParcelableExtra("recipientData");
-            Log.i(TAG, "Recipient Data Object retrieved: Recipient Name: " + recipientData.getName() + " : Recipient Email Address: " + recipientData.getEmailAddress());
-        } catch (NullPointerException e) {
-            // Recipient data not passed on correctly
-            Log.i(TAG, "Null reference to recipient data object: " + e.getMessage());
-        }
+        // Bundle added to the intent and contains data indicating what kind of package the user is sending
+        toDetailActivity.putExtras(extras);
+        startActivity(toDetailActivity);
 
-        // Get the sender data to pass to the Details Activity
-        try {
-            senderData = intent.getParcelableExtra("senderData");
-            Log.i(TAG, "Sender Data Object retrieved: sender Name: " + senderData.getName() + " : Sender Email Address: " + senderData.getEmailAddress());
-        } catch (NullPointerException e) {
-            // Sender data not passed on correctly
-            Log.i(TAG, "Null reference to sender data object: " + e.getMessage());
-        }
+        Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
     }
 }

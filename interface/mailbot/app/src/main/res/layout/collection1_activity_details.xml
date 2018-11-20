@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/postRed"
-    tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
+    tools:context="com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection">
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
@@ -21,17 +21,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/speechBubble"
-            android:layout_alignLeft="@id/speechBubble"
-            android:layout_marginLeft="21dp"
-            android:layout_marginTop="10dp"
+            android:layout_alignStart="@id/speechBubble"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/botFace"
-            android:layout_width="359dp"
-            android:layout_height="320sp"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_marginStart="@dimen/_40sdp"
+            android:layout_centerVertical="true"
             android:src="@mipmap/mailbot_nocap" />
 
         <RelativeLayout
@@ -39,27 +40,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="60dp"
-            android:layout_marginTop="40dp">
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_30sdp">
 
             <ImageView
                 android:id="@+id/speechBubbleMain"
-                android:layout_width="450dp"
-                android:layout_height="200dp"
+                android:layout_width="@dimen/_210sdp"
+                android:layout_height="@dimen/_100sdp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:src="@mipmap/speechbubble" />
 
             <TextView
                 android:id="@+id/speechBubbleText"
-                android:layout_width="300dp"
+                android:layout_width="@dimen/_150sdp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:text="@string/infoDetailsActivity"
                 android:textAlignment="center"
                 android:textColor="@color/postRed"
-                android:textSize="20sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -69,8 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/speechBubble"
             android:layout_toRightOf="@+id/botFace"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="60dp">
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_20sdp">
 
             <LinearLayout
                 android:id="@+id/topFieldPanel"
@@ -80,23 +81,26 @@
                 <TextView
                     android:id="@+id/topField"
                     android:layout_width="wrap_content"
-                    android:layout_height="45dp"
+                    android:layout_height="@dimen/_25sdp"
                     android:text="@string/fieldName"
                     android:textColor="#ffffff"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <EditText
                     android:id="@+id/topEntry"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/_120sdp"
                     android:layout_height="wrap_content"
                     android:textColor="#ffffff"
-                    android:layout_marginStart="100dp"/>
+                    android:layout_marginStart="@dimen/_50sdp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:imeOptions="actionNext"/>
 
                 <TextView
                     android:id="@+id/confirmTopEntry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="65dp"
+                    android:layout_marginStart="@dimen/_10sdp"
                     android:textColor="#ffffff"
                     android:visibility="gone"/>
             </LinearLayout>
@@ -110,23 +114,25 @@
                 <TextView
                     android:id="@+id/midField"
                     android:layout_width="wrap_content"
-                    android:layout_height="45dp"
+                    android:layout_height="@dimen/_25sdp"
                     android:text="@string/fieldEmail"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/_10sdp"
                     android:textColor="#ffffff"/>
 
                 <EditText
                     android:id="@+id/midEntry"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/_120sdp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:textColor="#ffffff"/>
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:textColor="#ffffff"
+                    android:maxLines="1"
+                    android:inputType="textEmailAddress"/>
 
                 <TextView
                     android:id="@+id/confirmMidEntry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="@dimen/_10sdp"
                     android:visibility="gone"
                     android:textColor="#ffffff"/>
             </LinearLayout>
@@ -141,31 +147,33 @@
                 <TextView
                     android:id="@+id/bottomField"
                     android:layout_width="wrap_content"
-                    android:layout_height="45dp"
+                    android:layout_height="@dimen/_25sdp"
                     android:text="@string/userChoosePhoto"
                     android:textColor="#ffffff"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <CheckBox
                     android:id="@+id/choosePhoto"
                     android:layout_width="wrap_content"
                     android:textColor="#ffffff"
-                    android:layout_height="45dp"
-                    android:layout_marginStart="140dp"/>
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_marginStart="@dimen/_70sdp"/>
 
                 <EditText
                     android:id="@+id/deliveryLocation"
-                    android:layout_width="242dp"
+                    android:layout_width="@dimen/_120sdp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:textColor="#ffffff"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:singleLine="true"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:id="@+id/confirmBtmEntry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="@dimen/_10sdp"
                     android:textColor="#ffffff"
                     android:visibility="gone"/>
             </LinearLayout>
@@ -177,8 +185,8 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/speechBubble"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:text="NEXT" />
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="@string/btnNext" />
 
         <Button
             android:id="@+id/buttonCancel"
@@ -186,8 +194,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/botFace"
-            android:layout_marginBottom="30dp"
-            android:text="Cancel" />
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="@string/btnCancel" />
 
         <Button
             android:id="@+id/buttonProblem"
@@ -195,8 +203,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/buttonForward"
-            android:layout_marginEnd="429dp"
-            android:text="Problem"
+            android:layout_marginEnd="@dimen/_210sdp"
+            android:text="@string/btnProblem"
             android:visibility="gone"/>
 
     </RelativeLayout>
