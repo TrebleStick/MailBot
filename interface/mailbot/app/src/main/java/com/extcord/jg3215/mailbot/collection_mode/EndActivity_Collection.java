@@ -183,8 +183,13 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         finish();
     }
 }
+/*
+    TODO:
+            Add an array indicating whether lockers are in use. Check this at EndActivity
+            to see whether all are in use and delivery should be initiated.
+*/
 
-// Temporarily removes the bottom button panel
+
 /* View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.
         // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
