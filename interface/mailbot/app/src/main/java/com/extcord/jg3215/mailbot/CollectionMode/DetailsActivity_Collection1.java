@@ -27,7 +27,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
         // Can be fixed by changing the string's value and then changing it back after building
-    
+
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
 

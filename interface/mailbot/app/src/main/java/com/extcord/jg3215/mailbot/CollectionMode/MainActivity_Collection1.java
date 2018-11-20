@@ -28,9 +28,6 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     // Tag for debugging
     private static final String TAG = "MainActivity";
 
-    private PackageData recipientData;
-    private PackageData senderData;
-
     // Listen for response (Serial communication) to space query
     // TODO: Get information on space in all locker types - may come in handy later
     BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
@@ -102,7 +99,6 @@ public class MainActivity_Collection1 extends AppCompatActivity {
     }
 
     private void toDetailsActivity(int packageType) {
-        // TODO: Check that this activity is starting when you want it to (use Logging)
         Log.i(TAG, "setDetailsIntent() method called");
         String packageTag = "packageType";
 
@@ -110,50 +106,12 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // Adds this extra detail to bundle
-        // Bundle added to the intent and contains data indicating what kind of package the user is sending
         extras.putInt(packageTag, packageType);
 
-        /*
-        String dataProvidedTag = "dataProvided";
-        if (entryFromOtherActivity) {
-            addExtras(extras);
-            // TODO: Make sure that it does not get here if the objects are empty
-            extras.putBoolean(dataProvidedTag, true);
-        } else {
-            extras.putBoolean(dataProvidedTag, false);
-        } */
-
+        // Bundle added to the intent and contains data indicating what kind of package the user is sending
         toDetailActivity.putExtras(extras);
         startActivity(toDetailActivity);
 
-        // Empty the objects again
-        senderData = null;
-        recipientData = null;
-
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
-    }
-
-    // Add data objects to the bundle that is passed to the next activity
-    // TODO: Verify if redundant or not
-    private void addExtras(Bundle extrasBundle) {
-        if (senderData != null) {
-            String senderDataTag = "senderData";
-            extrasBundle.putParcelable(senderDataTag, senderData);
-        } else {
-            // throw an exception - this object should not be empty
-            Log.i(TAG, "Sender data object empty");
-            // finish();
-            return;
-        }
-
-        if (recipientData != null) {
-            String recipientDataTag = "recipientData";
-            extrasBundle.putParcelable(recipientDataTag, recipientData);
-        } else {
-            // throw an exception - this object should not be empty
-            Log.i(TAG, "Recipient data object empty");
-            // finish();
-            return;
-        }
     }
 }
