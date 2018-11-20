@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/postRed"
-    tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
+    tools:context="com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection">
 
     <!--Can we get rid of the Constraint Layout? Seems redundant-->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,10 +1,9 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,7 @@ import android.widget.Button;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-public class EndActivity_Collection1 extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
+public class EndActivity_Collection extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
 
     private int packageType;
 
@@ -81,7 +80,7 @@ public class EndActivity_Collection1 extends FragmentActivity implements EndActi
                 showDialog();
 
                 /* Go back to main screen and wait for user to select a locker size
-                Intent returnToMainActivityIntent = new Intent(EndActivity_Collection1.this, MainActivity_Collection1.class);
+                Intent returnToMainActivityIntent = new Intent(EndActivity_Collection.this, MainActivity_Collection.class);
                 startActivityForResult(returnToMainActivityIntent, 1); */
             }
         });
@@ -117,7 +116,7 @@ public class EndActivity_Collection1 extends FragmentActivity implements EndActi
             packageType = LETTER_STANDARD;
             redoDetailsActivity(dialogFragment);
         // else
-            // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+            // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -128,7 +127,7 @@ public class EndActivity_Collection1 extends FragmentActivity implements EndActi
             packageType = LETTER_LARGE;
             redoDetailsActivity(dialogFragment);
         // else
-            // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+            // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -139,7 +138,7 @@ public class EndActivity_Collection1 extends FragmentActivity implements EndActi
             packageType = PARCEL;
             redoDetailsActivity(dialogFragment);
         // else
-            // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+            // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -159,7 +158,7 @@ public class EndActivity_Collection1 extends FragmentActivity implements EndActi
         String recipientDataTag = "recipientData";
         String dataProvidedTag = "dataProvided";
 
-        Intent redoDetailsActivityIntent = new Intent(this, DetailsActivity_Collection1.class);
+        Intent redoDetailsActivityIntent = new Intent(this, DetailsActivity_Collection.class);
 
         // Create a bundle for holding the extras
         Bundle extras = new Bundle();

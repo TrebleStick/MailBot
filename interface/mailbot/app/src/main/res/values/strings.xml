@@ -57,6 +57,9 @@
 
     <!--Password Activity Strings-->
     <string name="PasswordActivitySpeech">Please enter the personal PIN code that has been sent to you via e-mail to open the locker containing your mail item.</string>
+    <string name="pinCode">PIN code: </string>
+    <string name="btnSubmit">Submit</string>
+    <string name="incorrectPin">Incorrect pin entered. Attempts remaining:</string>
 
     <!--Unsuccessful Activity Strings-->
     <string name="UnsuccessfulActivitySpeech_PIN">Sorry, the wrong PIN code has been entered three times so the mail item will remain secured. The sender will be able to retrieve it at the next collection time.</string>
@@ -64,4 +67,5 @@
 
     <!--Open Locker Activity Strings-->
     <string name="openLockerActivitySpeech">That\'s the correct password! A locker for your mail item has been opened! Please retrieve your item, and then close the locker.</string>
+    <string name="btnDone">DONE</string>
 </resources>

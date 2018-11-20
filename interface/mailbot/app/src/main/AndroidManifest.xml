@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".CollectionMode.MainActivity_Collection1"
+            android:name=".collection_mode.MainActivity_Collection"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,15 +20,15 @@
         </activity>
 
         <activity
-            android:name=".CollectionMode.DetailsActivity_Collection1"
+            android:name=".collection_mode.DetailsActivity_Collection"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CollectionMode.MainActivity_Collection1"/>
+                android:value=".collection_mode.MainActivity_Collection"/>
         </activity>
 
         <activity
-            android:name=".CollectionMode.LockerActivity_Collection1"
+            android:name=".collection_mode.LockerActivity_Collection"
             android:screenOrientation="landscape">
             <meta-data
                 android:value="android.support.PARENT_ACTIVITY"
@@ -36,11 +36,43 @@
         </activity>
 
         <activity
-            android:name=".CollectionMode.EndActivity_Collection1"
+            android:name=".collection_mode.EndActivity_Collection"
             android:screenOrientation="landscape">
             <meta-data
                 android:value="android.support.PARENT_ACTIVITY"
                 android:name=".CollectionMode.MainActivity_Collection1"/>
+        </activity>
+
+        <activity
+            android:name=".delivery_mode.EnRouteActivity_Delivery"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".collection_mode.MainActivity_Collection"/>
+        </activity>
+
+        <activity
+            android:name=".delivery_mode.PasswordActivity_Delivery"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".delivery_mode.EnRouteActivity_Delivery"/>
+        </activity>
+
+        <activity
+            android:name=".delivery_mode.OpenLockerActivity_Delivery"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".delivery_mode.EnRouteActivity_Delivery"/>
+        </activity>
+
+        <activity
+            android:name=".delivery_mode.UnsuccessfulActivity_Delivery"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".delivery_mode.EnRouteActivity_Delivery"/>
         </activity>
     </application>
 </manifest>
