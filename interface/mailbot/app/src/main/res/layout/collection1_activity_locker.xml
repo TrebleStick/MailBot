@@ -22,36 +22,36 @@
 
         <ImageView
             android:id="@+id/mailbotlocker"
-            android:layout_width="350sp"
-            android:layout_height="320sp"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_160sdp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="@dimen/_25sdp"
             android:src="@mipmap/mailbot_nocap"/>
 
         <RelativeLayout
             android:id="@+id/relativeLayoutLocker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginLeft="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_40sdp"
             android:layout_toEndOf="@id/mailbotlocker">
 
             <ImageView
                 android:id="@+id/speechbubblelocker"
-                android:layout_width="450dp"
-                android:layout_height="320dp"
+                android:layout_width="@dimen/_225sdp"
+                android:layout_height="@dimen/_160sdp"
                 android:src="@mipmap/speechbubble"/>
 
             <TextView
 
-                android:layout_width="360dp"
-                android:layout_height="160dp"
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="@dimen/_80sdp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="75dp"
+                android:layout_marginTop="@dimen/_38sdp"
                 android:text="@string/lockerActivitySpeech"
                 android:textColor="@color/postRed"
-                android:textSize="25sp"
+                android:textSize="@dimen/_12sdp"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
@@ -61,25 +61,25 @@
             android:id="@+id/textBadFit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="420dp"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_200sdp"
             android:layout_toEndOf="@id/mailbotlocker"
             android:text="@string/lockerActivityBadFit"
             android:textAlignment="center"
             android:textColor="#ffffff"
-            android:textSize="25sp"/>
+            android:textSize="@dimen/_12sdp"/>
 
         <TextView
             android:id="@+id/textGoodFit"
-            android:layout_width="250dp"
+            android:layout_width="@dimen/_125sdp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="400dp"
+            android:layout_marginStart="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_190sdp"
             android:layout_toEndOf="@id/textBadFit"
             android:text="@string/lockerActivityGoodFit"
             android:textAlignment="center"
             android:textColor="#ffffff"
-            android:textSize="25sp"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="bold"/>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

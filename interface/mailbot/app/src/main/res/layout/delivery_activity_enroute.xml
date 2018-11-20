@@ -28,37 +28,37 @@
 
         <ImageView
             android:id="@+id/mailbotMain"
-            android:layout_width="350dp"
-            android:layout_height="320dp"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_160sdp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="@dimen/_35sdp"
             android:src="@mipmap/mailbot_nocap"
             app:layout_constraintStart_toStartOf="parent" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="wrap_content"
-            android:layout_height="320dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="120dp"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_60sdp"
             android:layout_toEndOf="@id/mailbotMain">
 
             <ImageView
                 android:id="@+id/speechBubbleMain"
-                android:layout_width="450dp"
-                android:layout_height="250dp"
+                android:layout_width="@dimen/_225sdp"
+                android:layout_height="@dimen/_125sdp"
                 android:src="@mipmap/speechbubble" />
 
             <TextView
-                android:layout_width="380dp"
+                android:layout_width="@dimen/_190sdp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="55dp"
+                android:layout_marginTop="@dimen/_28sdp"
                 android:text="@string/enRouteActivitySpeech"
                 android:textAlignment="center"
                 android:textColor="@color/postRed"
-                android:textSize="20sp"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
