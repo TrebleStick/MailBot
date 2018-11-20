@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

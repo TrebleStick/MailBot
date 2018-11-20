@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/postRed"
-    tools:context="com.extcord.jg3215.mailbot.CollectionMode.MainActivity_Collection1">
+    tools:context="com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection">
 
     <RelativeLayout
         android:orientation="vertical"

@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-public class MainActivity_Collection1 extends AppCompatActivity {
+public class MainActivity_Collection extends AppCompatActivity {
 
     // The image views that are being used like buttons
     ImageView letterView;
@@ -63,7 +61,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(LETTER_STANDARD);
                 // else { tell the user that no lockers of that size are available
-                    // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -78,7 +76,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(LETTER_LARGE);
                 // else { tell the user that no lockers of that size are available
-                    // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -93,7 +91,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
                 // if (robot says there is space) {
                     toDetailsActivity(PARCEL);
                 // else { tell the user that no lockers of that size are available
-                    // Toast.makeText(MainActivity_Collection1.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -102,7 +100,7 @@ public class MainActivity_Collection1 extends AppCompatActivity {
         Log.i(TAG, "setDetailsIntent() method called");
         String packageTag = "packageType";
 
-        Intent toDetailActivity = new Intent(this, DetailsActivity_Collection1.class);
+        Intent toDetailActivity = new Intent(this, DetailsActivity_Collection.class);
         Bundle extras = new Bundle();
 
         // Adds this extra detail to bundle

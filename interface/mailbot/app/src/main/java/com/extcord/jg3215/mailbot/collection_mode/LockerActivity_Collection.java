@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,9 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-public class LockerActivity_Collection1 extends AppCompatActivity {
+public class LockerActivity_Collection extends AppCompatActivity {
+
+    // TODO: Send a PIN code for each package to the computer as the mail item is locked away
 
     // The TextViews for the two options given at the start of this activity
         // 'Parcel fits' vs 'Parcel does not fit'
@@ -60,7 +62,7 @@ public class LockerActivity_Collection1 extends AppCompatActivity {
                     // TODO: Check if a bigger size locker is available
                 } else {
                     Log.i(TAG, "The mail item will not fit in MailBot");
-                    Toast.makeText(LockerActivity_Collection1.this, getResources().getString(R.string.packageTooBig), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.packageTooBig), Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
@@ -85,7 +87,7 @@ public class LockerActivity_Collection1 extends AppCompatActivity {
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
 
-        Intent toEndActivity = new Intent(this, EndActivity_Collection1.class);
+        Intent toEndActivity = new Intent(this, EndActivity_Collection.class);
 
         // Create a bundle for holding the extras
         Bundle extras = new Bundle();

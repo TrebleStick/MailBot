@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,9 +20,7 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-import java.util.ArrayList;
-
-public class DetailsActivity_Collection1 extends AppCompatActivity {
+public class DetailsActivity_Collection extends AppCompatActivity {
 
     // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
@@ -368,7 +366,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
 
-        Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection1.class);
+        Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection.class);
 
         // Create a bundle for holding the extras
         Bundle extras = new Bundle();
@@ -397,20 +395,20 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     private boolean entryChecks(String name, String emailAddress) {
         if (name.equals("")) {
             Log.i(TAG, "Name Field is empty");
-            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
+            Toast.makeText(DetailsActivity_Collection.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (emailAddress.equals("")) {
             Log.i(TAG, "Email Address Field is empty");
-            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
+            Toast.makeText(DetailsActivity_Collection.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
             return false;
         }
 
         // The user will have to insert a valid email address before they can progress beyond this point
         if (!isValidEmail(emailAddress)) {
             Log.i(TAG, "Invalid email address format given");
-            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
+            Toast.makeText(DetailsActivity_Collection.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
             return false;
         }
 
