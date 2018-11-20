@@ -22,45 +22,36 @@
 
         <ImageView
             android:id="@+id/mailbotEnd"
-            android:layout_width="350sp"
-            android:layout_height="320sp"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_160sdp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="@dimen/_40sdp"
             android:src="@mipmap/mailbot_nocap"
-
             />
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="80dp"
-            android:layout_toEndOf="@id/mailbotEnd">
+        <ImageView
+            android:id="@+id/speechbubbleEnd"
+            android:layout_width="@dimen/_230sdp"
+            android:layout_height="@dimen/_370sdp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_50sdp"
+            android:src="@mipmap/speechbubble" />
 
-            <ImageView
-                android:id="@+id/speechbubbleEnd"
-                android:layout_width="500dp"
-                android:layout_height="550dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="90dp"
-                android:src="@mipmap/speechbubble" />
+        <TextView
 
-            <TextView
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_110sdp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/_27sdp"
+            android:layout_marginTop="@dimen/_60sdp"
+            android:text="@string/endActivitySpeech"
+            android:textAlignment="center"
+            android:textColor="@color/postRed"
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="bold" />
 
-                android:layout_width="420dp"
-                android:layout_height="220dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="80dp"
-                android:text="@string/endActivitySpeech"
-                android:textAlignment="center"
-                android:textColor="@color/postRed"
-                android:textSize="21sp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
 
         <!--<TextView
             android:id="@+id/textEnd"
@@ -81,17 +72,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/relativeLayoutEnd"
-            android:layout_marginBottom="100dp"
-            android:layout_marginStart="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_140sdp"
             android:text="@string/toSameRecipient" />
 
         <Button
             android:id="@+id/btnStartAgain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/relativeLayoutEnd"
-            android:layout_marginEnd="100dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/_50sdp"
             android:layout_alignTop="@+id/btnToSameRecipient"
             android:text="@string/exitProcess" />
 

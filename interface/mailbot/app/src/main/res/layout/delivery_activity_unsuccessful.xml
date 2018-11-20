@@ -23,8 +23,6 @@
         app:layout_constraintVertical_bias="0.5"
 
         tools:layout_editor_absoluteY="345dp">
-        <!-- collection1 means 'one mail item at a time' algorithm -->
-
 
         <ImageView
             android:id="@+id/mailbotMain"
@@ -49,15 +47,30 @@
                 android:layout_height="250dp"
                 android:src="@mipmap/speechbubble" />
 
+            <!--Depending on how this is accessed, make this last textview
+            @string/UnsuccessfulActivitySpeech_PIN or @string/UnsuccessfulActivitySpeech_knock-->
+
             <TextView
                 android:layout_width="380dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="55dp"
-                android:text="@string/enRouteActivitySpeech"
+                android:text="@string/UnsuccessfulActivitySpeech_PIN"
                 android:textAlignment="center"
                 android:textColor="@color/postRed"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="255dp"
+                android:text="Moving onto the next delivery..."
+                android:textAlignment="center"
+                android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </RelativeLayout>
