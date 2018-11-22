@@ -1,1 +1,3 @@
 .~lock.*
+movement/opencv*
+movement/libfreenect2*

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <include file="$(find p2os_urdf)/launch/upload_pioneer3at.xml"/>
+  <include file="$(find mailbot)/config/upload_pioneer3at.xml"/>
 
   <!-- publish TFs for static links -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
