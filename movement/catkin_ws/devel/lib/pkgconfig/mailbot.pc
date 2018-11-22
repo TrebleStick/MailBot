@@ -1,0 +1,8 @@
+prefix=/home/human/Documents/catkin_ws/devel
+
+Name: mailbot
+Description: Description of mailbot
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/human/Documents/catkin_ws/devel/lib 
+Requires: 
