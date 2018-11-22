@@ -12,8 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   geometry_msgs
-  rosaria
-  rosaria_client
+  # rosaria
+  # rosaria_client
 )
 
 ## System dependencies are found with CMake's conventions
