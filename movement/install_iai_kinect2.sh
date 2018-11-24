@@ -73,3 +73,17 @@
 
   # Return to root
   cd ../../
+
+
+# Finally install iai_kinect2
+  cd catkin_ws/src/ # cd to catkin_ws
+  git clone https://github.com/code-iai/iai_kinect2.git
+  cd iai_kinect2
+  rosdep install -r --from-paths .# rosdep will output errors  on not being able to locate [kinect2_bridge] and [depth_registration]. That is fine because they are all part of the iai_kinect2 package and rosdep does not know these packages.
+  cd ../../ # cd back to catkin_ws folder to run catkin_make
+  catkin_make -DCMAKE_BUILD_TYPE="Release" # \
+              # -Dfreenect2_DIR=path_to_freenect2/lib/cmake/freenect2 # if we changed the location of install of freenect2 - see 'Install libfreenect2' section -Dfreenect2_DIR=$HOME/freenect2/lib/cmake/freenect2
+
+# NOTE: Our cmake got a an error CMake Warning at iai_kinect2/kinect2_registration/CMakeLists.txt:60 (message):
+#  Your libOpenCL.so is incompatible with CL/cl.h.  Install ocl-icd-opencl-dev  to update libOpenCL.so?
+# But our Ubuntu 16.04 didn't have a newer version available

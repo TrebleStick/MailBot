@@ -580,3 +580,129 @@ Linking C executable cmTC_a925f
 make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
 
 
+Performing C++ SOURCE FILE Test COMPILER_SUPPORTS_CXX11 succeeded with the following output:
+Change Dir: /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_7fc71/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7fc71.dir/build.make CMakeFiles/cmTC_7fc71.dir/build
+make[1]: Entering directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_7fc71.dir/src.cxx.o
+/usr/bin/c++     -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -DCOMPILER_SUPPORTS_CXX11   -std=c++11 -o CMakeFiles/cmTC_7fc71.dir/src.cxx.o -c /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_7fc71
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7fc71.dir/link.txt --verbose=1
+/usr/bin/c++    -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -DCOMPILER_SUPPORTS_CXX11    CMakeFiles/cmTC_7fc71.dir/src.cxx.o  -o cmTC_7fc71 -rdynamic 
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORTS_CXX0X succeeded with the following output:
+Change Dir: /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_c983c/fast"
+/usr/bin/make -f CMakeFiles/cmTC_c983c.dir/build.make CMakeFiles/cmTC_c983c.dir/build
+make[1]: Entering directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c983c.dir/src.cxx.o
+/usr/bin/c++     -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -DCOMPILER_SUPPORTS_CXX0X   -std=c++0x -o CMakeFiles/cmTC_c983c.dir/src.cxx.o -c /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c983c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c983c.dir/link.txt --verbose=1
+/usr/bin/c++    -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -DCOMPILER_SUPPORTS_CXX0X    CMakeFiles/cmTC_c983c.dir/src.cxx.o  -o cmTC_c983c -rdynamic 
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_7a88d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_7a88d.dir/build.make CMakeFiles/cmTC_7a88d.dir/build
+make[1]: Entering directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7a88d.dir/src.c.o
+/usr/bin/cc    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTC_7a88d.dir/src.c.o   -c /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_7a88d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7a88d.dir/link.txt --verbose=1
+/usr/bin/cc   -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTC_7a88d.dir/src.c.o  -o cmTC_7a88d -rdynamic 
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Performing C++ SOURCE FILE Test OpenMP_FLAG_DETECTED succeeded with the following output:
+Change Dir: /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_3d2d5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_3d2d5.dir/build.make CMakeFiles/cmTC_3d2d5.dir/build
+make[1]: Entering directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_3d2d5.dir/src.cxx.o
+/usr/bin/c++     -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -std=c++11 -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTC_3d2d5.dir/src.cxx.o -c /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_3d2d5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3d2d5.dir/link.txt --verbose=1
+/usr/bin/c++    -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -std=c++11 -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTC_3d2d5.dir/src.cxx.o  -o cmTC_3d2d5 -rdynamic 
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <omp.h>
+int main() {
+#ifdef _OPENMP
+  return 0;
+#else
+  breaks_on_purpose
+#endif
+}
+
+Determining if the CL_VERSION_2_0 exist passed with the following output:
+Change Dir: /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d7701/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d7701.dir/build.make CMakeFiles/cmTC_d7701.dir/build
+make[1]: Entering directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d7701.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_d7701.dir/CheckSymbolExists.c.o   -c /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_d7701
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d7701.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_d7701.dir/CheckSymbolExists.c.o  -o cmTC_d7701 -rdynamic 
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+
+File /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include </usr/include/CL/cl.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef CL_VERSION_2_0
+  return ((int*)(&CL_VERSION_2_0))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Performing C SOURCE FILE Test OpenCL_C_WORKS succeeded with the following output:
+Change Dir: /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_5d90f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_5d90f.dir/build.make CMakeFiles/cmTC_5d90f.dir/build
+make[1]: Entering directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5d90f.dir/src.c.o
+/usr/bin/cc   -I/include/internal  -DOpenCL_C_WORKS   -o CMakeFiles/cmTC_5d90f.dir/src.c.o   -c /home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_5d90f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5d90f.dir/link.txt --verbose=1
+/usr/bin/cc   -DOpenCL_C_WORKS    CMakeFiles/cmTC_5d90f.dir/src.c.o  -o cmTC_5d90f -rdynamic /usr/lib/x86_64-linux-gnu/libOpenCL.so 
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/src/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <CL/cl.h>
+int main() {
+  clGetPlatformIDs(0, 0, 0);
+  return 0;
+}

@@ -56,6 +56,16 @@ CMAKE_BINARY_DIR = /home/human/Documents/catkin_ws/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -68,17 +78,6 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -90,26 +89,27 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
 
-# Special rule for the target install/local
-install/local/fast: install/local
+# Special rule for the target test
+test/fast: test
 
-.PHONY : install/local/fast
+.PHONY : test/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
 
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
 
-.PHONY : list_install_components/fast
+.PHONY : rebuild_cache/fast
 
 # Special rule for the target install/strip
 install/strip: preinstall
@@ -122,16 +122,16 @@ install/strip/fast: install/strip
 
 .PHONY : install/strip/fast
 
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
 
-# Special rule for the target test
-test/fast: test
+# Special rule for the target install/local
+install/local/fast: install/local
 
-.PHONY : test/fast
+.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -181,66 +181,6 @@ pointcloud_to_laserscan/fast:
 .PHONY : pointcloud_to_laserscan/fast
 
 # Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_nodejs: pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_nodejs.dir/rule
-
-.PHONY : nodelet_generate_messages_nodejs
-
-# fast build rule for target.
-nodelet_generate_messages_nodejs/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_nodejs.dir/build.make pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_nodejs.dir/build
-.PHONY : nodelet_generate_messages_nodejs/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_py.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_py.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_py.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_py: pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_py.dir/rule
-
-.PHONY : bond_generate_messages_py
-
-# fast build rule for target.
-bond_generate_messages_py/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_py.dir/build.make pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_py.dir/build
-.PHONY : bond_generate_messages_py/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_eus.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_eus.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_eus: pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_eus.dir/rule
-
-.PHONY : nodelet_generate_messages_eus
-
-# fast build rule for target.
-nodelet_generate_messages_eus/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_eus.dir/build.make pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_eus.dir/build
-.PHONY : nodelet_generate_messages_eus/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_cpp.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_cpp: pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
-
-.PHONY : nodelet_generate_messages_cpp
-
-# fast build rule for target.
-nodelet_generate_messages_cpp/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_cpp.dir/build.make pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_cpp.dir/build
-.PHONY : nodelet_generate_messages_cpp/fast
-
-# Convenience name for target.
 pointcloud_to_laserscan/CMakeFiles/pointcloud_to_laserscan_node.dir/rule:
 	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/pointcloud_to_laserscan_node.dir/rule
 .PHONY : pointcloud_to_laserscan/CMakeFiles/pointcloud_to_laserscan_node.dir/rule
@@ -254,96 +194,6 @@ pointcloud_to_laserscan_node: pointcloud_to_laserscan/CMakeFiles/pointcloud_to_l
 pointcloud_to_laserscan_node/fast:
 	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/pointcloud_to_laserscan_node.dir/build.make pointcloud_to_laserscan/CMakeFiles/pointcloud_to_laserscan_node.dir/build
 .PHONY : pointcloud_to_laserscan_node/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_py.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_py.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_py.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_py: pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_py.dir/rule
-
-.PHONY : nodelet_generate_messages_py
-
-# fast build rule for target.
-nodelet_generate_messages_py/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_py.dir/build.make pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_py.dir/build
-.PHONY : nodelet_generate_messages_py/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_cpp.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_cpp.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_cpp: pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_cpp.dir/rule
-
-.PHONY : bond_generate_messages_cpp
-
-# fast build rule for target.
-bond_generate_messages_cpp/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_cpp.dir/build.make pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_cpp.dir/build
-.PHONY : bond_generate_messages_cpp/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_lisp.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-nodelet_generate_messages_lisp: pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
-
-.PHONY : nodelet_generate_messages_lisp
-
-# fast build rule for target.
-nodelet_generate_messages_lisp/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_lisp.dir/build.make pointcloud_to_laserscan/CMakeFiles/nodelet_generate_messages_lisp.dir/build
-.PHONY : nodelet_generate_messages_lisp/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_nodejs.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_nodejs.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_nodejs: pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_nodejs.dir/rule
-
-.PHONY : bond_generate_messages_nodejs
-
-# fast build rule for target.
-bond_generate_messages_nodejs/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_nodejs.dir/build.make pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_nodejs.dir/build
-.PHONY : bond_generate_messages_nodejs/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_eus.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_eus.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_eus: pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_eus.dir/rule
-
-.PHONY : bond_generate_messages_eus
-
-# fast build rule for target.
-bond_generate_messages_eus/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_eus.dir/build.make pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_eus.dir/build
-.PHONY : bond_generate_messages_eus/fast
-
-# Convenience name for target.
-pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_lisp.dir/rule:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_lisp.dir/rule
-.PHONY : pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-bond_generate_messages_lisp: pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_lisp.dir/rule
-
-.PHONY : bond_generate_messages_lisp
-
-# fast build rule for target.
-bond_generate_messages_lisp/fast:
-	cd /home/human/Documents/catkin_ws/build && $(MAKE) -f pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_lisp.dir/build.make pointcloud_to_laserscan/CMakeFiles/bond_generate_messages_lisp.dir/build
-.PHONY : bond_generate_messages_lisp/fast
 
 src/pointcloud_to_laserscan_node.o: src/pointcloud_to_laserscan_node.cpp.o
 
@@ -405,25 +255,15 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install"
-	@echo "... rebuild_cache"
-	@echo "... edit_cache"
-	@echo "... install/local"
 	@echo "... list_install_components"
-	@echo "... install/strip"
-	@echo "... pointcloud_to_laserscan"
-	@echo "... nodelet_generate_messages_nodejs"
-	@echo "... bond_generate_messages_py"
-	@echo "... nodelet_generate_messages_eus"
-	@echo "... nodelet_generate_messages_cpp"
-	@echo "... pointcloud_to_laserscan_node"
-	@echo "... nodelet_generate_messages_py"
-	@echo "... bond_generate_messages_cpp"
-	@echo "... nodelet_generate_messages_lisp"
-	@echo "... bond_generate_messages_nodejs"
+	@echo "... install"
+	@echo "... edit_cache"
 	@echo "... test"
-	@echo "... bond_generate_messages_eus"
-	@echo "... bond_generate_messages_lisp"
+	@echo "... rebuild_cache"
+	@echo "... pointcloud_to_laserscan"
+	@echo "... pointcloud_to_laserscan_node"
+	@echo "... install/strip"
+	@echo "... install/local"
 	@echo "... src/pointcloud_to_laserscan_node.o"
 	@echo "... src/pointcloud_to_laserscan_node.i"
 	@echo "... src/pointcloud_to_laserscan_node.s"

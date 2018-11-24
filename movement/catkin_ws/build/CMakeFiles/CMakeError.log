@@ -53,3 +53,30 @@ Makefile:126: recipe for target 'cmTC_e0c0f/fast' failed
 make: *** [cmTC_e0c0f/fast] Error 2
 
 
+Performing C++ SOURCE FILE Test OpenCL_CXX_WORKS failed with the following output:
+Change Dir: /home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_89ae6/fast"
+make[1]: Entering directory '/home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTC_89ae6.dir/build.make CMakeFiles/cmTC_89ae6.dir/build
+make[2]: Entering directory '/home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_89ae6.dir/src.cxx.o
+/usr/bin/c++    -I/include/internal  -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunused-function -Wunused-label -Wunused-variable -Wunused-but-set-variable -Wunused-but-set-parameter -Warray-bounds -Wtype-limits -Wreturn-type -Wsequence-point -Wparentheses -Wmissing-braces -Wchar-subscripts -Wswitch -Wwrite-strings -Wenum-compare -Wempty-body -std=c++11 -fopenmp -DOpenCL_CXX_WORKS   -o CMakeFiles/cmTC_89ae6.dir/src.cxx.o -c /home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp/src.cxx
+/home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp/src.cxx:2:21: fatal error: CL/cl.hpp: No such file or directory
+compilation terminated.
+CMakeFiles/cmTC_89ae6.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_89ae6.dir/src.cxx.o' failed
+make[2]: *** [CMakeFiles/cmTC_89ae6.dir/src.cxx.o] Error 1
+make[2]: Leaving directory '/home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_89ae6/fast' failed
+make[1]: *** [cmTC_89ae6/fast] Error 2
+make[1]: Leaving directory '/home/human/Documents/catkin_ws/build/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <CL/cl.hpp>
+int main() {
+  cl::Context context;
+  cl::Platform platform;
+  cl::Device device;
+  return 0;
+}

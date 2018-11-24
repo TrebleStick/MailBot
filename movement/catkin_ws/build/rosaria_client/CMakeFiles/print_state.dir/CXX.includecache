@@ -6,24 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/human/Documents/catkin_ws/devel/include/rosaria/BumperState.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-std_msgs/Header.h
--
-
 /home/human/Documents/catkin_ws/src/rosaria_client/src/print_state.cpp
 ros/ros.h
 -
