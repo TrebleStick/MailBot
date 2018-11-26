@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
 
 public class MainActivity_Collection extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     // Tag for debugging
     private static final String TAG = "MainActivity";
 
+<<<<<<< HEAD
     // Listen for response (Serial communication) to space query
     // TODO: Get information on space in all locker types - may come in handy later --- will be handled internally
     BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
@@ -35,6 +38,11 @@ public class MainActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "Received: " + text);
         }
     };
+=======
+    private LockerManager mLockerManager;
+
+    // Get the number of free lockers from the lockerManager object
+>>>>>>> 852b64e17000d61a77d1707df5482e6836a0a6a5
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +58,24 @@ public class MainActivity_Collection extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
+        // TODO: Change this from testMode to not testMode once testing is complete
+        mLockerManager = new LockerManager(this, true);
+
         letterView = (ImageView) findViewById(R.id.letter);
         letterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "letter View selected");
-                // TODO: Communicate to the robot (via Serial) that a small letter is being delivered
 
-                // Might to put the below in a broadcast receiver
-                // if (robot says there is space) {
+                // Determines whether there is a locker free
+                int aLockers = mLockerManager.getAvailability(LETTER_STANDARD);
+                if (aLockers > 0) {
+                    Log.i(TAG, "Lockers available = " + String.valueOf(aLockers));
                     toDetailsActivity(LETTER_STANDARD);
-                // else { tell the user that no lockers of that size are available
-                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                } else {
+                    Log.i(TAG, "No lockers available");
+                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -70,13 +84,16 @@ public class MainActivity_Collection extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "Large letter View selected");
-                // TODO: Communicate to the robot (via Serial) that a small letter is being delivered
 
-                // Might to put the below in a broadcast receiver
-                // if (robot says there is space) {
+                // Determines whether there is a locker free
+                int aLockers = mLockerManager.getAvailability(LETTER_LARGE);
+                if (aLockers > 0) {
+                    Log.i(TAG, "Lockers available = " + String.valueOf(aLockers));
                     toDetailsActivity(LETTER_LARGE);
-                // else { tell the user that no lockers of that size are available
-                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                } else {
+                    Log.i(TAG, "No lockers available");
+                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -85,19 +102,22 @@ public class MainActivity_Collection extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "parcel View selected");
-                // TODO: Communicate to the robot (via Serial) that a small letter is being delivered
 
-                // Might to put the below in a broadcast receiver
-                // if (robot says there is space) {
+                // Determines whether there is a locker free
+                int aLockers = mLockerManager.getAvailability(PARCEL);
+                if (aLockers > 0) {
+                    Log.i(TAG, "Lockers available = " + String.valueOf(aLockers));
                     toDetailsActivity(PARCEL);
-                // else { tell the user that no lockers of that size are available
-                    // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                } else {
+                    Log.i(TAG, "No lockers available");
+                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
     private void toDetailsActivity(int packageType) {
-        Log.i(TAG, "setDetailsIntent() method called");
+        Log.i(TAG, "toDetailsActivity() method called");
         String packageTag = "packageType";
 
         Intent toDetailActivity = new Intent(this, DetailsActivity_Collection.class);

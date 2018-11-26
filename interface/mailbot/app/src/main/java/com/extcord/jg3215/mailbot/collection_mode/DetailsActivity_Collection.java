@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
@@ -26,6 +27,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // It is a bug that seems to appear in random places and I cannot figure out why
         // Can be fixed by changing the string's value and then changing it back after building
 
+    // TODO: Get rid of setting textView to "Delivery Location: "
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
 
@@ -68,11 +70,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     // Bottom field
     TextView btmField;
 
-    // Used to allow the sender to say whether or not they want to take a photo -> 1st state only
-    // What are you going to do if they check this option?
-    // TODO: Check if photo is still happening?
-    CheckBox takePhotoOption;
-
     // TextViews shown when confirming given details
     TextView confirmTopEnt;
     TextView confirmMidEnt;
@@ -91,18 +88,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     private PackageData senderData;
     private PackageData recipientData;
 
-    // Listen for response (Serial communication) to open locker command
-    // TODO: Register and unregister Broadcast Receivers br0
-    BroadcastReceiver mBroadcastReceiverLockerOpen = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String text = intent.getStringExtra("openLocker");
-            Log.i(TAG, "Received: " + text);
-
-            // TODO: Go to the next activity once the locker has been opened
-            // toLockerActivity();
-        }
-    };
+    private LockerManager mLockerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +104,13 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // 3. Confirming details with user
         state = 1;
 
+        // TODO: Change the mode to false
+        mLockerManager = new LockerManager(this, true);
+
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
         btmEntry = (EditText) findViewById(R.id.deliveryLocation);
 
-        // Bottom field in state 1 -> Take Photo?
-        takePhotoOption = (CheckBox) findViewById(R.id.choosePhoto);
         // Bottom field in state 2 -> Delivery Location
         // Bottom field only visible for recipient details spinner
         btmField = (TextView) findViewById(R.id.bottomField);
@@ -184,7 +171,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
                 Log.i(TAG, "Cancel button pressed");
-                // TODO: Tell Robot that the process has been cancelled
+                // TODO: Tell Robot that the process has been cancelled -> Is this necessary?
                 // Takes the user back to the main menu - not the previous state
                 finish();
             }
@@ -299,8 +286,12 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         break;
                     case STATE_CONFIRMATION:
                         Log.i(TAG, "Details confirmed");
-                        // TODO: Send a serial message to the computer to request locker opening
 
+                        mLockerManager.setSelectLockerIndex(packageType);
+                        Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(mLockerManager.getSelectLockerIndex() + 1));
+
+                        // TODO: Send a serial message to the computer to request locker opening
+                        // Assume locker opens once requested
                         toLockerActivity();
                         break;
                 }
@@ -352,8 +343,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 // Takes the user to the third state of this activity
                 toLayoutStateThree(1);
-                // Needs to be done or the checkBox will be there, haunting you
-                takePhotoOption.setVisibility(View.GONE);
             }
         } else {
             throw new NullPointerException("No data provided from endActivity");
@@ -416,8 +405,11 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     }
 
     private void toLayoutStateOne(int callCase) {
-        // Bottom TextView text should have "Take photo"
-        btmField.setText(getResources().getString(R.string.userChoosePhoto));
+        // Bottom field textView should not be visible
+        btmField.setVisibility(View.GONE);
+
+        // Bottom entry editText should not be visible
+        btmEntry.setVisibility(View.GONE);
 
         // Problem button should not be visible
         problemButton.setVisibility(View.GONE);
@@ -437,13 +429,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 confirmMidEnt.setVisibility(View.GONE);
                 confirmBtmEnt.setVisibility(View.GONE);
 
-                // Take Photo checkBox should be visible
-                takePhotoOption.setVisibility(View.VISIBLE);
-
-                // Bottom field textView should be visible
-                    // It would not be if problem button was selected on Sender Details
-                btmField.setVisibility(View.VISIBLE);
-
                 // Top and Mid EditTexts need to be made visible and should display name and email address data
                 topEntry.setText(senderData.getName());
                 topEntry.setVisibility(View.VISIBLE);
@@ -458,7 +443,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     private void toLayoutStateTwo(int callCase) {
         // callCase refers to which state you call this method from
-
         // toLayoutStateTwo means that you are preparing the activity to receive recipient details
         TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
         bubbleText.setText(getResources().getString(R.string.bubbleRecipientDetails));
@@ -473,8 +457,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 btmField.setText(getResources().getString(R.string.fieldLocation));
                 Log.i(TAG, "Bottom Field set to: " + getResources().getString(R.string.fieldLocation));
 
-                // Gets rid of take photo checkbox
-                takePhotoOption.setVisibility(View.GONE);
+                btmField.setVisibility(View.VISIBLE);
 
                 // Brings up EditText for inserting delivery location
                 btmEntry.setVisibility(View.VISIBLE);
@@ -543,9 +526,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 // Bottom field should not be visible in this case
                 btmField.setVisibility(View.GONE);
 
-                // This checkbox should not be visible
-                takePhotoOption.setVisibility(View.GONE);
-
                 // Manually update these textViews
                 confirmTopEnt.setText(senderData.getName());
                 confirmMidEnt.setText(senderData.getEmailAddress());
@@ -574,9 +554,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        // TODO: Check that this does not mess up what is sent to next activity
         // Here to make sure that there is no remaining object data when new instances are made and to free up memory
         recipientData = null;
         senderData = null;
+        mLockerManager = null; 
     }
 }

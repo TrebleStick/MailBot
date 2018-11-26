@@ -148,16 +148,9 @@
                     android:id="@+id/bottomField"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_25sdp"
-                    android:text="@string/userChoosePhoto"
+                    android:text="@string/fieldLocation"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/_10sdp" />
-
-                <CheckBox
-                    android:id="@+id/choosePhoto"
-                    android:layout_width="wrap_content"
-                    android:textColor="#ffffff"
-                    android:layout_height="@dimen/_25sdp"
-                    android:layout_marginStart="@dimen/_70sdp"/>
 
                 <EditText
                     android:id="@+id/deliveryLocation"
