@@ -128,5 +128,16 @@
             android:text="@string/parcelText"
             android:textAlignment="center"
             android:textColor="#ffffff"/>
+
+        <TextView
+            android:id="@+id/testLockerManager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/mailbotMain"
+            android:layout_alignStart="@+id/mailbotMain"
+            android:layout_marginBottom="27dp"
+            android:ems="15"
+            android:textColor="#ffffff"
+            android:text="Name" />
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
