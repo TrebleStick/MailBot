@@ -31,6 +31,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
 
+    private int lockerIndex;
+
     // Denotes the state the activity is in at that moment in time
     private int state;
 
@@ -105,7 +107,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         state = 1;
 
         // TODO: Change the mode to false
-        mLockerManager = new LockerManager(this, true);
+        mLockerManager = new LockerManager(this, false);
 
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
@@ -290,7 +292,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Details confirmed");
 
                         mLockerManager.setSelectLockerIndex(packageType);
-                        Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(mLockerManager.getSelectLockerIndex() + 1));
+                        lockerIndex = mLockerManager.getSelectLockerIndex();
+                        Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(lockerIndex + 1));
 
                         // TODO: Send a serial message to the computer to request locker opening
                         // Assume locker opens once requested
@@ -356,6 +359,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         String packageTag = "packageType";
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
+        String lockerToUseTag = "lockerTag";
 
         Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection.class);
 
@@ -369,6 +373,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
+        extras.putInt(lockerToUseTag, lockerIndex);
 
         // Add all the extras content to the intent
         lockerActivityIntent.putExtras(extras);

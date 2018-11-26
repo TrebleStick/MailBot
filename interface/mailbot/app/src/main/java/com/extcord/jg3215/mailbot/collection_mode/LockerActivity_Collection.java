@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
@@ -22,10 +23,14 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
     private int packageType;
 
+    private int lockerIndex;
+
     private final static String TAG = "LockerActivity";
 
     private PackageData senderData;
     private PackageData recipientData;
+
+    private LockerManager mLockerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
         // Get data from previous activity stored in a bundle
         Bundle detailActivityData = this.getIntent().getExtras();
 
+        mLockerManager = new LockerManager(this, false);
+
         if (detailActivityData != null) {
             packageType = detailActivityData.getInt("packageType");
             Log.i(TAG, "Package Type: " + String.valueOf(packageType));
@@ -47,6 +54,9 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
             recipientData = detailActivityData.getParcelable("recipientData");
             Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+
+            lockerIndex = detailActivityData.getInt("lockerTag");
+            Log.i(TAG, "Locker to open = " + String.valueOf(lockerIndex + 1));
         } else {
             // throw some exception/error -> there should be data from the previous activity
             Log.i(TAG, "No data sent from previous activity");
@@ -76,6 +86,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 // TODO: Tell the computer that the locker is closed?
                 // TODO: Update the availability of that locker size
                 // Is there any data that needs to passed on as an extra?
+
+                mLockerManager.updateAvailability(lockerIndex, true);
                 toEndActivity();
             }
         });
