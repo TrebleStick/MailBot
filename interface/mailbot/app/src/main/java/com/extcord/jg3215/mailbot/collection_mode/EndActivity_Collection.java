@@ -77,8 +77,6 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         toSameRecipientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Check if there is still space in MailBot for any mail items
-
                 // Empty the package type variable so it can be reset
                 packageType = 0;
 

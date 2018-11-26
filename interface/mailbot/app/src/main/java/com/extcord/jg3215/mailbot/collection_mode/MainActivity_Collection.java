@@ -37,6 +37,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     // Tag for debugging
     private static final String TAG = "MainActivity";
 
+    // Listens for message that lockers are full
     BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -46,9 +47,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         }
     };
 
-    // Get the number of free lockers from the lockerManager object
     private LockerManager mLockerManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         mLockerManager = new LockerManager(this);
         mLockerManager.setLockerState("0000000");
 
+        // Register broadcast receiver to this instance of the activity
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
 
         letterView = (ImageView) findViewById(R.id.letter);
@@ -83,7 +83,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                     toDetailsActivity(LETTER_STANDARD);
                 } else {
                     Log.i(TAG, "No lockers available");
-                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -104,7 +104,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                     toDetailsActivity(LETTER_LARGE);
                 } else {
                     Log.i(TAG, "No lockers available");
-                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -122,7 +122,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                     toDetailsActivity(PARCEL);
                 } else {
                     Log.i(TAG, "No lockers available");
-                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
                 }
             }
         });

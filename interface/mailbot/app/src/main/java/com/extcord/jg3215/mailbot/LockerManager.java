@@ -46,7 +46,6 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
         mContext = context;
         String filename = "lockerPrefs";
 
-        // TODO: Check that sharedPreferences are shared on an application-wide scale rather than activity-wide
         sharedPreferences = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE);
         lockerState = sharedPreferences.getString(key, null);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -196,8 +195,6 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
     public void unregisterListener() {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
-
-    // TODO: Broadcast app-wide message when the lockerState == "1111111"
 }
 
 

@@ -40,7 +40,6 @@
     <string name="recipientDetailsSpinner">Recipient Details</string>
 
     <!--Locker Activity Strings-->
-    <!--TODO: Change locker X to an actual value-->
     <string name="lockerActivitySpeech">I have opened locker X for your mail item! Please store it there so I can deliver it, and close the locker before continuing.</string>
     <string name="lockerActivityBadFit">It doesn\'t fit!</string>
     <string name="lockerActivityGoodFit">I put the parcel in and closed the locker!</string>

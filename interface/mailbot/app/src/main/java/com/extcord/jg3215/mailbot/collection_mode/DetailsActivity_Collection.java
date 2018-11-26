@@ -27,7 +27,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // It is a bug that seems to appear in random places and I cannot figure out why
         // Can be fixed by changing the string's value and then changing it back after building
 
-    // TODO: Get rid of setting textView to "Delivery Location: "
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
 
@@ -106,7 +105,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // 3. Confirming details with user
         state = 1;
 
-        // TODO: Change the mode to false
         mLockerManager = new LockerManager(this);
 
         topEntry = (EditText) findViewById(R.id.topEntry);
@@ -175,7 +173,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
                 Log.i(TAG, "Cancel button pressed");
-                // TODO: Tell Robot that the process has been cancelled -> Is this necessary?
                 // Takes the user back to the main menu - not the previous state
                 finish();
             }
