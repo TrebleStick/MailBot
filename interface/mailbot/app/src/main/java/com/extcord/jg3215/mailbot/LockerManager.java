@@ -177,4 +177,6 @@ public class LockerManager {
     }
 
     public int getSelectLockerIndex() { return this.selectLockerIndex; }
+
+    public String getLockerState() { return this.lockerState; }
 }
