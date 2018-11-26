@@ -1,7 +1,9 @@
 package com.extcord.jg3215.mailbot;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
@@ -17,60 +19,37 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
     private final static String TAG = "LockerManager";
 
     // Gets the activity that this object belongs to
-    Context mContext;
+    private Context mContext;
 
     // Used to access file that stores locker state data
-    SharedPreferences sharedPreferences;
-    String filename = "lockerPrefs";
+    private SharedPreferences sharedPreferences;
 
     // Preferences are stored in key-value pairs. Key is used to retrieve availability string
-    String key = "key";
+    private String key = "key";
 
-    String previousLockerState;
+    private String previousLockerState;
 
     // Variable that will contain the string representing locker state
-    String lockerState;
+    private String lockerState;
 
     // Edit the contents of the sharedPreference file
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
     // Registers whether or not the app is being used in test mode or nah
     // NOTE: SharedPreferences will remain 0000000 unless this is false
     // boolean isFirstTime;
 
     // Get the locker that has been chosen for mail item
-    int selectLockerIndex;
+    private int selectLockerIndex;
 
     public LockerManager(Context context) {
         mContext = context;
+        String filename = "lockerPrefs";
 
         // TODO: Check that sharedPreferences are shared on an application-wide scale rather than activity-wide
         sharedPreferences = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE);
         lockerState = sharedPreferences.getString(key, null);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        /* if (sharedPreferences.getString(key, null) == null || testMode) {
-            if (testMode) {
-                // Locker state string variable set to 0000000 in the constructor of LockerManager object
-                lockerState = "0000000";
-
-                String currentState = sharedPreferences.getString(key, null);
-                if (currentState != null && currentState.equals(lockerState)) {
-                    Log.i(TAG, "LockerManager constructor: lockerState string already set to default");
-                } else {
-                    Log.i(TAG, "LockerManager constructor: Putting " + lockerState + " to sharedPreference file");
-
-                    editor.putString(key, lockerState);
-
-                    // Commit changes to the sharedPreference file
-                    editor.apply();
-                }
-            }
-        // } else {
-            Log.i(TAG, "LockerManager constructor: sharedPreference file contains states");
-            lockerState = sharedPreferences.getString(key, null);
-            Log.i(TAG, "LockerManager constructor: lockerState = " + lockerState);
-        } */
     }
 
     // Gets the data from the availability string
@@ -203,6 +182,14 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
             Log.i(TAG, mContext.getClass().getSimpleName() + ": Locker state changed from: " + previousLockerState + " to: " + lockerState);
 
             previousLockerState = lockerState;
+
+            if (lockerState.equals("1111111")) {
+                Log.i(TAG, mContext.getClass().getSimpleName() + ": Locker is full");
+                String fullLockerString = "toEnRouteActivity";
+                Intent incomingMessageIntent = new Intent("lockerFull");
+                incomingMessageIntent.putExtra("lockerFull", fullLockerString);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingMessageIntent);
+            }
         }
     }
 
@@ -210,7 +197,30 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public void registerListener() {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
+    // TODO: Broadcast app-wide message when the lockerState == "1111111"
 }
+
+
+
+        /* if (sharedPreferences.getString(key, null) == null || testMode) {
+            if (testMode) {
+                // Locker state string variable set to 0000000 in the constructor of LockerManager object
+                lockerState = "0000000";
+
+                String currentState = sharedPreferences.getString(key, null);
+                if (currentState != null && currentState.equals(lockerState)) {
+                    Log.i(TAG, "LockerManager constructor: lockerState string already set to default");
+                } else {
+                    Log.i(TAG, "LockerManager constructor: Putting " + lockerState + " to sharedPreference file");
+
+                    editor.putString(key, lockerState);
+
+                    // Commit changes to the sharedPreference file
+                    editor.apply();
+                }
+            }
+        // } else {
+            Log.i(TAG, "LockerManager constructor: sharedPreference file contains states");
+            lockerState = sharedPreferences.getString(key, null);
+            Log.i(TAG, "LockerManager constructor: lockerState = " + lockerState);
+        } */

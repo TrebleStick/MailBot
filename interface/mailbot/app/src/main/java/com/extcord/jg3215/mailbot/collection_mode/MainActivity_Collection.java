@@ -3,6 +3,8 @@ package com.extcord.jg3215.mailbot.collection_mode;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.delivery_mode.EnRouteActivity_Delivery;
 
 import java.util.concurrent.locks.Lock;
 
@@ -34,13 +37,12 @@ public class MainActivity_Collection extends AppCompatActivity {
     // Tag for debugging
     private static final String TAG = "MainActivity";
 
-    // Listen for response (Serial communication) to space query
-    // TODO: Get information on space in all locker types - may come in handy later --- will be handled internally
-    BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
+    BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String text = intent.getStringExtra("spaceQueryResponse");
-            Log.i(TAG, "Received: " + text);
+            String text = intent.getStringExtra("lockerFull");
+            Log.i(TAG, "MainActivity: Broadcast received: " + text);
+            toEnRouteActivity();
         }
     };
 
@@ -53,7 +55,7 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.collection1_activity_main);
-        
+
         View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.
         // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
@@ -65,7 +67,8 @@ public class MainActivity_Collection extends AppCompatActivity {
         // TODO: Make handling of lockerState more robust
         mLockerManager = new LockerManager(this);
         mLockerManager.setLockerState("0000000");
-        mLockerManager.registerListener();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
 
         letterView = (ImageView) findViewById(R.id.letter);
         letterView.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +145,15 @@ public class MainActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
     }
 
+    private void toEnRouteActivity() {
+        Log.i(TAG, "toEnRouteActivity() method called");
+
+        // TODO: Figure out extras to send
+
+        Intent toEnRouteActivityIntent = new Intent(this, EnRouteActivity_Delivery.class);
+        startActivity(toEnRouteActivityIntent);
+    }
+
     protected void onResume() {
         super.onResume();
 
@@ -149,12 +161,9 @@ public class MainActivity_Collection extends AppCompatActivity {
         lockerTextView.setText(mLockerManager.getLockerState());
     }
 
-    protected void onPause() {
-        super.onPause();
-    }
-
     protected void onDestroy() {
         mLockerManager.unregisterListener();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFullLocker);
         super.onDestroy();
     }
 }

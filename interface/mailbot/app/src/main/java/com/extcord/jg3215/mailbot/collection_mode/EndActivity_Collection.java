@@ -191,6 +191,11 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         dialogFragment.dismiss();
         finish();
     }
+
+    protected void onDestroy() {
+        mLockerManager.unregisterListener();
+        super.onDestroy();
+    }
 }
 
 /* View decorView = getWindow().getDecorView();

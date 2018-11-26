@@ -1,5 +1,6 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -63,12 +64,14 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     }
 
     private void toOpenLockerActivity() {
-
+        Intent toOpenLockerActivityIntent = new Intent(this, OpenLockerActivity_Delivery.class);
+        startActivity(toOpenLockerActivityIntent);
         finish();
     }
 
     private void toUnsuccessfulActivity() {
-
+        Intent toUnsuccessfulActivityIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
+        startActivity(toUnsuccessfulActivityIntent);
         finish();
     }
 }

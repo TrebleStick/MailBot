@@ -19,6 +19,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private boolean personDetected = false;
 
+    // TODO: Figure out which mail item (in the 7 digit string) is being delivered
+
     // Listen for message (Serial communication) that MailBot is at destination
     // TODO: Register and unregister Broadcast Receivers in onCreate() and when no longer needed (respectively)
     BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {

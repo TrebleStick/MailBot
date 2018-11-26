@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
 
 /**
@@ -15,6 +16,8 @@ import com.extcord.jg3215.mailbot.R;
 public class OpenLockerActivity_Delivery extends AppCompatActivity {
 
     private final static String TAG = "OpenLockerActivity";
+
+    private LockerManager mLockerManager;
 
     Button doneButton;
 
