@@ -1,0 +1,8 @@
+prefix=/home/human/Documents/catkin_ws/devel
+
+Name: pointcloud_to_laserscan
+Description: Description of pointcloud_to_laserscan
+Version: 1.3.1
+Cflags: -I/home/human/Documents/catkin_ws/src/pointcloud_to_laserscan/include
+Libs: -L/home/human/Documents/catkin_ws/devel/lib -lpointcloud_to_laserscan
+Requires: roscpp message_filters nodelet sensor_msgs tf2 tf2_ros

@@ -1,0 +1,8 @@
+
+<launch>
+<!-- Example of how to setup RViz to visualise a robot model (provided in URDF format) -->
+<!-- URDF file is found in the p2os_urdf package whilst the RViz setup is provided in this package's "config" directory -->
+<include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find mailbot)/config/mailbot.rviz"/>
+
+</launch>
