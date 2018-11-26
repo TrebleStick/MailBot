@@ -43,7 +43,7 @@
                 android:src="@mipmap/speechbubble"/>
 
             <TextView
-
+                android:id="@+id/textLockerOpened"
                 android:layout_width="@dimen/_180sdp"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_alignParentTop="true"

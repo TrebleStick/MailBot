@@ -7,7 +7,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0-alpha03'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+
+        //had to change to gradle 3.0.0 so it would compile the serialUSB library
         
 
         // NOTE: Do not place your application dependencies here; they belong
