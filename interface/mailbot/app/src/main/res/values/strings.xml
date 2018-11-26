@@ -21,7 +21,9 @@
 
     <string name="fieldName">Name: </string>
     <string name="fieldEmail">Email Address: </string>
-    <string name="userChoosePhoto">Take a photo? </string>
+
+    <!--For take a photo? checkbox-->
+    <!--<string name="userChoosePhoto">Take a photo? </string>-->
 
     <string name="bubbleRecipientDetails">Perfect! Now please provide details of the recipient of your mail item.</string>
 
