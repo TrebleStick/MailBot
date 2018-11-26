@@ -3,22 +3,22 @@ import time
 #----------------ROS-NOT TESTED-------------#
 # import roslib as ros
 # ros.load_manifest('node_example')
-#check the sourc file provided for this
-#http://wiki.ros.org/ROSNodeTutorialPython
-import rospy
-
-def callback(data):
-    rospy.loginfo(rospy.get_name())
-
-def listener():
-    #create a uniqe name for the listener so multiple listeners can be used
-    rospy.init_node('listener', anonymus=True)
-    # subscribe to info "chatter" may need re-naming
-    rospy.Subscriber("chatter", String, callback)
-    # stop the python script from terminating after callback
-    rospy.spin()
+# #check the sourc file provided for this
+# #http://wiki.ros.org/ROSNodeTutorialPython
+# import rospy
+#
+# def callback(data):
+#     rospy.loginfo(rospy.get_name())
+#
+# def listener():
+#     #create a uniqe name for the listener so multiple listeners can be used
+#     rospy.init_node('listener', anonymus=True)
+#     # subscribe to info "chatter" may need re-naming
+#     rospy.Subscriber("chatter", String, callback)
+#     # stop the python script from terminating after callback
+#     rospy.spin()
 #---------------FUNC-----------------#
-def unpack(data):
+# def unpack(data):
     #find format of data taken from listener channel
     #convert this to int TODO
 #change ports for system
