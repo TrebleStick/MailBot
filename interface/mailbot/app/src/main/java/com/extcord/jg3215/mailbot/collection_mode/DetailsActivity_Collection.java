@@ -557,6 +557,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // Here to make sure that there is no remaining object data when new instances are made and to free up memory
         recipientData = null;
         senderData = null;
-        mLockerManager = null; 
+        mLockerManager = null;
     }
 }

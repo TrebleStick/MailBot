@@ -28,7 +28,6 @@ public class MainActivity_Collection extends AppCompatActivity {
     // Tag for debugging
     private static final String TAG = "MainActivity";
 
-<<<<<<< HEAD
     // Listen for response (Serial communication) to space query
     // TODO: Get information on space in all locker types - may come in handy later --- will be handled internally
     BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
@@ -38,11 +37,10 @@ public class MainActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "Received: " + text);
         }
     };
-=======
-    private LockerManager mLockerManager;
 
     // Get the number of free lockers from the lockerManager object
->>>>>>> 852b64e17000d61a77d1707df5482e6836a0a6a5
+    private LockerManager mLockerManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
