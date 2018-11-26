@@ -14,12 +14,17 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
 
+import java.util.concurrent.locks.Lock;
+
 public class MainActivity_Collection extends AppCompatActivity {
 
     // The image views that are being used like buttons
     ImageView letterView;
     ImageView largeLetterView;
     ImageView parcelView;
+
+    // Shows lockerState string
+    TextView lockerTextView;
 
     // Integers used to represent the type of mail that is being sent
     private static final int LETTER_STANDARD = 1;
@@ -48,7 +53,7 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.collection1_activity_main);
-
+        
         View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.
         // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
@@ -57,8 +62,10 @@ public class MainActivity_Collection extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        // TODO: Change this from testMode to not testMode once testing is complete
-        mLockerManager = new LockerManager(this, false);
+        // TODO: Make handling of lockerState more robust
+        mLockerManager = new LockerManager(this);
+        mLockerManager.setLockerState("0000000");
+        mLockerManager.registerListener();
 
         letterView = (ImageView) findViewById(R.id.letter);
         letterView.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +85,7 @@ public class MainActivity_Collection extends AppCompatActivity {
             }
         });
 
-        TextView lockerTextView = findViewById(R.id.testLockerManager);
+        lockerTextView = (TextView) findViewById(R.id.testLockerManager);
         lockerTextView.setText(mLockerManager.getLockerState());
 
         largeLetterView = (ImageView) findViewById(R.id.largeLetter);
@@ -133,5 +140,21 @@ public class MainActivity_Collection extends AppCompatActivity {
         startActivity(toDetailActivity);
 
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        Log.i(TAG, "Locker state = " + mLockerManager.getLockerState());
+        lockerTextView.setText(mLockerManager.getLockerState());
+    }
+
+    protected void onPause() {
+        super.onPause();
+    }
+
+    protected void onDestroy() {
+        mLockerManager.unregisterListener();
+        super.onDestroy();
     }
 }

@@ -43,7 +43,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
         // Get data from previous activity stored in a bundle
         Bundle detailActivityData = this.getIntent().getExtras();
 
-        mLockerManager = new LockerManager(this, false);
+        mLockerManager = new LockerManager(this);
 
         if (detailActivityData != null) {
             packageType = detailActivityData.getInt("packageType");
@@ -117,5 +117,10 @@ public class LockerActivity_Collection extends AppCompatActivity {
         startActivity(toEndActivity);
 
         finish();
+    }
+
+    protected void onDestroy() {
+        mLockerManager.unregisterListener();
+        super.onDestroy();
     }
 }

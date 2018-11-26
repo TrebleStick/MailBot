@@ -107,7 +107,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         state = 1;
 
         // TODO: Change the mode to false
-        mLockerManager = new LockerManager(this, false);
+        mLockerManager = new LockerManager(this);
 
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
@@ -564,6 +564,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // Here to make sure that there is no remaining object data when new instances are made and to free up memory
         recipientData = null;
         senderData = null;
+
+        mLockerManager.unregisterListener();
         mLockerManager = null;
     }
 }

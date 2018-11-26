@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
@@ -26,6 +28,8 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
     Button toSameRecipientButton;
     Button returnButton;
 
+    private LockerManager mLockerManager;
+
     private static final String TAG = "EndActivity";
 
     @Override
@@ -36,6 +40,8 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
 
         // Get data from previous activity stored in a bundle
         Bundle lockerActivityData = this.getIntent().getExtras();
+
+        mLockerManager = new LockerManager(this);
 
         if (lockerActivityData != null) {
             try {
@@ -107,34 +113,41 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
     public void onSmallLockerSelect(DialogFragment dialogFragment) {
         Log.i(TAG, "Small locker selected to send to the same recipient");
 
-        // if (there is space)
+        int aLockers = mLockerManager.getAvailability(LETTER_STANDARD);
+        if (aLockers > 0) {
             // The dialog fragment is dismissed in the redoDetailsActivity() method
+            // Change the packageType variable to the selected packageType
             packageType = LETTER_STANDARD;
             redoDetailsActivity(dialogFragment);
-        // else
-            // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(EndActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onMediumLockerSelect(DialogFragment dialogFragment) {
         Log.i(TAG, "Medium locker selected to send to the same recipient");
 
-        // if (there is space)
+        int aLockers = mLockerManager.getAvailability(LETTER_LARGE);
+        if (aLockers > 0) {
             packageType = LETTER_LARGE;
             redoDetailsActivity(dialogFragment);
-        // else
-            // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(EndActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onLargeLockerSelect(DialogFragment dialogFragment) {
         Log.i(TAG, "Large locker selected to send to the same recipient");
 
-        // if (there is space)
+        int aLockers = mLockerManager.getAvailability(PARCEL);
+        if (aLockers > 0) {
             packageType = PARCEL;
             redoDetailsActivity(dialogFragment);
-        // else
-            // Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(EndActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -179,12 +192,6 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         finish();
     }
 }
-/*
-    TODO:
-            Add an array indicating whether lockers are in use. Check this at EndActivity
-            to see whether all are in use and delivery should be initiated.
-*/
-
 
 /* View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.

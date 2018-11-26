@@ -12,7 +12,7 @@ import android.util.Log;
  * There are 4 small lockers, 2 medium lockers and 1 large one.
  */
 
-public class LockerManager {
+public class LockerManager implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final static String TAG = "LockerManager";
 
@@ -26,6 +26,8 @@ public class LockerManager {
     // Preferences are stored in key-value pairs. Key is used to retrieve availability string
     String key = "key";
 
+    String previousLockerState;
+
     // Variable that will contain the string representing locker state
     String lockerState;
 
@@ -34,20 +36,20 @@ public class LockerManager {
 
     // Registers whether or not the app is being used in test mode or nah
     // NOTE: SharedPreferences will remain 0000000 unless this is false
-    boolean testMode;
+    // boolean isFirstTime;
 
     // Get the locker that has been chosen for mail item
     int selectLockerIndex;
 
-    public LockerManager(Context context, boolean mode) {
+    public LockerManager(Context context) {
         mContext = context;
-        testMode = mode;
 
         // TODO: Check that sharedPreferences are shared on an application-wide scale rather than activity-wide
         sharedPreferences = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        lockerState = sharedPreferences.getString(key, null);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        if (sharedPreferences.getString(key, null) == null || testMode) {
+        /* if (sharedPreferences.getString(key, null) == null || testMode) {
             if (testMode) {
                 // Locker state string variable set to 0000000 in the constructor of LockerManager object
                 lockerState = "0000000";
@@ -56,7 +58,6 @@ public class LockerManager {
                 if (currentState != null && currentState.equals(lockerState)) {
                     Log.i(TAG, "LockerManager constructor: lockerState string already set to default");
                 } else {
-                    // TODO: Check that creating multiple locker manager objects does not create multiple sharedPreference files
                     Log.i(TAG, "LockerManager constructor: Putting " + lockerState + " to sharedPreference file");
 
                     editor.putString(key, lockerState);
@@ -65,20 +66,20 @@ public class LockerManager {
                     editor.apply();
                 }
             }
-        } else {
+        // } else {
             Log.i(TAG, "LockerManager constructor: sharedPreference file contains states");
             lockerState = sharedPreferences.getString(key, null);
             Log.i(TAG, "LockerManager constructor: lockerState = " + lockerState);
-        }
+        } */
     }
 
     // Gets the data from the availability string
     public int getAvailability(int packageType) {
 
-        Log.i(TAG, "getAvailability() method called");
+        Log.i(TAG, mContext.getClass().getSimpleName() + ": getAvailability() method called");
 
         if (lockerState != null) {
-            Log.i(TAG, "lockerState not null");
+            Log.i(TAG, mContext.getClass().getSimpleName() + ": lockerState not null");
 
             // Counts how many lockers are available
             int aCount = 0;
@@ -124,7 +125,7 @@ public class LockerManager {
     // Updates the availability string
     public void updateAvailability(int lockerIndex, boolean isInserting) {
 
-        Log.i(TAG, "updateAvailability() method called");
+        Log.i(TAG, mContext.getClass().getSimpleName() + ": updateAvailability() method called");
         StringBuilder changeLockerState = new StringBuilder(lockerState);
         Log.i(TAG, "isInserting = " + String.valueOf(isInserting) + " at locker index = " + String.valueOf(lockerIndex));
 
@@ -137,22 +138,26 @@ public class LockerManager {
         }
 
         // Update lockerState string
+        previousLockerState = lockerState;
         lockerState = changeLockerState.toString();
 
-        Log.i(TAG, "Writing " + lockerState + " to sharedPreferences file");
+        Log.i(TAG, mContext.getClass().getSimpleName() + ": Writing " + lockerState + " to sharedPreferences file");
+        editor = sharedPreferences.edit();
         editor.putString(key, lockerState);
         editor.apply();
+
+        Log.i(TAG, mContext.getClass().getSimpleName() + ": SharedPreference file contains: " + sharedPreferences.getString(key, null));
     }
 
     public void setSelectLockerIndex(int packageType) {
-        Log.i(TAG, "setSelectLockerIndex() method called");
+        Log.i(TAG, mContext.getClass().getSimpleName() + ": setSelectLockerIndex() method called");
 
         switch (packageType) {
             case 1:
                 for (int i = 0; i < 4; i++) {
-                    if (lockerState.charAt(i) == '0') {
+                    if (this.lockerState.charAt(i) == '0') {
                         selectLockerIndex = i;
-                        Log.i(TAG, "setSelectLockerIndex(): Locker available at index " + String.valueOf(i));
+                        Log.i(TAG, mContext.getClass().getSimpleName() + ": setSelectLockerIndex(): Locker available at index " + String.valueOf(i));
                         // Gets the first index at which locker state is 'free' for that mail item
                         break;
                     }
@@ -162,7 +167,7 @@ public class LockerManager {
                 for (int i = 4; i < 6; i++) {
                     if (lockerState.charAt(i) == '0') {
                         selectLockerIndex = i;
-                        Log.i(TAG, "setSelectLockerIndex(): Locker available at index " + String.valueOf(i));
+                        Log.i(TAG, mContext.getClass().getSimpleName() + ": setSelectLockerIndex(): Locker available at index " + String.valueOf(i));
                         // Gets the first index at which locker state is 'free' for that mail item
                         break;
                     }
@@ -170,7 +175,7 @@ public class LockerManager {
                 break;
             case 3:
                 // should only call this function if a large locker is available so if-statement is redundant
-                Log.i(TAG, "setSelectLockerIndex(): Locker available at index 6");
+                Log.i(TAG, mContext.getClass().getSimpleName() + ": setSelectLockerIndex(): Locker available at index 6");
                 selectLockerIndex = 6;
                 break;
         }
@@ -179,4 +184,33 @@ public class LockerManager {
     public int getSelectLockerIndex() { return this.selectLockerIndex; }
 
     public String getLockerState() { return this.lockerState; }
+
+    public void setLockerState(String state) {
+        this.lockerState = state;
+
+        Log.i(TAG, mContext.getClass().getSimpleName() + ": Writing " + this.lockerState + " to sharedPreferences file");
+        editor = sharedPreferences.edit();
+        editor.putString(key, lockerState);
+        editor.apply();
+    }
+
+    // SharedPreference listener dynamically registers a change in the sharedPreference file
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String prefKey) {
+        if (prefKey.equals(this.key)) {
+            Log.i(TAG, mContext.getClass().getSimpleName() + ": SharedPreference listener called");
+            lockerState = sharedPreferences.getString(key, null);
+            Log.i(TAG, mContext.getClass().getSimpleName() + ": Locker state changed from: " + previousLockerState + " to: " + lockerState);
+
+            previousLockerState = lockerState;
+        }
+    }
+
+    public void unregisterListener() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    public void registerListener() {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
 }
