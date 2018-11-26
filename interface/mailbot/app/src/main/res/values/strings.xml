@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">mailbot</string>
 
+    <!--Buttons-->
+    <string name="btnCancel">Cancel</string>
+    <string name="btnNext">NEXT</string>
+    <string name="btnProblem">Problem</string>
+
     <!--Main Activity Strings-->
     <string name="mainActivitySpeech">Hi! My name is MailBot and I am here to deliver your letters or your parcels to anyone in the EEE building!\n\nChoose what type of mail item you want to deliver to start organising your delivery!</string>
 
@@ -9,6 +14,7 @@
     <string name="parcelText">Parcel\n(up to 00x00cm)</string>
 
     <string name="lockerSizeUnavailable">All lockers of this size are full</string>
+    <string name="lockerSizePrompt">Please select a locker size as before!</string>
 
     <!--Details Activity Strings-->
     <string name="infoDetailsActivity">That\'s great! I just need to know a little bit about you...</string>
@@ -17,14 +23,14 @@
     <string name="fieldEmail">Email Address: </string>
     <string name="userChoosePhoto">Take a photo? </string>
 
-    <string name="bubbleRecipientDetails">Perfect! Now please tell us the details of the recipient of your mail item.</string>
+    <string name="bubbleRecipientDetails">Perfect! Now please provide details of the recipient of your mail item.</string>
 
     <string name="emailError">Please give a valid email address</string>
     <string name="emptyNameField">Please enter a name</string>
     <string name="emptyEmailField">Please enter an email address</string>
 
     <!--Will this need multiple lines?-->
-    <string name="recipientLocation">Delivery Location: </string>
+    <string name="fieldLocation">Delivery Location: </string>
 
     <string name="confirmSpeechBubble">Please confirm to me that the details below are correct.</string>
 
@@ -32,6 +38,7 @@
     <string name="recipientDetailsSpinner">Recipient Details</string>
 
     <!--Locker Activity Strings-->
+    <!--TODO: Change locker X to an actual value-->
     <string name="lockerActivitySpeech">I have opened locker X for your mail item! Please store it there so I can deliver it, and close the locker before continuing.</string>
     <string name="lockerActivityBadFit">It doesn\'t fit!</string>
     <string name="lockerActivityGoodFit">I put the parcel in and closed the locker!</string>
@@ -41,7 +48,24 @@
     <string name="endActivitySpeech">Thank you for giving me your mail! It will be delivered in the next delivery slot time, and a confirmation e-mail with the security code for the recipient to open the locker has been sent to both you and the recipient.
     Use the buttons below to send another mail item to the same recipient, or begin again!</string>
     <string name="toSameRecipient">Same recipient</string>
-    <string name="startAgain">Return</string>
+    <string name="exitProcess">Complete</string>
+
+    <string name="popupTitle">Select a locker size</string>
+
+    <!--En Route Activity Strings-->
     <string name="enRouteActivitySpeech">I am now delivering the mail items that have been handed to me! If you want to send your own mail item, find me in reception at the next collection time!</string>
+
+    <!--Password Activity Strings-->
+    <string name="PasswordActivitySpeech">Please enter the personal PIN code that has been sent to you via e-mail to open the locker containing your mail item.</string>
+    <string name="pinCode">PIN code: </string>
+    <string name="btnSubmit">Submit</string>
+    <string name="incorrectPin">Incorrect pin entered. Attempts remaining:</string>
+
+    <!--Unsuccessful Activity Strings-->
+    <string name="UnsuccessfulActivitySpeech_PIN">Sorry, the wrong PIN code has been entered three times so the mail item will remain secured. The sender will be able to retrieve it at the next collection time.</string>
+    <string name="UnsuccessfulActivitySpeech_knock">Sorry, nobody was around to collect the mail item so the locker will remain secured. The sender will be able to retrieve it at the next collection time.</string>
+
+    <!--Open Locker Activity Strings-->
     <string name="openLockerActivitySpeech">That\'s the correct password! A locker for your mail item has been opened! Please retrieve your item, and then close the locker.</string>
+    <string name="btnDone">DONE</string>
 </resources>

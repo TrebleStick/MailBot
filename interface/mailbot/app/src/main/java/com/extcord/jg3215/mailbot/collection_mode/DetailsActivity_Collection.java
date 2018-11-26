@@ -1,4 +1,4 @@
-package com.extcord.jg3215.mailbot.CollectionMode;
+package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,9 +20,11 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-public class DetailsActivity_Collection1 extends AppCompatActivity {
+public class DetailsActivity_Collection extends AppCompatActivity {
 
-    // TODO: Change text of speech bubble
+    // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
+        // It is a bug that seems to appear in random places and I cannot figure out why
+        // Can be fixed by changing the string's value and then changing it back after building
 
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
@@ -51,7 +53,8 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     // User selects this button if there is an error with the details entered
     Button problemButton;
 
-    private boolean fromProblemButtonListener;
+    // indicates whether user is in a state because they came from problem button listener
+    private boolean fromProblemButtonListener = false;
 
     // Used for sender name, recipient name -> not in confirmation state
     EditText topEntry;
@@ -75,8 +78,14 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     TextView confirmMidEnt;
     TextView confirmBtmEnt;
 
+    // Spinner is a dropdown list that presents loads up details associated with selected person (sender or recipient)
     Spinner inputDetails;
     private int spinnerListItem;
+
+    ArrayAdapter<String> adapter;
+    // data obtained from the user about the sender and the recipient
+    // senderName, senderEmail, recipientName, recipientEmail, recipientLocation
+    private String[] storedData = new String [5];
 
     // Package details - could make this one class
     private PackageData senderData;
@@ -109,23 +118,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             // 3. Confirming details with user
         state = 1;
 
-        // Gets the package type that is being delivered from the intent
-        packageType = this.getIntent().getIntExtra("packageType", 0);
-        Log.i(TAG, "Package Type: " + String.valueOf(packageType));
-
-        try {
-            // If a null point exception does not occur, user has requested to mail another item to same recipient
-            recipientData = this.getIntent().getParcelableExtra("recipientData");
-        } catch (NullPointerException e) {
-            Log.i(TAG, "No recipientData object available: " + e.getMessage());
-        }
-
-        try {
-            senderData = this.getIntent().getParcelableExtra("senderData");
-        } catch (NullPointerException e) {
-            Log.i(TAG, "No recipientData object available: " + e.getMessage());
-        }
-
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
         btmEntry = (EditText) findViewById(R.id.deliveryLocation);
@@ -141,7 +133,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         confirmBtmEnt = (TextView) findViewById(R.id.confirmBtmEntry);
 
         inputDetails = (Spinner) findViewById(R.id.detailSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, inputDetailList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, inputDetailList);
         inputDetails.setAdapter(adapter);
         inputDetails.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -153,15 +145,13 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         // item 0 in the adapter list should present sender details
                         spinnerListItem = 0;
                         Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
-                        Log.i(TAG, "Sender data, Name: " + senderData.getName() + ", Email Address" + senderData.getEmailAddress());
-                        confirmTopEnt.setText(senderData.getName());
-                        confirmTopEnt.setVisibility(View.VISIBLE);
-
-                        confirmMidEnt.setText(senderData.getEmailAddress());
-                        confirmMidEnt.setVisibility(View.VISIBLE);
+                        Log.i(TAG, "Sender data, Name: " + senderData.getName() + ", Email Address: " + senderData.getEmailAddress());
 
                         confirmBtmEnt.setVisibility(View.GONE);
                         btmField.setVisibility(View.GONE);
+
+                        confirmTopEnt.setText(storedData[0]);
+                        confirmMidEnt.setText(storedData[1]);
                         break;
                     case 1:
                         // item 1 in the adapter list should present the recipient details
@@ -169,19 +159,16 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                         Log.i(TAG, "Spinner List Item Selected = " + String.valueOf(spinnerListItem) + ", " + String.valueOf(i));
                         Log.i(TAG, "Recipient data, Name: " + recipientData.getName() + ", Email Address: " + recipientData.getEmailAddress() + ", Delivery Location: " + recipientData.getDeliveryLocation());
 
-                        confirmTopEnt.setText(recipientData.getName());
-                        confirmTopEnt.setVisibility(View.VISIBLE);
-
-                        confirmMidEnt.setText(recipientData.getEmailAddress());
-                        confirmMidEnt.setVisibility(View.VISIBLE);
-
-                        confirmBtmEnt.setText(recipientData.getDeliveryLocation());
                         confirmBtmEnt.setVisibility(View.VISIBLE);
-
                         btmField.setVisibility(View.VISIBLE);
+
+                        confirmTopEnt.setText(storedData[2]);
+                        confirmMidEnt.setText(storedData[3]);
+                        confirmBtmEnt.setText(storedData[4]);
                         break;
                     default:
                         Log.i(TAG, "Item list exception: i = " + String.valueOf(i));
+                        break;
                 }
             }
 
@@ -196,16 +183,13 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             @Override
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
-            Log.i(TAG, "Cancel button pressed");
-            // TODO: Tell Robot that the process has been cancelled
-            // Takes the user back to the main menu - not the previous state
-            finish();
+                Log.i(TAG, "Cancel button pressed");
+                // TODO: Tell Robot that the process has been cancelled
+                // Takes the user back to the main menu - not the previous state
+                finish();
             }
         });
 
-        fromProblemButtonListener = false;
-
-        // TODO: FINISH
         problemButton = (Button) findViewById(R.id.buttonProblem);
         problemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,12 +202,11 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 switch (spinnerListItem) {
                     case 0:
                         state = 1;
-                        toLayoutStateOne(1);
+                        toLayoutStateOne(3);
                         break;
                     case 1:
                         state = 2;
-                        // This method does not need any arguments tbh
-                        toLayoutStateTwo(1);
+                        toLayoutStateTwo(3);
                         break;
                 }
             }
@@ -235,6 +218,7 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
                 Log.i(TAG, "Go button pressed");
+
                 switch (state) {
                     case STATE_USER_DETAILS:
                         Log.i(TAG, "Sender details entered");
@@ -245,22 +229,31 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                             return;
                         }
 
+                        storedData[0] = senderName;
+                        storedData[1] = senderEmailAddress;
+
                         if (!fromProblemButtonListener) {
+                            // not entering this state from the problem button listener method
+                            Log.i(TAG, "State not accessed from Problem button");
+
                             // Create class containing data about the user
                             senderData = new PackageData(senderName, senderEmailAddress);
 
                             // Change view to what you expect next
-                            toLayoutStateTwo(0);
+                            toLayoutStateTwo(1);
                             Log.i(TAG, "toLayoutStateTwo() method called.");
                         } else {
-                            // not entering this state from the problem button listener method
+                            Log.i(TAG, "State accessed from Problem button");
+
                             // senderData class instance already exists
-                            senderData.setName(topEntry.getText().toString());
-                            senderData.setEmailAddress(midEntry.getText().toString());
+                            senderData.setName(senderName);
+                            senderData.setEmailAddress(senderEmailAddress);
+
+                            // Notify spinner that list data set has been altered
+                            adapter.notifyDataSetChanged();
 
                             // return to final state
-                            toLayoutStateThree(topEntry, midEntry, btmEntry);
-                            return;
+                            toLayoutStateThree(1);
                         }
 
                         // Change state of the activity
@@ -278,25 +271,28 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                             return;
                         }
 
+                        storedData[2] = recipientName;
+                        storedData[3] = recipientEmailAddress;
+                        storedData[4] = recipientLocation;
+
                         if (!fromProblemButtonListener) {
                             // Create a class containing data about the recipient
                             recipientData = new PackageData(recipientName, recipientEmailAddress);
                             recipientData.setDeliveryLocation(recipientLocation);
-
-                            // Change view to what you expect next
-                            toLayoutStateThree(topEntry, midEntry, btmEntry);
-                            Log.i(TAG, "toLayoutStateThree() method called");
                         } else {
                             // not entering this state from the problem button listener method
                             // senderData class instance already exists
-                            recipientData.setName(topEntry.getText().toString());
-                            recipientData.setEmailAddress(midEntry.getText().toString());
-                            recipientData.setDeliveryLocation(btmEntry.getText().toString());
+                            recipientData.setName(recipientName);
+                            recipientData.setEmailAddress(recipientEmailAddress);
+                            recipientData.setDeliveryLocation(recipientLocation);
 
-                            // return to final state
-                            toLayoutStateThree(topEntry, midEntry, btmEntry);
-                            return;
+                            // Notify the spinner list that values have been updated
+                            adapter.notifyDataSetChanged();
                         }
+
+                        // Change view to what you expect next
+                        toLayoutStateThree(2);
+                        Log.i(TAG, "toLayoutStateThree() method called");
 
                         // Change state of the activity
                         Log.i(TAG, "State variable updated. State = " + String.valueOf(state));
@@ -310,6 +306,58 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 }
             }
         });
+
+        Bundle endActivityData = this.getIntent().getExtras();
+        if (endActivityData != null) {
+            // Gets the package type that is being delivered from the intent
+            try {
+                packageType = endActivityData.getInt("packageType");
+                Log.i(TAG, "Package Type: " + String.valueOf(packageType));
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No package data provided from endActivity: " + e.getMessage());
+            }
+
+            if (endActivityData.getBoolean("dataProvided")) {
+                // Object data already provided by the user
+                Log.i(TAG, "Data has already been provided by the user");
+
+                try {
+                    senderData = endActivityData.getParcelable("senderData");
+
+                    if (senderData != null) {
+                        Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+
+                        // Update string array that is used to present object data
+                        storedData[0] = senderData.getName();
+                        storedData[1] = senderData.getEmailAddress();
+                    }
+                } catch (NullPointerException e) {
+                    throw new NullPointerException("No sender data provided from endActivity: " + e.getMessage());
+                }
+
+                try {
+                    recipientData = endActivityData.getParcelable("recipientData");
+
+                    if (recipientData != null) {
+                        Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+
+                        // Update string array that is used to present object data
+                        storedData[2] = recipientData.getName();
+                        storedData[3] = recipientData.getEmailAddress();
+                        storedData[4] = recipientData.getDeliveryLocation();
+                    }
+                } catch (NullPointerException e) {
+                    throw new NullPointerException("No recipient data provided from endActivity: " + e.getMessage());
+                }
+
+                // Takes the user to the third state of this activity
+                toLayoutStateThree(1);
+                // Needs to be done or the checkBox will be there, haunting you
+                takePhotoOption.setVisibility(View.GONE);
+            }
+        } else {
+            throw new NullPointerException("No data provided from endActivity");
+        }
     }
 
     private void toLockerActivity() {
@@ -318,18 +366,24 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
 
-        Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection1.class);
+        Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection.class);
+
+        // Create a bundle for holding the extras
+        Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
             // The kind of package the user is sending
             // The data given to MailBot about the sender
             // The data given to MailBot about the recipient
-        lockerActivityIntent.putExtra(packageTag, packageType);
-        lockerActivityIntent.putExtra(senderDataTag, senderData);
-        lockerActivityIntent.putExtra(recipientDataTag, recipientData);
+        extras.putInt(packageTag, packageType);
+        extras.putParcelable(senderDataTag, senderData);
+        extras.putParcelable(recipientDataTag, recipientData);
+
+        // Add all the extras content to the intent
+        lockerActivityIntent.putExtras(extras);
 
         startActivity(lockerActivityIntent);
-        Log.i(TAG, "Locker Activity started with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag);
+        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag);
         finish();
     }
 
@@ -339,23 +393,22 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     }
 
     private boolean entryChecks(String name, String emailAddress) {
-        // TODO: Make the checks below a function
         if (name.equals("")) {
             Log.i(TAG, "Name Field is empty");
-            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
+            Toast.makeText(DetailsActivity_Collection.this, getResources().getString(R.string.emptyNameField), Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (emailAddress.equals("")) {
             Log.i(TAG, "Email Address Field is empty");
-            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
+            Toast.makeText(DetailsActivity_Collection.this, getResources().getString(R.string.emptyEmailField), Toast.LENGTH_LONG).show();
             return false;
         }
 
         // The user will have to insert a valid email address before they can progress beyond this point
         if (!isValidEmail(emailAddress)) {
             Log.i(TAG, "Invalid email address format given");
-            Toast.makeText(DetailsActivity_Collection1.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
+            Toast.makeText(DetailsActivity_Collection.this, getResources().getString(R.string.emailError), Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -363,7 +416,6 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
     }
 
     private void toLayoutStateOne(int callCase) {
-
         // Bottom TextView text should have "Take photo"
         btmField.setText(getResources().getString(R.string.userChoosePhoto));
 
@@ -374,11 +426,11 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         inputDetails.setVisibility(View.GONE);
 
         switch (callCase) {
-            case 0:
-                // if this method needs to be called from elsewhere
+            case 2:
+                // go to state 1 from state 2
                 break;
-            case 1:
-                // called from problem button
+            case 3:
+                // go to state 1 from state 3
 
                 // Entry TextViews should not be visible
                 confirmTopEnt.setVisibility(View.GONE);
@@ -393,44 +445,49 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
                 btmField.setVisibility(View.VISIBLE);
 
                 // Top and Mid EditTexts need to be made visible and should display name and email address data
-                topEntry.setText(recipientData.getName());
+                topEntry.setText(senderData.getName());
                 topEntry.setVisibility(View.VISIBLE);
 
-                midEntry.setText(recipientData.getEmailAddress());
+                midEntry.setText(senderData.getEmailAddress());
                 midEntry.setVisibility(View.VISIBLE);
                 break;
         }
+        state = 1;
+        Log.i(TAG, "Layout changed to state: " + String.valueOf(state));
     }
 
     private void toLayoutStateTwo(int callCase) {
-        // callCase refers to whether this method is called from problem Button or go Button listener
+        // callCase refers to which state you call this method from
 
         // toLayoutStateTwo means that you are preparing the activity to receive recipient details
         TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
         bubbleText.setText(getResources().getString(R.string.bubbleRecipientDetails));
 
         switch (callCase) {
-            case 0:
-                // case 0 is from the go button listener ie from state 1
+            case 1:
+                // go to state 2 from state 1
                 topEntry.setText("");
                 midEntry.setText("");
+
+                // Bottom field set to read "Delivery Location: "
+                btmField.setText(getResources().getString(R.string.fieldLocation));
+                Log.i(TAG, "Bottom Field set to: " + getResources().getString(R.string.fieldLocation));
 
                 // Gets rid of take photo checkbox
                 takePhotoOption.setVisibility(View.GONE);
 
-                // Bottom field set to read "Delivery Location: "
-                btmField.setText(getResources().getString(R.string.recipientLocation));
                 // Brings up EditText for inserting delivery location
                 btmEntry.setVisibility(View.VISIBLE);
                 break;
-            case 1:
-                // should only be here if this method is called from problem button click listener
-                // TODO: Check if the View.VISIBLE commands are necessary for the Entry EditTexts
-                // TextViews should not be visible
+            case 3:
+                // go to state 2 from state 3 (recipient details)
+
+                // Confirmation textViews should not be visible
                 confirmTopEnt.setVisibility(View.GONE);
                 confirmMidEnt.setVisibility(View.GONE);
                 confirmBtmEnt.setVisibility(View.GONE);
 
+                // Make top, middle and bottom EditTexts visible with existing data
                 topEntry.setText(recipientData.getName());
                 topEntry.setVisibility(View.VISIBLE);
 
@@ -452,11 +509,21 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         Log.i(TAG, "Layout changed to state: " + String.valueOf(state));
     }
 
-    private void toLayoutStateThree(EditText topText, EditText midText, EditText btmText) {
+    private void toLayoutStateThree(int callCase) {
+        // callCase refers to which state ou call this method from
+        fromProblemButtonListener = false;
+
         // When confirming details, user cannot edit their entries -> EditTexts are hidden
-        topText.setVisibility(View.GONE);
-        midText.setVisibility(View.GONE);
-        btmText.setVisibility(View.GONE);
+        topEntry.setVisibility(View.GONE);
+        midEntry.setVisibility(View.GONE);
+        btmEntry.setVisibility(View.GONE);
+
+        // Make confirmation TextViews visible
+        confirmTopEnt.setVisibility(View.VISIBLE);
+        confirmMidEnt.setVisibility(View.VISIBLE);
+
+        // Makes spinner visible
+        inputDetails.setVisibility(View.VISIBLE);
 
         // Button allows user to flag an issue with a set of details given (sender or recipient)
         problemButton.setVisibility(View.VISIBLE);
@@ -465,9 +532,41 @@ public class DetailsActivity_Collection1 extends AppCompatActivity {
         TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
         bubbleText.setText(getResources().getString(R.string.confirmSpeechBubble));
 
-        // Makes spinner visible
-        inputDetails.setVisibility(View.VISIBLE);
+        switch(callCase) {
+            case 1:
+                // go to state 3 from state 1
+                Log.i(TAG, "toLayoutStateThree() method called from state: " + String.valueOf(callCase));
 
+                // Bottom field text altered to be "Delivery Location"
+                btmField.setText(getResources().getString(R.string.fieldLocation));
+                // If you are going to state three from state one, you registered a problem in Sender details
+                // Bottom field should not be visible in this case
+                btmField.setVisibility(View.GONE);
+
+                // This checkbox should not be visible
+                takePhotoOption.setVisibility(View.GONE);
+
+                // Manually update these textViews
+                confirmTopEnt.setText(senderData.getName());
+                confirmMidEnt.setText(senderData.getEmailAddress());
+
+                // This textView should not be visible if you are coming from state 1 (user details)
+                confirmBtmEnt.setVisibility(View.GONE);
+                break;
+            case 2:
+                // go to state 3 from state 2
+                Log.i(TAG, "toLayoutStateThree() method called from state: " + String.valueOf(callCase));
+
+                // Manually update the textViews
+                confirmTopEnt.setText(recipientData.getName());
+                confirmMidEnt.setText(recipientData.getEmailAddress());
+
+                confirmBtmEnt.setText(recipientData.getDeliveryLocation());
+                confirmBtmEnt.setVisibility(View.VISIBLE);
+
+                btmField.setVisibility(View.VISIBLE);
+                break;
+        }
         state = 3;
         Log.i(TAG, "Layout changed to state: "+ String.valueOf(state));
     }
