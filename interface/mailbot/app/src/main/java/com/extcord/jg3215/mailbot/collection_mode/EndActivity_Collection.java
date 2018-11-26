@@ -78,10 +78,6 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
 
                 // Create the popup dialog (fragment activity)
                 showDialog();
-
-                /* Go back to main screen and wait for user to select a locker size
-                Intent returnToMainActivityIntent = new Intent(EndActivity_Collection.this, MainActivity_Collection.class);
-                startActivityForResult(returnToMainActivityIntent, 1); */
             }
         });
 

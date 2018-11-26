@@ -57,7 +57,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         // TODO: Change this from testMode to not testMode once testing is complete
-        mLockerManager = new LockerManager(this, true);
+        mLockerManager = new LockerManager(this, false);
 
         letterView = (ImageView) findViewById(R.id.letter);
         letterView.setOnClickListener(new View.OnClickListener() {
