@@ -27,7 +27,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     // Listen for response (Serial communication) to space query
-    // TODO: Get information on space in all locker types - may come in handy later
+    // TODO: Get information on space in all locker types - may come in handy later --- will be handled internally
     BroadcastReceiver mBroadcastReceiverSpaceQuery = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
