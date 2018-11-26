@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.LockerManager;
@@ -77,9 +76,6 @@ public class MainActivity_Collection extends AppCompatActivity {
                 }
             }
         });
-
-        TextView LockerTextView = findViewById(R.id.testLockerManager);
-        LockerTextView.setText(mLockerManager.getLockerState());
 
         largeLetterView = (ImageView) findViewById(R.id.largeLetter);
         largeLetterView.setOnClickListener(new View.OnClickListener() {
