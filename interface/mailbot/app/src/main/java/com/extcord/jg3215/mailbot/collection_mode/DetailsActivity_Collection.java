@@ -110,10 +110,12 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
         btmEntry = (EditText) findViewById(R.id.deliveryLocation);
+        btmEntry.setVisibility(View.GONE);
 
         // Bottom field in state 2 -> Delivery Location
         // Bottom field only visible for recipient details spinner
         btmField = (TextView) findViewById(R.id.bottomField);
+        btmField.setVisibility(View.GONE);
 
         confirmTopEnt = (TextView) findViewById(R.id.confirmTopEntry);
         confirmMidEnt = (TextView) findViewById(R.id.confirmMidEntry);
@@ -408,7 +410,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // Bottom field textView should not be visible
         btmField.setVisibility(View.GONE);
 
-        // Bottom entry editText should not be visible
+        // Bottom entry editText should be visible
         btmEntry.setVisibility(View.GONE);
 
         // Problem button should not be visible
