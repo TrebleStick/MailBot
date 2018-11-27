@@ -11,12 +11,18 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.database.LockerItem;
 
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 public class LockerActivity_Collection extends AppCompatActivity {
 
     // TODO: Send a PIN code for each package to the computer as the mail item is locked away
+    // Integers used to represent the type of mail that is being sent
+    private static final int LETTER_STANDARD = 1;
+    private static final int LETTER_LARGE = 2;
+    private static final int PARCEL = 3;
 
     // The TextViews for the two options given at the start of this activity
         // 'Parcel fits' vs 'Parcel does not fit'
@@ -45,8 +51,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
         // Get data from previous activity stored in a bundle
         Bundle detailActivityData = this.getIntent().getExtras();
 
-
-
         mLockerManager = new LockerManager(this);
 
         if (detailActivityData != null) {
@@ -59,7 +63,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
             recipientData = detailActivityData.getParcelable("recipientData");
             Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
 
-            lockerIndex = detailActivityData.getInt("lockerTag");
+            lockerIndex = detailActivityData.getInt("lockerIndex");
             Log.i(TAG, "Locker to open = " + String.valueOf(lockerIndex + 1));
 
             //Set the opened locker number in speech bubble in LockerActivity_Collection
@@ -93,11 +97,38 @@ public class LockerActivity_Collection extends AppCompatActivity {
             public void onClick(View view) {
                 Log.i(TAG, "goodFitView text pressed");
                 // TODO: Tell the computer that the locker is closed?
-                // TODO: Update the availability of that locker size
                 // Is there any data that needs to passed on as an extra?
 
-                mLockerManager.updateAvailability(lockerIndex, true);
-                toEndActivity();
+                // Create a database entry for the senderData, recipientData and locker number associated with this mail item
+                LockerItem lockerItem = new LockerItem();
+                lockerItem.setLockerNo(lockerIndex + 1);
+
+                lockerItem.setSenderName(senderData.getName());
+                lockerItem.setSenderEmail(senderData.getEmailAddress());
+
+                lockerItem.setRecipientName(recipientData.getName());
+                lockerItem.setRecipientEmail(recipientData.getEmailAddress());
+
+                lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
+                checkDatabase();
+
+                MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
+                Log.i(TAG, "Locker item info added to database successfully");
+
+                // Gets the number of available lockers
+                int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
+
+                // If no lockers are available, app will go to EnRouteActivity
+                if (aLockers > 1) {
+                    // Updates lockerState string with one extra full locker
+                    mLockerManager.updateAvailability(lockerIndex, true);
+
+                    toEndActivity();
+                } else {
+                    mLockerManager.unregisterListener();
+                    mLockerManager.updateAvailability(lockerIndex, true);
+                    finish();
+                }
             }
         });
     }
@@ -114,9 +145,9 @@ public class LockerActivity_Collection extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
-        // The kind of package the user is sending
-        // The data given to MailBot about the sender
-        // The data given to MailBot about the recipient
+            // The kind of package the user is sending
+            // The data given to MailBot about the sender
+            // The data given to MailBot about the recipient
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
@@ -128,8 +159,28 @@ public class LockerActivity_Collection extends AppCompatActivity {
         finish();
     }
 
+    private void checkDatabase() {
+        Log.i(TAG, "checkDatabase() method called");
+        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+        int count = 0;
+
+        for (LockerItem lockerItems : lockerItemList) {
+            int nLocker = lockerItems.getLockerNo();
+            String sName = lockerItems.getSenderName();
+            String rName = lockerItems.getRecipientName();
+            String dLocation = lockerItems.getDeliveryLocation();
+
+            Log.i(TAG, "Mail Item Count = " + String.valueOf(count));
+            count++;
+            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
+        }
+    }
+
     protected void onDestroy() {
-        mLockerManager.unregisterListener();
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+        }
+        mLockerManager = null;
         super.onDestroy();
     }
 }

@@ -5,20 +5,16 @@ import android.os.Parcelable;
 
 // Make it parcelable so that its instances can be passed as extras between activities
 public class PackageData implements Parcelable{
-    // TODO: Check that is/is not the best way to format data to be sent along
     private String name;
     private String emailAddress;
 
     // TODO: Check what the format of the delivery location is going to be
     private String deliveryLocation;
 
-    private boolean photoOptionState;
-
     // Constructor
     public PackageData(String userName, String userEmail) {
         name = userName;
         emailAddress = userEmail;
-        // photoOptionState = optionState;
     }
 
     // Set methods might only be necessary for delivery location
@@ -45,8 +41,6 @@ public class PackageData implements Parcelable{
     public String getDeliveryLocation() {
         return this.deliveryLocation;
     }
-
-    public boolean getPhotoOptionState() {  return photoOptionState;}
 
     public int describeContents() {
         return 0;

@@ -1,5 +1,6 @@
 package com.extcord.jg3215.mailbot.collection_mode;
 
+import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +16,18 @@ import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.database.LockerItem;
+import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.delivery_mode.EnRouteActivity_Delivery;
 
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 public class MainActivity_Collection extends AppCompatActivity {
+
+    // Database is a public, static object so can be accessed by all activities
+    // I assume Android Studio provides security against memory leaks for Rooms
+    public static LockerItemDatabase lockerItemDatabase;
 
     // The image views that are being used like buttons
     ImageView letterView;
@@ -43,7 +51,14 @@ public class MainActivity_Collection extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("lockerFull");
             Log.i(TAG, "MainActivity: Broadcast received: " + text);
-            toEnRouteActivity();
+
+            // Extract the delivery locations from the database of lockerItem information
+            String[] deliveryLocations;
+            deliveryLocations = getDeliveryLocations();
+            Log.i(TAG, "Delivery Location list successfully created");
+
+            // Go to EnRouteActivity
+            toEnRouteActivity(deliveryLocations);
         }
     };
 
@@ -63,9 +78,14 @@ public class MainActivity_Collection extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
+        lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, "lockerInfo").allowMainThreadQueries().build();
+
         // TODO: Make handling of lockerState more robust
         mLockerManager = new LockerManager(this);
         mLockerManager.setLockerState("0000000");
+
+        // TODO: Make handling of database more robust
+        clearDatabase();
 
         // Register broadcast receiver to this instance of the activity
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
@@ -145,12 +165,16 @@ public class MainActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
     }
 
-    private void toEnRouteActivity() {
+    private void toEnRouteActivity(String[] deliveryLocations) {
         Log.i(TAG, "toEnRouteActivity() method called");
-
-        // TODO: Figure out extras to send
+        String locationsTag = "locations";
 
         Intent toEnRouteActivityIntent = new Intent(this, EnRouteActivity_Delivery.class);
+        Bundle extras = new Bundle();
+
+        // TODO: Figure out extras to send
+        extras.putStringArray(locationsTag, deliveryLocations);
+
         startActivity(toEnRouteActivityIntent);
     }
 
@@ -159,6 +183,44 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         Log.i(TAG, "Locker state = " + mLockerManager.getLockerState());
         lockerTextView.setText(mLockerManager.getLockerState());
+    }
+
+    // Provides locations but also checks that database do what is supposed to do
+    private String[] getDeliveryLocations() {
+        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+        String[] locationList = new String[7];
+        int index = 0;
+
+        for (LockerItem lockerItems : lockerItemList) {
+            int nLocker = lockerItems.getLockerNo();
+            String sName = lockerItems.getSenderName();
+            String rName = lockerItems.getRecipientName();
+            String dLocation = lockerItems.getDeliveryLocation();
+
+            locationList[index] = dLocation;
+            Log.i(TAG, "Index = " + String.valueOf(index));
+            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
+
+            index++;
+        }
+
+        return locationList;
+    }
+
+    private void clearDatabase() {
+        Log.i(TAG, "clearDatabase() method called");
+        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+        int itemListLength = lockerItemList.size();
+
+        for (int i = 0; i < itemListLength; i++) {
+            int primaryKey = lockerItemList.get(i).getLockerNo();
+            LockerItem delItem = new LockerItem();
+            delItem.setLockerNo(primaryKey);
+
+            Log.i(TAG, "Item to delete has index = " + String.valueOf(primaryKey));
+            MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().deleteLockerItem(delItem);
+            Log.i(TAG, "Item successfully deleted");
+        }
     }
 
     protected void onDestroy() {

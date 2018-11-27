@@ -15,15 +15,16 @@ import com.extcord.jg3215.mailbot.R;
 
 public class EndActivity_Collection extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
 
-    private int packageType;
-
     // Integers used to represent the type of mail that is being sent
     private static final int LETTER_STANDARD = 1;
     private static final int LETTER_LARGE = 2;
     private static final int PARCEL = 3;
 
+    // Incoming extras
     private PackageData senderData;
     private PackageData recipientData;
+
+    private int packageType;
 
     Button toSameRecipientButton;
     Button returnButton;
@@ -44,12 +45,12 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         mLockerManager = new LockerManager(this);
 
         if (lockerActivityData != null) {
-            try {
+            /* try {
                 packageType = lockerActivityData.getInt("packageType");
                 Log.i(TAG, "Package Type: " + String.valueOf(packageType));
             } catch (NullPointerException e) {
-                Log.i(TAG, "No package type data received: " + e.getMessage());
-            }
+                Log.i(TAG, "Error in communicating integer data from LockerActivity: " + e.getMessage());
+            } */
 
             try {
                 senderData = lockerActivityData.getParcelable("senderData");
@@ -177,6 +178,7 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
+
         // Boolean represents whether or not data has been provided by a previous activity
         extras.putBoolean(dataProvidedTag, true);
         Log.i(TAG, "Extras added to bundle");

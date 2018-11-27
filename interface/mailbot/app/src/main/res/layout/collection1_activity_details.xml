@@ -150,7 +150,8 @@
                     android:layout_height="@dimen/_25sdp"
                     android:text="@string/fieldLocation"
                     android:textColor="#ffffff"
-                    android:textSize="@dimen/_10sdp" />
+                    android:textSize="@dimen/_10sdp"
+                    android:visibility="gone"/>
 
                 <EditText
                     android:id="@+id/deliveryLocation"

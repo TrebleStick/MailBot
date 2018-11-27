@@ -1,0 +1,63 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "063dc049719c3db8482146e6e3845817",
+    "entities": [
+      {
+        "tableName": "lockers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lockerNo` INTEGER NOT NULL, `senderName` TEXT, `senderEmail` TEXT, `recipientName` TEXT, `recipientEmail` TEXT, `deliveryLocation` TEXT, PRIMARY KEY(`lockerNo`))",
+        "fields": [
+          {
+            "fieldPath": "lockerNo",
+            "columnName": "lockerNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderName",
+            "columnName": "senderName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "senderEmail",
+            "columnName": "senderEmail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recipientName",
+            "columnName": "recipientName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recipientEmail",
+            "columnName": "recipientEmail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deliveryLocation",
+            "columnName": "deliveryLocation",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "lockerNo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"063dc049719c3db8482146e6e3845817\")"
+    ]
+  }
+}

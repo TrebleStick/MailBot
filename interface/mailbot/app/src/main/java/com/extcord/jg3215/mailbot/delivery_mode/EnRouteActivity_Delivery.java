@@ -19,6 +19,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private boolean personDetected = false;
 
+    private String[] deliveryLocations;
+
     // TODO: Figure out which mail item (in the 7 digit string) is being delivered
 
     // Listen for message (Serial communication) that MailBot is at destination
@@ -59,15 +61,42 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_activity_enroute);
         Log.i(TAG, "onCreate() method called");
+
+        Bundle collectionModeData = this.getIntent().getExtras();
+        if (collectionModeData != null) {
+            try {
+                deliveryLocations = collectionModeData.getStringArray("locations");
+
+                if (deliveryLocations != null) {
+                    int index = 1;
+                    for (String location : deliveryLocations) {
+                        Log.i(TAG, "Location " + String.valueOf(index) + ": " + location);
+                        index++;
+                    }
+                }
+            } catch (NullPointerException e) {
+                // throw new exception?
+                Log.i(TAG, "Delivery Location data not received: " + e.getMessage());
+            }
+        }
     }
 
     private void toUnsuccessfulActivity() {
         Log.i(TAG, "toUnsuccessfulActivity() method called");
+
+        Intent toUnsuccessfulIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
+        startActivity(toUnsuccessfulIntent);
         finish();
     }
 
     private void toPasswordActivity() {
         Log.i(TAG, "toPasswordActivity() method called");
+
+        Intent toPasswordActivityIntent = new Intent(this, PasswordActivity_Delivery.class);
+
+        // TODO: Figure out if there are extras to send
+        
+        startActivity(toPasswordActivityIntent);
         finish();
     }
 }

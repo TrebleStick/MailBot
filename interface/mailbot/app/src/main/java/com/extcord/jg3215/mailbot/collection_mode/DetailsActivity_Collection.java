@@ -332,7 +332,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                     recipientData = endActivityData.getParcelable("recipientData");
 
                     if (recipientData != null) {
-                        Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+                        Log.i(TAG, "Recipient data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
 
                         // Update string array that is used to present object data
                         storedData[2] = recipientData.getName();
@@ -356,7 +356,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         String packageTag = "packageType";
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
-        String lockerToUseTag = "lockerTag";
+        String lockerIndexTag = "lockerIndex";
 
         Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection.class);
 
@@ -367,16 +367,17 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // The kind of package the user is sending
             // The data given to MailBot about the sender
             // The data given to MailBot about the recipient
+            // The locker that is storing the mail item
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
-        extras.putInt(lockerToUseTag, lockerIndex);
+        extras.putInt(lockerIndexTag, lockerIndex);
 
         // Add all the extras content to the intent
         lockerActivityIntent.putExtras(extras);
 
         startActivity(lockerActivityIntent);
-        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag);
+        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag + ", " + lockerIndexTag);
         finish();
     }
 
