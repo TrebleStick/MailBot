@@ -19,7 +19,6 @@
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,12 +30,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".collection_mode.MainActivity_Collection"/>
             <!--USB capabilities-->
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
+                android:resource="@xml/device_filter" />-->
         </activity>
 
         <activity
@@ -63,12 +62,12 @@
                 android:value=".collection_mode.MainActivity_Collection"/>
 
             <!--USB capabilities-->
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
+                android:resource="@xml/device_filter" />-->
         </activity>
 
         <activity
@@ -87,12 +86,12 @@
                 android:value=".delivery_mode.EnRouteActivity_Delivery"/>
 
             <!--USB capabilities-->
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
+                android:resource="@xml/device_filter" />-->
 
         </activity>
 

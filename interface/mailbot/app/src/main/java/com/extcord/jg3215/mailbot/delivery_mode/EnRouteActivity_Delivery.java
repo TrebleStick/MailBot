@@ -134,5 +134,5 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         }
     }
 
-    private int[] getDistinctProfiles
+    private int[] getDistinctProfiles;
 }
