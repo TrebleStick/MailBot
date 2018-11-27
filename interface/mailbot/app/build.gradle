@@ -48,7 +48,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
     // TODO: Make these files not local lmao
-    implementation files('C:/Users/IChinweze/Documents/GitHub/MailBot/interface/mailbot/libs/activation.jar')
-    implementation files('C:/Users/IChinweze/Documents/GitHub/MailBot/interface/mailbot/libs/additionnal.jar')
-    implementation files('C:/Users/IChinweze/Documents/GitHub/MailBot/interface/mailbot/libs/mail.jar')
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
 }
