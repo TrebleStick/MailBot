@@ -170,9 +170,6 @@ public class MainActivity_Collection extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // TODO: Figure out extras to send
-        extras.putStringArray(locationsTag, deliveryLocations);
-        extras.putStringArray(recipientEmailTag, recipientEmailAddresses);
-        extras.putStringArray(senderEmailTag, senderEmailAddresses);
 
         startActivity(toEnRouteActivityIntent);
     }

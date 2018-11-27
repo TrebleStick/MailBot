@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mailbot.iml" filepath="$PROJECT_DIR$/mailbot.iml" />
       <module fileurl="file://$PROJECT_DIR$/usbSerialForAndroid/usbSerialForAndroid.iml" filepath="$PROJECT_DIR$/usbSerialForAndroid/usbSerialForAndroid.iml" />
+      <module fileurl="file://C:\Users\IChinweze\Documents\GitHub\MailBot\interface\mailbot\usbSerialForAndroid\usbSerialForAndroid.iml" filepath="C:\Users\IChinweze\Documents\GitHub\MailBot\interface\mailbot\usbSerialForAndroid\usbSerialForAndroid.iml" />
     </modules>
   </component>
 </project>
