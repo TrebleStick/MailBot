@@ -25,7 +25,8 @@ import time
 Linux_port = '/dev/ttyUSB0'
 Windows_port = 'COM3'
 
-pins = ['1','2','3','4','5','6','7']
+pins = ['1','2','3','4','5','6']
+# pins = ['1','2','3']
 
 channel = serial.Serial(Windows_port, baudrate = 9600, timeout = 2)
 
@@ -35,23 +36,23 @@ if channel.is_open :
 else :
     print('Serial Channel not opened check port setting')
 
-time.sleep(2)
+time.sleep(1)
 
 
 #-------CALIBRATE--------#
-print('writing comms init to channel')
-channel.write('9'.encode('utf-8'))
-time.sleep(1)
+# print('writing comms init to channel')
+# channel.write('9'.encode('utf-8'))
+# time.sleep(1)
 
-data = channel.readline()
-if (data[0]-48) == 9 :
-    print('woop')
+# data = channel.readline()
+# if (data[0]-48) == 9 :
+print('woop')
 
 #------------DEMO-ALL-LATCHES--------------#
 for i in pins :
-    channel.write(i.encode('utf-8'))
-    time.sleep(1)
     print(i)
+    channel.write(i.encode('utf-8'))
+    time.sleep(2)
     # print(channel.readline()[0] - 48)
 
 print('Latch demo complete')

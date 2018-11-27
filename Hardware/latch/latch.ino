@@ -3,7 +3,7 @@
 
 
 // Global vars
-const int LATCH_DELAY_MS = 2000;
+const int LATCH_DELAY_MS = 500;
 int pin = 0;
 // --------------------------------------------//
 //-------------global functions---------------//
@@ -11,13 +11,13 @@ int pin = 0;
 //---------------------------------------------//
 void setup(){
   //set 7 digital output pins with the correspnding wire colour
-  pinMode(1, OUTPUT); //brown
-  pinMode(2, OUTPUT); //orange
-  pinMode(3, OUTPUT); //grey
-  pinMode(4, OUTPUT); //red
-  pinMode(5, OUTPUT); //pink
-  pinMode(6, OUTPUT); //blue
-  pinMode(7, OUTPUT); //green
+  pinMode(2, OUTPUT); //brown
+  pinMode(3, OUTPUT); //orange
+  pinMode(4, OUTPUT); //grey
+  pinMode(5, OUTPUT); //red
+  pinMode(6, OUTPUT); //pink
+  pinMode(7, OUTPUT); //blue
+  pinMode(8, OUTPUT); //green
 
   pinMode(9, OUTPUT); //RESET ?
 
@@ -35,9 +35,11 @@ void loop(){
   if( Serial.available() > 0){
 
     pin = Serial.parseInt();
+    // pin
+    pin++;
     Serial.println(pin);
     // pin = Serial.read() - 48; // remove ASCII encoding
-    pin = Serial.parseInt();
+    // pin = Serial.parseInt();
     //might need some pre processing here etc
 
     //Reset device cmd
@@ -45,11 +47,13 @@ void loop(){
       Serial.println(pin, HEX);
       digitalWrite(9, HIGH);
     }
-    else {
-      // Serial.println(pin, HEX);
+    else if(pin!=0){
+      Serial.println(pin, HEX);
+      Serial.println("Hello?");
       digitalWrite(pin, HIGH);
       delay(LATCH_DELAY_MS);
       digitalWrite(pin, LOW);
+      Serial.println("Goodbye");
     }
 
     // Serial.write(pin);
