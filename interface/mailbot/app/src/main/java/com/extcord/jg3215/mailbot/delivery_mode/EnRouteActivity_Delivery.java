@@ -8,12 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.extcord.jg3215.mailbot.R;
-import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
-import com.extcord.jg3215.mailbot.database.LockerItem;
-import com.extcord.jg3215.mailbot.email.eMailService;
-
-import java.util.List;
-import java.util.concurrent.locks.Lock;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -26,8 +20,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     private boolean personDetected = false;
 
     private String[] deliveryLocations;
-
-    private List<LockerItem> lockerItemList;
 
     // TODO: Figure out which mail item (in the 7 digit string) is being delivered
 
@@ -70,36 +62,23 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         setContentView(R.layout.delivery_activity_enroute);
         Log.i(TAG, "onCreate() method called");
 
-        lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
-        deliveryLocations = getDeliveryLocations(lockerItemList);
-        sendEmails();
-    }
+        Bundle collectionModeData = this.getIntent().getExtras();
+        if (collectionModeData != null) {
+            try {
+                deliveryLocations = collectionModeData.getStringArray("locations");
 
-    // Provides locations but also checks that database do what is supposed to do
-    private String[] getDeliveryLocations(List<LockerItem> itemList) {
-        Log.i(TAG, "getDeliveryLocations() method called");
-
-        String[] locationList = new String[7];
-        int index = 0;
-
-        for (LockerItem lockerItems : itemList) {
-            int nLocker = lockerItems.getLockerNo();
-            String sName = lockerItems.getSenderName();
-            String rName = lockerItems.getRecipientName();
-
-            String dLocation = lockerItems.getDeliveryLocation();
-
-            locationList[index] = dLocation;
-
-            Log.i(TAG, "Index = " + String.valueOf(index));
-            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
-
-            index++;
+                if (deliveryLocations != null) {
+                    int index = 1;
+                    for (String location : deliveryLocations) {
+                        Log.i(TAG, "Location " + String.valueOf(index) + ": " + location);
+                        index++;
+                    }
+                }
+            } catch (NullPointerException e) {
+                // throw new exception?
+                Log.i(TAG, "Delivery Location data not received: " + e.getMessage());
+            }
         }
-
-        // Extract the delivery locations from the database of lockerItem information
-        Log.i(TAG, "Delivery Location list successfully created");
-        return locationList;
     }
 
     private void toUnsuccessfulActivity() {
@@ -116,23 +95,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         Intent toPasswordActivityIntent = new Intent(this, PasswordActivity_Delivery.class);
 
         // TODO: Figure out if there are extras to send
-
+        
         startActivity(toPasswordActivityIntent);
         finish();
     }
-
-    private void sendEmails() {
-        Log.i(TAG, "sendEmails() method called");
-
-        for (String address : senderEmailAddresses) {
-            try {
-                eMailService mailService = new eMailService("", "");
-                mailService.sendMail("Delivery of your mail item", "Your mail item is being delivered to", "", "");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
-    }
-
-    private int[] getDistinctProfiles
 }

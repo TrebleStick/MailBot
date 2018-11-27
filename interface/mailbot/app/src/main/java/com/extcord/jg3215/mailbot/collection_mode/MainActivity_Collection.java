@@ -52,8 +52,13 @@ public class MainActivity_Collection extends AppCompatActivity {
             String text = intent.getStringExtra("lockerFull");
             Log.i(TAG, "MainActivity: Broadcast received: " + text);
 
+            // Extract the delivery locations from the database of lockerItem information
+            String[] deliveryLocations;
+            deliveryLocations = getDeliveryLocations();
+            Log.i(TAG, "Delivery Location list successfully created");
+
             // Go to EnRouteActivity
-            toEnRouteActivity();
+            toEnRouteActivity(deliveryLocations);
         }
     };
 
@@ -160,19 +165,15 @@ public class MainActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
     }
 
-    private void toEnRouteActivity() {
+    private void toEnRouteActivity(String[] deliveryLocations) {
         Log.i(TAG, "toEnRouteActivity() method called");
         String locationsTag = "locations";
-        String recipientEmailTag = "rEmail";
-        String senderEmailTag = "sEmail";
 
         Intent toEnRouteActivityIntent = new Intent(this, EnRouteActivity_Delivery.class);
         Bundle extras = new Bundle();
 
         // TODO: Figure out extras to send
         extras.putStringArray(locationsTag, deliveryLocations);
-        extras.putStringArray(recipientEmailTag, recipientEmailAddresses);
-        extras.putStringArray(senderEmailTag, senderEmailAddresses);
 
         startActivity(toEnRouteActivityIntent);
     }
@@ -182,6 +183,28 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         Log.i(TAG, "Locker state = " + mLockerManager.getLockerState());
         lockerTextView.setText(mLockerManager.getLockerState());
+    }
+
+    // Provides locations but also checks that database do what is supposed to do
+    private String[] getDeliveryLocations() {
+        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+        String[] locationList = new String[7];
+        int index = 0;
+
+        for (LockerItem lockerItems : lockerItemList) {
+            int nLocker = lockerItems.getLockerNo();
+            String sName = lockerItems.getSenderName();
+            String rName = lockerItems.getRecipientName();
+            String dLocation = lockerItems.getDeliveryLocation();
+
+            locationList[index] = dLocation;
+            Log.i(TAG, "Index = " + String.valueOf(index));
+            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
+
+            index++;
+        }
+
+        return locationList;
     }
 
     private void clearDatabase() {
