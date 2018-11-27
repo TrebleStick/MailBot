@@ -26,12 +26,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
     compile project(':usbSerialForAndroid')
 
+    //implementation 'com.github.felHR85:UsbSerial:5.0.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -45,4 +46,9 @@ dependencies {
     // Lifecycle components
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+
+    // TODO: Make these files not local lmao
+    implementation files('C:/Users/IChinweze/Documents/GitHub/MailBot/interface/mailbot/libs/activation.jar')
+    implementation files('C:/Users/IChinweze/Documents/GitHub/MailBot/interface/mailbot/libs/additionnal.jar')
+    implementation files('C:/Users/IChinweze/Documents/GitHub/MailBot/interface/mailbot/libs/mail.jar')
 }

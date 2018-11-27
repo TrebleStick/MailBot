@@ -124,15 +124,15 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     private void sendEmails() {
         Log.i(TAG, "sendEmails() method called");
 
-        for (String address : senderEmailAddresses) {
+        /* for (String address : senderEmailAddresses) {
             try {
                 eMailService mailService = new eMailService("", "");
                 mailService.sendMail("Delivery of your mail item", "Your mail item is being delivered to", "", "");
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
-        }
+        } */
     }
 
-    private int[] getDistinctProfiles
+    // private int[] getDistinctProfiles
 }
