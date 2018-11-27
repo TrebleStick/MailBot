@@ -307,11 +307,17 @@ LIBUSB_1_INCLUDE_DIR:PATH=/usr/include
 //Path to a library.
 LIBUSB_1_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libusb-1.0.so
 
+//Path to a library.
+LOG4CXX_LIBRARIES:FILEPATH=/usr/lib/x86_64-linux-gnu/liblog4cxx.so
+
 //lsb_release executable was found
 LSB_FOUND:BOOL=TRUE
 
 //Path to a program.
 LSB_RELEASE_EXECUTABLE:FILEPATH=/usr/bin/lsb_release
+
+//The directory containing a CMake configuration file for Log4cxx.
+Log4cxx_DIR:PATH=Log4cxx_DIR-NOTFOUND
 
 //Path to a program.
 NOSETESTS:FILEPATH=/usr/bin/nosetests-2.7
@@ -569,6 +575,9 @@ UBUNTU:BOOL=TRUE
 UBUNTU_XENIAL:BOOL=TRUE
 
 //Path to a file.
+_file_name:FILEPATH=/home/human/Documents/catkin_ws/src/openni_camera/openni_description/test/sample_kobuki.test
+
+//Path to a file.
 _gmock_INCLUDES:FILEPATH=/usr/include/gmock/gmock.h
 
 //Path to a file.
@@ -591,6 +600,12 @@ bond_DIR:PATH=/opt/ros/kinetic/share/bond/cmake
 
 //The directory containing a CMake configuration file for bondcpp.
 bondcpp_DIR:PATH=/opt/ros/kinetic/share/bondcpp/cmake
+
+//The directory containing a CMake configuration file for camera_calibration_parsers.
+camera_calibration_parsers_DIR:PATH=/opt/ros/kinetic/share/camera_calibration_parsers/cmake
+
+//The directory containing a CMake configuration file for camera_info_manager.
+camera_info_manager_DIR:PATH=/opt/ros/kinetic/share/camera_info_manager/cmake
 
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/kinetic/share/catkin/cmake
@@ -761,6 +776,30 @@ nav_msgs_DIR:PATH=/opt/ros/kinetic/share/nav_msgs/cmake
 //The directory containing a CMake configuration file for nodelet.
 nodelet_DIR:PATH=/opt/ros/kinetic/share/nodelet/cmake
 
+//Value Computed by CMake
+openni_camera_BINARY_DIR:STATIC=/home/human/Documents/catkin_ws/src/openni_camera/openni_camera
+
+//Value Computed by CMake
+openni_camera_SOURCE_DIR:STATIC=/home/human/Documents/catkin_ws/src/openni_camera/openni_camera
+
+//Value Computed by CMake
+openni_description_BINARY_DIR:STATIC=/home/human/Documents/catkin_ws/src/openni_camera/openni_description
+
+//Value Computed by CMake
+openni_description_SOURCE_DIR:STATIC=/home/human/Documents/catkin_ws/src/openni_camera/openni_description
+
+//Dependencies for the target
+openni_driver_LIB_DEPENDS:STATIC=general;/opt/ros/kinetic/lib/libcamera_info_manager.so;general;/opt/ros/kinetic/lib/libcamera_calibration_parsers.so;general;/opt/ros/kinetic/lib/libdynamic_reconfigure_config_init_mutex.so;general;/opt/ros/kinetic/lib/libimage_transport.so;general;/opt/ros/kinetic/lib/libmessage_filters.so;general;/opt/ros/kinetic/lib/libnodeletlib.so;general;/usr/lib/x86_64-linux-gnu/libuuid.so;general;/opt/ros/kinetic/lib/libbondcpp.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml2.so;general;/opt/ros/kinetic/lib/libclass_loader.so;general;/usr/lib/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/kinetic/lib/libroslib.so;general;/opt/ros/kinetic/lib/librospack.so;general;/usr/lib/x86_64-linux-gnu/libpython2.7.so;general;/usr/lib/x86_64-linux-gnu/libboost_program_options.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml.so;general;/opt/ros/kinetic/lib/libroscpp.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/usr/lib/x86_64-linux-gnu/libboost_signals.so;general;/opt/ros/kinetic/lib/librosconsole.so;general;/opt/ros/kinetic/lib/librosconsole_log4cxx.so;general;/opt/ros/kinetic/lib/librosconsole_backend_interface.so;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so;general;/opt/ros/kinetic/lib/libxmlrpcpp.so;general;/opt/ros/kinetic/lib/libroscpp_serialization.so;general;/opt/ros/kinetic/lib/librostime.so;general;/opt/ros/kinetic/lib/libcpp_common.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;/usr/lib/x86_64-linux-gnu/libconsole_bridge.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;OpenNI;general;usb-1.0;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;
+
+//Value Computed by CMake
+openni_launch_BINARY_DIR:STATIC=/home/human/Documents/catkin_ws/src/openni_camera/openni_launch
+
+//Value Computed by CMake
+openni_launch_SOURCE_DIR:STATIC=/home/human/Documents/catkin_ws/src/openni_camera/openni_launch
+
+//Dependencies for the target
+openni_nodelet_LIB_DEPENDS:STATIC=general;openni_driver;general;/opt/ros/kinetic/lib/libcamera_info_manager.so;general;/opt/ros/kinetic/lib/libcamera_calibration_parsers.so;general;/opt/ros/kinetic/lib/libdynamic_reconfigure_config_init_mutex.so;general;/opt/ros/kinetic/lib/libimage_transport.so;general;/opt/ros/kinetic/lib/libmessage_filters.so;general;/opt/ros/kinetic/lib/libnodeletlib.so;general;/usr/lib/x86_64-linux-gnu/libuuid.so;general;/opt/ros/kinetic/lib/libbondcpp.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml2.so;general;/opt/ros/kinetic/lib/libclass_loader.so;general;/usr/lib/libPocoFoundation.so;general;/usr/lib/x86_64-linux-gnu/libdl.so;general;/opt/ros/kinetic/lib/libroslib.so;general;/opt/ros/kinetic/lib/librospack.so;general;/usr/lib/x86_64-linux-gnu/libpython2.7.so;general;/usr/lib/x86_64-linux-gnu/libboost_program_options.so;general;/usr/lib/x86_64-linux-gnu/libtinyxml.so;general;/opt/ros/kinetic/lib/libroscpp.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/usr/lib/x86_64-linux-gnu/libboost_signals.so;general;/opt/ros/kinetic/lib/librosconsole.so;general;/opt/ros/kinetic/lib/librosconsole_log4cxx.so;general;/opt/ros/kinetic/lib/librosconsole_backend_interface.so;general;/usr/lib/x86_64-linux-gnu/liblog4cxx.so;general;/usr/lib/x86_64-linux-gnu/libboost_regex.so;general;/opt/ros/kinetic/lib/libxmlrpcpp.so;general;/opt/ros/kinetic/lib/libroscpp_serialization.so;general;/opt/ros/kinetic/lib/librostime.so;general;/opt/ros/kinetic/lib/libcpp_common.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;general;/usr/lib/x86_64-linux-gnu/libconsole_bridge.so;general;/usr/lib/x86_64-linux-gnu/libboost_system.so;general;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;general;/usr/lib/x86_64-linux-gnu/libboost_thread.so;general;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;general;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;general;/usr/lib/x86_64-linux-gnu/libboost_atomic.so;general;/usr/lib/x86_64-linux-gnu/libpthread.so;
+
 //The directory containing a CMake configuration file for pluginlib.
 pluginlib_DIR:PATH=/opt/ros/kinetic/share/pluginlib/cmake
 
@@ -808,6 +847,9 @@ rosgraph_DIR:PATH=/opt/ros/kinetic/share/rosgraph/cmake
 //The directory containing a CMake configuration file for rosgraph_msgs.
 rosgraph_msgs_DIR:PATH=/opt/ros/kinetic/share/rosgraph_msgs/cmake
 
+//The directory containing a CMake configuration file for roslaunch.
+roslaunch_DIR:PATH=/opt/ros/kinetic/share/roslaunch/cmake
+
 //The directory containing a CMake configuration file for roslib.
 roslib_DIR:PATH=/opt/ros/kinetic/share/roslib/cmake
 
@@ -816,6 +858,9 @@ rospack_DIR:PATH=/opt/ros/kinetic/share/rospack/cmake
 
 //The directory containing a CMake configuration file for rospy.
 rospy_DIR:PATH=/opt/ros/kinetic/share/rospy/cmake
+
+//The directory containing a CMake configuration file for rostest.
+rostest_DIR:PATH=/opt/ros/kinetic/share/rostest/cmake
 
 //The directory containing a CMake configuration file for rostime.
 rostime_DIR:PATH=/opt/ros/kinetic/share/rostime/cmake
@@ -1008,7 +1053,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=14
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=17
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -1105,6 +1150,8 @@ FIND_PACKAGE_MESSAGE_DETAILS_PCL_SURFACE:INTERNAL=[/usr/lib/x86_64-linux-gnu/lib
 FIND_PACKAGE_MESSAGE_DETAILS_PCL_TRACKING:INTERNAL=[/usr/lib/x86_64-linux-gnu/libpcl_tracking.so][/usr/include/pcl-1.7][v()]
 //Details about finding PCL_VISUALIZATION
 FIND_PACKAGE_MESSAGE_DETAILS_PCL_VISUALIZATION:INTERNAL=[/usr/lib/x86_64-linux-gnu/libpcl_visualization.so][/usr/include/pcl-1.7][v()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v0.29.1()]
 //Details about finding PythonInterp
 FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python][v2.7.12()]
 //Details about finding Threads
@@ -1289,6 +1336,74 @@ PC_FLANN_flann_INCLUDEDIR:INTERNAL=
 PC_FLANN_flann_LIBDIR:INTERNAL=
 PC_FLANN_flann_PREFIX:INTERNAL=
 PC_FLANN_flann_VERSION:INTERNAL=
+PC_LIBOPENNI_CFLAGS:INTERNAL=-I/usr/include/ni
+PC_LIBOPENNI_CFLAGS_I:INTERNAL=
+PC_LIBOPENNI_CFLAGS_OTHER:INTERNAL=
+PC_LIBOPENNI_FOUND:INTERNAL=1
+PC_LIBOPENNI_INCLUDEDIR:INTERNAL=/usr/include/ni
+PC_LIBOPENNI_INCLUDE_DIRS:INTERNAL=/usr/include/ni
+PC_LIBOPENNI_LDFLAGS:INTERNAL=-lOpenNI
+PC_LIBOPENNI_LDFLAGS_OTHER:INTERNAL=
+PC_LIBOPENNI_LIBDIR:INTERNAL=/usr/lib
+PC_LIBOPENNI_LIBRARIES:INTERNAL=OpenNI
+PC_LIBOPENNI_LIBRARY_DIRS:INTERNAL=
+PC_LIBOPENNI_LIBS:INTERNAL=
+PC_LIBOPENNI_LIBS_L:INTERNAL=
+PC_LIBOPENNI_LIBS_OTHER:INTERNAL=
+PC_LIBOPENNI_LIBS_PATHS:INTERNAL=
+PC_LIBOPENNI_PREFIX:INTERNAL=/usr
+PC_LIBOPENNI_STATIC_CFLAGS:INTERNAL=-I/usr/include/ni
+PC_LIBOPENNI_STATIC_CFLAGS_I:INTERNAL=
+PC_LIBOPENNI_STATIC_CFLAGS_OTHER:INTERNAL=
+PC_LIBOPENNI_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/ni
+PC_LIBOPENNI_STATIC_LDFLAGS:INTERNAL=-lOpenNI
+PC_LIBOPENNI_STATIC_LDFLAGS_OTHER:INTERNAL=
+PC_LIBOPENNI_STATIC_LIBDIR:INTERNAL=
+PC_LIBOPENNI_STATIC_LIBRARIES:INTERNAL=OpenNI
+PC_LIBOPENNI_STATIC_LIBRARY_DIRS:INTERNAL=
+PC_LIBOPENNI_STATIC_LIBS:INTERNAL=
+PC_LIBOPENNI_STATIC_LIBS_L:INTERNAL=
+PC_LIBOPENNI_STATIC_LIBS_OTHER:INTERNAL=
+PC_LIBOPENNI_STATIC_LIBS_PATHS:INTERNAL=
+PC_LIBOPENNI_VERSION:INTERNAL=1.5.4.0
+PC_LIBOPENNI_libopenni_INCLUDEDIR:INTERNAL=
+PC_LIBOPENNI_libopenni_LIBDIR:INTERNAL=
+PC_LIBOPENNI_libopenni_PREFIX:INTERNAL=
+PC_LIBOPENNI_libopenni_VERSION:INTERNAL=
+PC_LIBUSB_CFLAGS:INTERNAL=-I/usr/include/libusb-1.0
+PC_LIBUSB_CFLAGS_I:INTERNAL=
+PC_LIBUSB_CFLAGS_OTHER:INTERNAL=
+PC_LIBUSB_FOUND:INTERNAL=1
+PC_LIBUSB_INCLUDEDIR:INTERNAL=/usr/include
+PC_LIBUSB_INCLUDE_DIRS:INTERNAL=/usr/include/libusb-1.0
+PC_LIBUSB_LDFLAGS:INTERNAL=-lusb-1.0
+PC_LIBUSB_LDFLAGS_OTHER:INTERNAL=
+PC_LIBUSB_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+PC_LIBUSB_LIBRARIES:INTERNAL=usb-1.0
+PC_LIBUSB_LIBRARY_DIRS:INTERNAL=
+PC_LIBUSB_LIBS:INTERNAL=
+PC_LIBUSB_LIBS_L:INTERNAL=
+PC_LIBUSB_LIBS_OTHER:INTERNAL=
+PC_LIBUSB_LIBS_PATHS:INTERNAL=
+PC_LIBUSB_PREFIX:INTERNAL=/usr
+PC_LIBUSB_STATIC_CFLAGS:INTERNAL=-I/usr/include/libusb-1.0
+PC_LIBUSB_STATIC_CFLAGS_I:INTERNAL=
+PC_LIBUSB_STATIC_CFLAGS_OTHER:INTERNAL=
+PC_LIBUSB_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/libusb-1.0
+PC_LIBUSB_STATIC_LDFLAGS:INTERNAL=-lusb-1.0;-ludev;-pthread
+PC_LIBUSB_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
+PC_LIBUSB_STATIC_LIBDIR:INTERNAL=
+PC_LIBUSB_STATIC_LIBRARIES:INTERNAL=usb-1.0;udev
+PC_LIBUSB_STATIC_LIBRARY_DIRS:INTERNAL=
+PC_LIBUSB_STATIC_LIBS:INTERNAL=
+PC_LIBUSB_STATIC_LIBS_L:INTERNAL=
+PC_LIBUSB_STATIC_LIBS_OTHER:INTERNAL=
+PC_LIBUSB_STATIC_LIBS_PATHS:INTERNAL=
+PC_LIBUSB_VERSION:INTERNAL=1.0.20
+PC_LIBUSB_libusb-1.0_INCLUDEDIR:INTERNAL=
+PC_LIBUSB_libusb-1.0_LIBDIR:INTERNAL=
+PC_LIBUSB_libusb-1.0_PREFIX:INTERNAL=
+PC_LIBUSB_libusb-1.0_VERSION:INTERNAL=
 PC_OPENNI2_CFLAGS:INTERNAL=-I/usr/include/openni2
 PC_OPENNI2_CFLAGS_I:INTERNAL=
 PC_OPENNI2_CFLAGS_OTHER:INTERNAL=
@@ -1379,7 +1494,9 @@ _Boost_NAMESPACE_LAST:INTERNAL=boost
 _Boost_USE_MULTITHREADED_LAST:INTERNAL=TRUE
 __pkg_config_checked_PC_EIGEN:INTERNAL=1
 __pkg_config_checked_PC_FLANN:INTERNAL=1
+__pkg_config_checked_PC_LIBOPENNI:INTERNAL=1
+__pkg_config_checked_PC_LIBUSB:INTERNAL=1
 __pkg_config_checked_PC_OPENNI:INTERNAL=1
 __pkg_config_checked_PC_OPENNI2:INTERNAL=1
-prefix_result:INTERNAL=/usr/lib
+prefix_result:INTERNAL=/usr/lib/x86_64-linux-gnu
 

@@ -43,6 +43,8 @@
   make all -j2 # 2 cores
   sudo make install
 
+  cd ../../   # Leave release, leave opencv-2.4.13
+
   # ignore libdc1394 error http://stackoverflow.com/questions/12689304/ctypes-error-libdc1394-error-failed-to-initialize-libdc1394
 
   #python
@@ -62,7 +64,8 @@
   sudo apt-get install libva-dev libjpeg-dev # vaapi intelGPU
   sudo apt-get install libopenni2-dev # Install OpenNi2
 
-  mkdir build && cd build
+  mkdir build
+  cd build
   cmake .. -DENABLE_CXX11=ON -DCMAKE_INSTALL_PREFIX=$HOME/freenect2
   cmake .. -DENABLE_CXX11=ON -Dfreenect2_DIR=$HOME/freenect2/lib/cmake/freenect2
   make
@@ -72,7 +75,7 @@
   # ./bin/Protonect
 
   # Return to root
-  cd ../../
+  cd ../../   # Leave build leave libfreenect2
 
 
 # Finally install iai_kinect2
