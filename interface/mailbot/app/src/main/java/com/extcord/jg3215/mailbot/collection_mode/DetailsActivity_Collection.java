@@ -566,4 +566,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         mLockerManager.unregisterListener();
         mLockerManager = null;
     }
+
+
 }
