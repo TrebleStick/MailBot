@@ -1,7 +1,5 @@
 package com.extcord.jg3215.mailbot.bluetooth;
 
-// import android.app.ProgressDialog;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -18,8 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
-
-// NOTE: Android imported a logging Handler. Not what we want for bluetooth!!
 
 public class BluetoothConnectionService {
 
@@ -40,9 +36,6 @@ public class BluetoothConnectionService {
     private BluetoothDevice mmDevice;
 
     private UUID deviceUUID;
-
-    // Note: Progress dialogs have been deprecated. What do they do? - Show amounts of stuff that has been done
-    // ProgressDialog mProgressDialog;
 
     private ConnectedThread mConnectedThread;
 
@@ -211,9 +204,6 @@ public class BluetoothConnectionService {
     public void startClient(BluetoothDevice device, UUID uuid) {
         Log.d(TAG, "startClient: started");
 
-        // Would initiate progress Dialog here but I don't really care much for it
-        // mProgressDialog = ProgressDialog.show(mContext, "Connecting Bluetooth", "Please Wait...", true);
-
         mConnectThread = new ConnectThread(device, uuid);
         mConnectThread.start();
     }
@@ -319,10 +309,11 @@ public class BluetoothConnectionService {
         mConnectedThread = new ConnectedThread(mmSocket);
         mConnectedThread.start();
 
-        // Once the connected thread is ready, it will communicate this to the main thread
-        Intent connectedThreadAvailablilityIntent = new Intent("connectedThreadStatusUpdate");
-        connectedThreadAvailablilityIntent.putExtra("Status", true);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectedThreadAvailablilityIntent);
+        // Once the connected thread is ready, it will communicate this to whatever activity on the
+        // main thread is registered to hear these broadcasts
+        Intent connectedThreadAvailabilityIntent = new Intent("connectedThreadStatusUpdate");
+        connectedThreadAvailabilityIntent.putExtra("Status", true);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectedThreadAvailabilityIntent);
     }
 
     // Seems to be an indirect way of calling ConnectedThread.write(byte[] byte)?

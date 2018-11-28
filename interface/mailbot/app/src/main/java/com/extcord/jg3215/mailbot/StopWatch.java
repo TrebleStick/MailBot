@@ -1,9 +1,11 @@
 package com.extcord.jg3215.mailbot;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
@@ -29,10 +31,12 @@ public class StopWatch {
 
     private Context mContext;
 
+    private boolean isBtTimer;
+
     // Volatile is used to indicate that the variable's value will be modified by different threads
     private volatile boolean isExecuting;
 
-    public StopWatch(long duration, Context context) {
+    public StopWatch(long duration, Context context, boolean isBtTimer) {
         handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(runnable, 0);
 
@@ -47,6 +51,8 @@ public class StopWatch {
 
         timerDuration = duration;
         mContext = context;
+
+        this.isBtTimer = isBtTimer;
     }
 
     public void setStopWatchTime(int minutes, int seconds, int millis) {
@@ -89,6 +95,12 @@ public class StopWatch {
                     setStopWatchTime(Minutes, (Seconds % 60), Milliseconds);
                     Log.i(TAG, "Stopwatch stopped at time = " + getStopWatchTime());
                     Log.i(TAG, "UpdateTime: " + String.valueOf(getUpdateTime()));
+
+                    if (isBtTimer) {
+                        Intent timedBluetoothScanIntent = new Intent("timedBluetoothScan");
+                        timedBluetoothScanIntent.putExtra("scanStatus", "complete");
+                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(timedBluetoothScanIntent);
+                    }
 
                     handler.removeCallbacks(runnable);
                 }
