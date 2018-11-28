@@ -2,6 +2,8 @@ package com.extcord.jg3215.mailbot.email;
 
 import android.util.Log;
 
+import com.extcord.jg3215.mailbot.database.LockerItem;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Random;
 
 /**
  * Created by IChinweze on 27/11/2018.
@@ -61,19 +64,30 @@ public class eMailService extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
+    public synchronized void sendMail(String subject, String body, String sender, String recipients, String PINcode) throws Exception {
         try {
+
+            // Code for mail including pin code - first one needed for the demo
+
+            body = "Dear " + recipients + "\n\nI am MailBot and I have received a mail item for you"
+                    + " from " + sender + ". It will be delivered within the next half hour to your"
+                    + " office. Your password for collecting it will be:\n\n" + PINcode + "\n\nReme"
+                    + "mber the password - it will be needed to open the locker containing your mai"
+                    + "l.\n\n See you soon!\n\nMailBot";
+
             MimeMessage message = new MimeMessage(session);
             DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
 
-            message.setSender(new InternetAddress(sender));
+            message.setFrom(new InternetAddress(sender));
             message.setSubject(subject);
+            message.setText(body);
             message.setDataHandler(handler);
 
             // Should only be one recipient for each mail
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
 
             Transport.send(message);
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }

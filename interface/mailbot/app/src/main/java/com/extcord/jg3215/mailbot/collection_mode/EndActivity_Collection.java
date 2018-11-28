@@ -12,6 +12,9 @@ import android.widget.Toast;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.database.LockerItem;
+
+import java.util.Random;
 
 public class EndActivity_Collection extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
 
@@ -43,6 +46,14 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         Bundle lockerActivityData = this.getIntent().getExtras();
 
         mLockerManager = new LockerManager(this);
+
+        // PIN code generator
+
+        Random rand = new Random();
+        LockerItem locker = new LockerItem();
+        String PINcode = Integer.toString(rand.nextInt(9999));
+        locker.setPINcode(PINcode);
+
 
         if (lockerActivityData != null) {
             /* try {
