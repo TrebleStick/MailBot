@@ -575,7 +575,7 @@ UBUNTU:BOOL=TRUE
 UBUNTU_XENIAL:BOOL=TRUE
 
 //Path to a file.
-_file_name:FILEPATH=/home/human/Documents/catkin_ws/src/openni_camera/openni_description/test/sample_kobuki.test
+_file_name:FILEPATH=/home/human/Documents/catkin_ws/src/rgbd_launch/test/camera.test
 
 //Path to a file.
 _gmock_INCLUDES:FILEPATH=/usr/include/gmock/gmock.h
@@ -811,6 +811,12 @@ pointcloud_to_laserscan_LIB_DEPENDS:STATIC=general;/opt/ros/kinetic/lib/libnodel
 
 //Value Computed by CMake
 pointcloud_to_laserscan_SOURCE_DIR:STATIC=/home/human/Documents/catkin_ws/src/pointcloud_to_laserscan
+
+//Value Computed by CMake
+rgbd_launch_BINARY_DIR:STATIC=/home/human/Documents/catkin_ws/src/rgbd_launch
+
+//Value Computed by CMake
+rgbd_launch_SOURCE_DIR:STATIC=/home/human/Documents/catkin_ws/src/rgbd_launch
 
 //Value Computed by CMake
 rosaria_BINARY_DIR:STATIC=/home/human/Documents/catkin_ws/src/rosaria
@@ -1053,7 +1059,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=17
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=18
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

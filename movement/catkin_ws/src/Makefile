@@ -1492,6 +1492,175 @@ kinect2_viewer/fast:
 .PHONY : kinect2_viewer/fast
 
 #=============================================================================
+# Target rules for targets named _run_tests_rgbd_launch_rostest_test_camera.test
+
+# Build rule for target.
+_run_tests_rgbd_launch_rostest_test_camera.test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_rgbd_launch_rostest_test_camera.test
+.PHONY : _run_tests_rgbd_launch_rostest_test_camera.test
+
+# fast build rule for target.
+_run_tests_rgbd_launch_rostest_test_camera.test/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_rostest_test_camera.test.dir/build.make rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_rostest_test_camera.test.dir/build
+.PHONY : _run_tests_rgbd_launch_rostest_test_camera.test/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_rgbd_launch_rostest
+
+# Build rule for target.
+_run_tests_rgbd_launch_rostest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_rgbd_launch_rostest
+.PHONY : _run_tests_rgbd_launch_rostest
+
+# fast build rule for target.
+_run_tests_rgbd_launch_rostest/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_rostest.dir/build.make rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_rostest.dir/build
+.PHONY : _run_tests_rgbd_launch_rostest/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_rgbd_launch
+
+# Build rule for target.
+run_tests_rgbd_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_rgbd_launch
+.PHONY : run_tests_rgbd_launch
+
+# fast build rule for target.
+run_tests_rgbd_launch/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/run_tests_rgbd_launch.dir/build.make rgbd_launch/CMakeFiles/run_tests_rgbd_launch.dir/build
+.PHONY : run_tests_rgbd_launch/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_rgbd_launch
+
+# Build rule for target.
+_run_tests_rgbd_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_rgbd_launch
+.PHONY : _run_tests_rgbd_launch
+
+# fast build rule for target.
+_run_tests_rgbd_launch/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/_run_tests_rgbd_launch.dir/build.make rgbd_launch/CMakeFiles/_run_tests_rgbd_launch.dir/build
+.PHONY : _run_tests_rgbd_launch/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_rgbd_launch_roslaunch-check
+
+# Build rule for target.
+_run_tests_rgbd_launch_roslaunch-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_rgbd_launch_roslaunch-check
+.PHONY : _run_tests_rgbd_launch_roslaunch-check
+
+# fast build rule for target.
+_run_tests_rgbd_launch_roslaunch-check/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_roslaunch-check.dir/build.make rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_roslaunch-check.dir/build
+.PHONY : _run_tests_rgbd_launch_roslaunch-check/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_rgbd_launch_roslaunch-check_launch
+
+# Build rule for target.
+run_tests_rgbd_launch_roslaunch-check_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_rgbd_launch_roslaunch-check_launch
+.PHONY : run_tests_rgbd_launch_roslaunch-check_launch
+
+# fast build rule for target.
+run_tests_rgbd_launch_roslaunch-check_launch/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/run_tests_rgbd_launch_roslaunch-check_launch.dir/build.make rgbd_launch/CMakeFiles/run_tests_rgbd_launch_roslaunch-check_launch.dir/build
+.PHONY : run_tests_rgbd_launch_roslaunch-check_launch/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_rgbd_launch_roslaunch-check
+
+# Build rule for target.
+run_tests_rgbd_launch_roslaunch-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_rgbd_launch_roslaunch-check
+.PHONY : run_tests_rgbd_launch_roslaunch-check
+
+# fast build rule for target.
+run_tests_rgbd_launch_roslaunch-check/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/run_tests_rgbd_launch_roslaunch-check.dir/build.make rgbd_launch/CMakeFiles/run_tests_rgbd_launch_roslaunch-check.dir/build
+.PHONY : run_tests_rgbd_launch_roslaunch-check/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_rgbd_launch_roslaunch-check_launch
+
+# Build rule for target.
+_run_tests_rgbd_launch_roslaunch-check_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_rgbd_launch_roslaunch-check_launch
+.PHONY : _run_tests_rgbd_launch_roslaunch-check_launch
+
+# fast build rule for target.
+_run_tests_rgbd_launch_roslaunch-check_launch/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_roslaunch-check_launch.dir/build.make rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_roslaunch-check_launch.dir/build
+.PHONY : _run_tests_rgbd_launch_roslaunch-check_launch/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_rgbd_launch_roslaunch-check_test
+
+# Build rule for target.
+_run_tests_rgbd_launch_roslaunch-check_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_rgbd_launch_roslaunch-check_test
+.PHONY : _run_tests_rgbd_launch_roslaunch-check_test
+
+# fast build rule for target.
+_run_tests_rgbd_launch_roslaunch-check_test/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_roslaunch-check_test.dir/build.make rgbd_launch/CMakeFiles/_run_tests_rgbd_launch_roslaunch-check_test.dir/build
+.PHONY : _run_tests_rgbd_launch_roslaunch-check_test/fast
+
+#=============================================================================
+# Target rules for targets named clean_test_results_rgbd_launch
+
+# Build rule for target.
+clean_test_results_rgbd_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 clean_test_results_rgbd_launch
+.PHONY : clean_test_results_rgbd_launch
+
+# fast build rule for target.
+clean_test_results_rgbd_launch/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/clean_test_results_rgbd_launch.dir/build.make rgbd_launch/CMakeFiles/clean_test_results_rgbd_launch.dir/build
+.PHONY : clean_test_results_rgbd_launch/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_rgbd_launch_rostest_test_camera.test
+
+# Build rule for target.
+run_tests_rgbd_launch_rostest_test_camera.test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_rgbd_launch_rostest_test_camera.test
+.PHONY : run_tests_rgbd_launch_rostest_test_camera.test
+
+# fast build rule for target.
+run_tests_rgbd_launch_rostest_test_camera.test/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/run_tests_rgbd_launch_rostest_test_camera.test.dir/build.make rgbd_launch/CMakeFiles/run_tests_rgbd_launch_rostest_test_camera.test.dir/build
+.PHONY : run_tests_rgbd_launch_rostest_test_camera.test/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_rgbd_launch_roslaunch-check_test
+
+# Build rule for target.
+run_tests_rgbd_launch_roslaunch-check_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_rgbd_launch_roslaunch-check_test
+.PHONY : run_tests_rgbd_launch_roslaunch-check_test
+
+# fast build rule for target.
+run_tests_rgbd_launch_roslaunch-check_test/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/run_tests_rgbd_launch_roslaunch-check_test.dir/build.make rgbd_launch/CMakeFiles/run_tests_rgbd_launch_roslaunch-check_test.dir/build
+.PHONY : run_tests_rgbd_launch_roslaunch-check_test/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_rgbd_launch_rostest
+
+# Build rule for target.
+run_tests_rgbd_launch_rostest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_rgbd_launch_rostest
+.PHONY : run_tests_rgbd_launch_rostest
+
+# fast build rule for target.
+run_tests_rgbd_launch_rostest/fast:
+	$(MAKE) -f rgbd_launch/CMakeFiles/run_tests_rgbd_launch_rostest.dir/build.make rgbd_launch/CMakeFiles/run_tests_rgbd_launch_rostest.dir/build
+.PHONY : run_tests_rgbd_launch_rostest/fast
+
+#=============================================================================
 # Target rules for targets named rosaria_generate_messages_cpp
 
 # Build rule for target.
@@ -2139,6 +2308,19 @@ help:
 	@echo "... kinect2_calibration"
 	@echo "... additional_files_kinect2_viewer"
 	@echo "... kinect2_viewer"
+	@echo "... _run_tests_rgbd_launch_rostest_test_camera.test"
+	@echo "... _run_tests_rgbd_launch_rostest"
+	@echo "... run_tests_rgbd_launch"
+	@echo "... _run_tests_rgbd_launch"
+	@echo "... _run_tests_rgbd_launch_roslaunch-check"
+	@echo "... run_tests_rgbd_launch_roslaunch-check_launch"
+	@echo "... run_tests_rgbd_launch_roslaunch-check"
+	@echo "... _run_tests_rgbd_launch_roslaunch-check_launch"
+	@echo "... _run_tests_rgbd_launch_roslaunch-check_test"
+	@echo "... clean_test_results_rgbd_launch"
+	@echo "... run_tests_rgbd_launch_rostest_test_camera.test"
+	@echo "... run_tests_rgbd_launch_roslaunch-check_test"
+	@echo "... run_tests_rgbd_launch_rostest"
 	@echo "... rosaria_generate_messages_cpp"
 	@echo "... nav_msgs_generate_messages_cpp"
 	@echo "... rosaria_geneus"

@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 import rospy
 import ast
+import pandas as pd
+import numpy as np
 from std_msgs.msg import String
 
 def callback2(data2):
     global globNodes
     global counter
+    global now
 
     if(int(data2.data) == globNodes[counter]):
+        travelTime = rospy.get_rostime() - now
+        if (counter != 0):
+        updateWeight(travelTime, globNodes[counter-1], globNodes[counter])
         counter += 1
+
         pub = rospy.Publisher('Location', String)
         if(counter == len(globNodes)):
             counter = 0
@@ -18,19 +25,35 @@ def callback2(data2):
     else:
         print("Not at current goal location")
 
+def updateWight(newTime, fromLoc, toLoc):
+
+    pub = rospy.Publisher('solvedPath', String, queue_size=10)
+    d = pd.read_csv("weights.csv", header=None)
+    d  = d.values
+
+    # As distance matrix is lower left triangular, index from lowest value first
+    if fromLoc < toLoc:
+        d[fromLoc][toLoc] = newTime.secs
+    else:
+        d[toLoc][fromLoc] = newTime.secs    
+
+    df = pd.DataFrame(d)
+    df.to_csv("weights.csv", header=None, index=None)
+
 def callback(data):
 
     # nodes = data.data.split()
     nodes = ast.literal_eval(data.data)
-    print(nodes)
+    # print(nodes)
     # nodes = [int(i) for i in nodes]
     global globNodes
     globNodes = nodes
 
-
+    global now
     global counter
     counter = 0
     pub = rospy.Publisher('Location', String)
+    now = rospy.get_rostime()
     pub.publish(str(globNodes[0]))
     # print the path cost
     # print(path_cost(d, path))
@@ -54,6 +77,7 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
+    now = rospy.get_rostime()
     counter = 0
     globNodes = []
     listener()

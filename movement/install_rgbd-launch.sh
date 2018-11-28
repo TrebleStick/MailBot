@@ -36,6 +36,7 @@
 
 cd catkin_ws/src/
 git clone https://github.com/ros-drivers/openni_camera.git
+git clone https://github.com/ros-drivers/rgbd_launch.git
 cd ..
 catkin_make
 
