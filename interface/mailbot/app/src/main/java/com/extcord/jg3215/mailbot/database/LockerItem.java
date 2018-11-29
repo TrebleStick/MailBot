@@ -30,6 +30,9 @@ public class LockerItem {
     @ColumnInfo
     private String deliveryLocation;
 
+    @ColumnInfo
+    private String PINcode;
+
     public int getLockerNo() {
         return lockerNo;
     }
@@ -74,7 +77,9 @@ public class LockerItem {
         return deliveryLocation;
     }
 
-    public void setDeliveryLocation(String deliveryLocation) {
-        this.deliveryLocation = deliveryLocation;
-    }
+    public void setDeliveryLocation(String deliveryLocation) { this.deliveryLocation = deliveryLocation; }
+
+    public String getPINcode() { return PINcode; }
+
+    public void setPINcode(String PINcode){ this.PINcode = PINcode; }
 }
