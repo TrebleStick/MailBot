@@ -21,10 +21,6 @@ import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
-import java.nio.charset.Charset;
-
-import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
-
 public class DetailsActivity_Collection extends AppCompatActivity {
 
     // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
@@ -94,38 +90,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     private PackageData recipientData;
 
     private LockerManager mLockerManager;
-
-    // Broadcast Receiver flags when a message is received on the Bluetooth input stream
-    private BroadcastReceiver mBroadcastReceiverLockerComm = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String text = intent.getStringExtra("theMessage");
-            Log.i(TAG, "Received: " + text);
-
-            switch (text) {
-                case "1409":
-                    String requestLO = "RLO";
-                    byte[] rloBytes = requestLO.getBytes(Charset.defaultCharset());
-                    mBluetoothConnection.write(rloBytes);
-                    break;
-                case "num":
-                    String lockToOpen = String.valueOf(lockerIndex + 1);
-                    byte[] lockNumBytes = lockToOpen.getBytes(Charset.defaultCharset());
-                    mBluetoothConnection.write(lockNumBytes);
-
-                    // Assume locker opens once requested
-                    toLockerActivity();
-                    break;
-                default:
-                    // restarts the process if none of these values are received
-                    // TODO: Have it run a limited number of times at most and throw an exception?
-                    String startCommCode = "0507";
-                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
-                    mBluetoothConnection.write(startBytes);
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,10 +292,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         lockerIndex = mLockerManager.getSelectLockerIndex();
                         Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(lockerIndex + 1));
 
-                        // TODO: Send a serial message to ROS to request locker opening
-                        String startCommCode = "0507";
-                        byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
-                        mBluetoothConnection.write(startBytes);
+                        // TODO: Send a serial message to the computer to request locker opening
+                        // Assume locker opens once requested
+                        toLockerActivity();
                         break;
                 }
             }
