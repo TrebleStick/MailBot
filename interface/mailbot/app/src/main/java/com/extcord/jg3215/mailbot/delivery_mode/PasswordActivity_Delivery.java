@@ -1,7 +1,12 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
+
+import java.nio.charset.Charset;
+
+import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -27,8 +37,48 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
 
     private int pinAttempt = 0;
 
-    // TODO: Do we want this as a String or an int?
     private String pinCode;
+
+    private int lockerID;
+
+    private LockerManager mLockerManager;
+
+    // Broadcast Receiver flags when a message is received on the Bluetooth input stream
+    private BroadcastReceiver mBroadcastReceiverLockerComm = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra("theMessage");
+            Log.i(TAG, "Received: " + text);
+
+            switch (text) {
+                case "1409":
+                    String requestLO = "RLO";
+                    byte[] rloBytes = requestLO.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(rloBytes);
+                    Log.i(TAG, "Written: " + requestLO + " to output stream");
+                    break;
+                case "num":
+                    String lockToOpen = String.valueOf(lockerID);
+                    byte[] lockNumBytes = lockToOpen.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(lockNumBytes);
+                    Log.i(TAG, "Written: " + lockToOpen + " to output stream");
+
+                    // Assume locker opens once requested
+                    mLockerManager.updateAvailability((lockerID - 1), false);
+                    toOpenLockerActivity();
+                    break;
+                default:
+                    // restarts the process if none of these values are received
+                    // TODO: Have it run a limited number of times at most and throw an exception?
+                    Log.i(TAG, "Restarting communication process");
+                    String startCommCode = "0507";
+                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(startBytes);
+                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +86,32 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         setContentView(R.layout.delivery_activity_password);
         Log.i(TAG, "onCreate() method called");
 
-        // get pinCode from intent created in EnRouteActivity
-        // TODO: Remove this pinCode assignment
-        pinCode = "0000";
+        mBluetoothConnection.setmContext(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverLockerComm, new IntentFilter("incomingMessage"));
+
+        mLockerManager = new LockerManager(this);
+
+        // TODO: Get pinCode from intent created in EnRouteActivity
+        Bundle enRouteActivityData = this.getIntent().getExtras();
+        if (enRouteActivityData != null) {
+            try {
+                pinCode = enRouteActivityData.getString("lockerPINCode");
+                Log.i(TAG, "Pin code successfully retrieved = " + pinCode);
+            } catch (NullPointerException e){
+                Log.i(TAG, "No pin code data: " + e.getMessage());
+            }
+
+            try {
+                // NOTE: LockerID should be the same as the locker number to be opened
+                lockerID = enRouteActivityData.getInt("lockerID");
+                Log.i(TAG, "Locker ID = " + String.valueOf(lockerID));
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No ID data: " + e.getMessage());
+            }
+        } else {
+            Log.i(TAG, "Bundle contains no data, RIP");
+            // throw an exception mebbe
+        }
 
         pinEditText = (EditText) findViewById(R.id.pinInput);
 
@@ -47,8 +120,12 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (pinEditText.getText().toString().equals(pinCode)) {
-                    // Ask computer to open locker
-                    toOpenLockerActivity();
+
+                    // TODO: Send a serial message to ROS to request locker opening
+                    String startCommCode = "0507";
+                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(startBytes);
+                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
                 } else {
                     pinAttempt++;
 
@@ -73,5 +150,14 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         Intent toUnsuccessfulActivityIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
         startActivity(toUnsuccessfulActivityIntent);
         finish();
+    }
+
+    protected void onDestroy() {
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+        }
+        mLockerManager = null;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverLockerComm);
+        super.onDestroy();
     }
 }

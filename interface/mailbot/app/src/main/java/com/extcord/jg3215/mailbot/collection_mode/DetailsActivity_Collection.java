@@ -3,7 +3,9 @@ package com.extcord.jg3215.mailbot.collection_mode;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
@@ -107,11 +109,13 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                     String requestLO = "RLO";
                     byte[] rloBytes = requestLO.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(rloBytes);
+                    Log.i(TAG, "Written: " + requestLO + " to output stream");
                     break;
                 case "num":
                     String lockToOpen = String.valueOf(lockerIndex + 1);
                     byte[] lockNumBytes = lockToOpen.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(lockNumBytes);
+                    Log.i(TAG, "Written: " + lockToOpen + " to output stream");
 
                     // Assume locker opens once requested
                     toLockerActivity();
@@ -119,9 +123,11 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 default:
                     // restarts the process if none of these values are received
                     // TODO: Have it run a limited number of times at most and throw an exception?
+                    Log.i(TAG, "Restarting communication process");
                     String startCommCode = "0507";
                     byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(startBytes);
+                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
                     break;
             }
         }
@@ -140,6 +146,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // 2. User entering recipient details
             // 3. Confirming details with user
         state = 1;
+
+        // TODO: Ctrl+Z this lmao
+        mBluetoothConnection.setmContext(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverLockerComm, new IntentFilter("incomingMessage"));
 
         mLockerManager = new LockerManager(this);
 
@@ -602,6 +612,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
         mLockerManager.unregisterListener();
         mLockerManager = null;
+
+        // unregister receiver from this activity
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverLockerComm);
     }
 
 

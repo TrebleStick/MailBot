@@ -28,6 +28,7 @@ import com.extcord.jg3215.mailbot.database.LockerItem;
 import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.delivery_mode.EnRouteActivity_Delivery;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -85,8 +86,56 @@ public class MainActivity_Collection extends AppCompatActivity {
             String text = intent.getStringExtra("lockerFull");
             Log.i(TAG, "MainActivity: Broadcast received: " + text);
 
-            // Go to EnRouteActivity
-            toEnRouteActivity();
+            mBluetoothConnection.setmContext(mContext);
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(mBroadcastReceiverComm, new IntentFilter("incomingMessage"));
+
+            String startCommCode = "0507";
+            byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+            mBluetoothConnection.write(startBytes);
+            Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
+        }
+    };
+
+    private BroadcastReceiver mBroadcastReceiverComm = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra("theMessage");
+            Log.i(TAG, "Received: " + text);
+
+            switch (text) {
+                case "1409":
+                    String sendLL = "SLL";
+                    byte[] sllBytes = sendLL.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(sllBytes);
+                    Log.i(TAG, "Written: " + sendLL + " to Output Stream");
+                    break;
+                case "list":
+                    List<LockerItem> lockerItemList;
+                    lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+                    String deliveryLocations = getDeliveryLocations(lockerItemList);
+
+                    Log.i(TAG, "Location List: " + deliveryLocations);
+                    byte[] locListBytes = deliveryLocations.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(locListBytes);
+                    Log.i(TAG, "Written: " + deliveryLocations + " to Output Stream");
+
+                    LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverComm);
+                    Log.i(TAG, "Unregistered mBroadcastReceiverComm");
+
+                    // TODO: Check if it better to have this here or the locker full BR
+                    // Go to EnRouteActivity
+                    toEnRouteActivity();
+                    break;
+                default:
+                    // restarts the process if none of these values are received
+                    // TODO: Have it run a limited number of times at most and throw an exception?
+                    Log.i(TAG, "Restarting communication process");
+                    String startCommCode = "0507";
+                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(startBytes);
+                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
+                    break;
+            }
         }
     };
 
@@ -99,8 +148,8 @@ public class MainActivity_Collection extends AppCompatActivity {
 
             if (connThreadStatus) {
                 Log.i(TAG, "Establishing communication between device and app");
-
-                // Do something now you have a connection established
+                // TODO: Do something to test connection?
+                // TODO: Have it such that processes can't start until connection established
             }
         }
     };
@@ -191,7 +240,11 @@ public class MainActivity_Collection extends AppCompatActivity {
         mLockerManager.setLockerState("0000000");
 
         // TODO: Make handling of database more robust
-        clearDatabase();
+        try {
+            clearDatabase();
+        } catch (IllegalStateException i) {
+            Log.i(TAG, "Room database does not exist: " + i.getMessage());
+        }
 
         // Register broadcast receiver to this instance of the activity
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
@@ -275,7 +328,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mBroadcastReceiverScanResult, discoverDevicesIntent);
 
-        mContext = this.getApplicationContext();
+        mContext = this;
 
         startTimer = false;
     }
@@ -385,9 +438,47 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         // Bundle added to the intent and contains data indicating what kind of package the user is sending
         toDetailActivity.putExtras(extras);
+
+        // unregister broadcast receivers here as they should not be needed anymore
+        unregisterReceiver(mBroadcastReceiverScanResult);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverScanComplete);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverConnectedThreadAvailable);
+
         startActivity(toDetailActivity);
 
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
+    }
+
+    // Provides locations but also checks that database do what is supposed to do
+    private String getDeliveryLocations(List<LockerItem> itemList) {
+        Log.i(TAG, "getDeliveryLocations() method called");
+
+        StringBuilder locationList = new StringBuilder("");
+        int index = 0;
+
+        for (LockerItem lockerItems : itemList) {
+            int nLocker = lockerItems.getLockerNo();
+            String sName = lockerItems.getSenderName();
+            String rName = lockerItems.getRecipientName();
+
+            String dLocation = lockerItems.getDeliveryLocation();
+
+            if (index != 6) {
+                locationList.append(dLocation);
+                locationList.append(" ");
+            } else {
+                locationList.append(locationList);
+            }
+
+            Log.i(TAG, "Index = " + String.valueOf(index));
+            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
+
+            index++;
+        }
+
+        // Extract the delivery locations from the database of lockerItem information
+        Log.i(TAG, "Delivery Location list successfully created");
+        return locationList.toString();
     }
 
     private void toEnRouteActivity() {
@@ -423,10 +514,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     protected void onDestroy() {
         mLockerManager.unregisterListener();
 
-        unregisterReceiver(mBroadcastReceiverScanResult);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverScanComplete);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFullLocker);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverConnectedThreadAvailable);
 
         Log.i(TAG, "Broadcast Receivers unregistered");
         Log.i(TAG, "onDestroy() complete");

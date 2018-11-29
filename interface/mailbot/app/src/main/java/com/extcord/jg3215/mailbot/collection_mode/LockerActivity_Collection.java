@@ -14,6 +14,7 @@ import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.database.LockerItem;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
 public class LockerActivity_Collection extends AppCompatActivity {
@@ -58,10 +59,14 @@ public class LockerActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "Package Type: " + String.valueOf(packageType));
 
             senderData = detailActivityData.getParcelable("senderData");
-            Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+            if (senderData != null) {
+                Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
+            }
 
             recipientData = detailActivityData.getParcelable("recipientData");
-            Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+            if (recipientData != null) {
+                Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+            }
 
             lockerIndex = detailActivityData.getInt("lockerIndex");
             Log.i(TAG, "Locker to open = " + String.valueOf(lockerIndex + 1));
@@ -110,6 +115,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 lockerItem.setRecipientEmail(recipientData.getEmailAddress());
 
                 lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
+
+                lockerItem.setPINcode(createPIN());
                 checkDatabase();
 
                 MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
@@ -121,10 +128,12 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 // If no lockers are available, app will go to EnRouteActivity
                 if (aLockers > 1) {
                     // Updates lockerState string with one extra full locker
+                    Log.i(TAG, "Prior to putting mail item in locker, there were "+ String.valueOf(aLockers) + " available");
                     mLockerManager.updateAvailability(lockerIndex, true);
 
                     toEndActivity();
                 } else {
+                    Log.i(TAG, "Locker is full. Closing this activity");
                     mLockerManager.unregisterListener();
                     mLockerManager.updateAvailability(lockerIndex, true);
                     finish();
@@ -174,6 +183,19 @@ public class LockerActivity_Collection extends AppCompatActivity {
             count++;
             Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
         }
+    }
+
+    private String createPIN() {
+        Log.i(TAG, "createPIN() method called");
+
+        StringBuilder createCode = new StringBuilder("");
+        for (int i = 0; i < 4; i++) {
+            Random rn = new Random();
+            // Generate random number from 0 to 10
+            int digit = rn.nextInt(11);
+            createCode.append(String.valueOf(digit));
+        }
+        return createCode.toString();
     }
 
     protected void onDestroy() {

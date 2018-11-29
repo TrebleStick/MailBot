@@ -1,6 +1,11 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +13,11 @@ import android.widget.Button;
 
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
+
+import java.nio.charset.Charset;
+
+import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -17,9 +27,45 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
 
     private final static String TAG = "OpenLockerActivity";
 
+    // Integers used to represent the type of mail that is being sent
+    private static final int LETTER_STANDARD = 1;
+    private static final int LETTER_LARGE = 2;
+    private static final int PARCEL = 3;
+
     private LockerManager mLockerManager;
 
     Button doneButton;
+
+    private BroadcastReceiver mBroadcastReceiverDeliverySuccess = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra("theMessage");
+            Log.i(TAG, "Received: " + text);
+
+            switch (text) {
+                case "1409":
+                    String goToNext = "GTN";
+                    byte[] gtnBytes = goToNext.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(gtnBytes);
+                    Log.i(TAG, "Written: " + goToNext + " to Output Stream");
+                    break;
+                case "done":
+                    String response = "yes";
+                    byte[] resBytes = response.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(resBytes);
+                    Log.i(TAG, "Written: " + response + " to Output Stream");
+
+                    int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
+                    Log.i(TAG, "Number of available lockers: " + String.valueOf(aLockers));
+                    if (aLockers > 0) {
+                        toEnRouteActivity();
+                    } else {
+                        returnToMainActivity();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +73,22 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
         setContentView(R.layout.delivery_activity_openlocker);
         Log.i(TAG, "onCreate() method called");
 
+        mLockerManager = new LockerManager(this);
+
+        mBluetoothConnection.setmContext(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverDeliverySuccess, new IntentFilter("incomingMessage"));
+
         doneButton = (Button) findViewById(R.id.btnStartAgain);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onClick() button listener method called");
 
-                // Tell computer to take MailBot to the next location
-                // Tell computer that delivery was successful
-
-                toEnRouteActivity();
+                // Tell computer that delivery was successful and take MailBot to next location
+                String startCommCode = "0507";
+                byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                mBluetoothConnection.write(startBytes);
+                Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
             }
         });
     }
@@ -44,7 +96,30 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
     private void toEnRouteActivity() {
         Log.i(TAG, "toEnRouteActivity() method called");
 
+        Intent toEnRouteIntent = new Intent(this, EnRouteActivity_Delivery.class);
+
         // Change speech bubble text to "Thank you" for ~20s
+
+        // Add extras?
+
+        startActivity(toEnRouteIntent);
         finish();
+    }
+
+    private void returnToMainActivity() {
+        Log.i(TAG, "returnToMainActivity() method called");
+
+        Intent returnToMainIntent = new Intent(this, MainActivity_Collection.class);
+        startActivity(returnToMainIntent);
+        finish();
+    }
+
+    protected void onDestroy() {
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+        }
+        mLockerManager = null;
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverDeliverySuccess);
+        super.onDestroy();
     }
 }

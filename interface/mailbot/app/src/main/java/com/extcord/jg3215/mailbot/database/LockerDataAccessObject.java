@@ -16,9 +16,15 @@ public interface LockerDataAccessObject {
     @Insert
     public void addUser(LockerItem lockerItem);
 
-    // select from [insert tablename]
+    // select all columns from [insert tableName]
     @Query("Select * from lockers")
     public List<LockerItem> readLockerItem();
+
+    @Query("Select * from lockers WHERE locker_num = :lockerNum LIMIT 1")
+    public LockerItem findLockerByID(int lockerNum);
+
+    @Query("Select * from lockers WHERE delivery_location = :deliveryLocation")
+    public List<LockerItem> findLockerByLocation(String deliveryLocation);
 
     @Delete
     public void deleteLockerItem(LockerItem lockerItem);

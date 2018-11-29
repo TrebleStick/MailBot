@@ -1,6 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
-<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/javigeis/Documents/GitHub/MailBot/interface/mailbot/usbSerialForAndroid/src/main/jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/javigeis/Documents/GitHub/MailBot/interface/mailbot/usbSerialForAndroid/src/debug/jniLibs"/></dataSet></merger>
-=======
 <merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\IChinweze\Documents\GitHub\MailBot\interface\mailbot\usbSerialForAndroid\src\main\jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\IChinweze\Documents\GitHub\MailBot\interface\mailbot\usbSerialForAndroid\src\debug\jniLibs"/></dataSet></merger>
->>>>>>> parent of 783d24c... Revert "Updates - 29/11 (1)"
