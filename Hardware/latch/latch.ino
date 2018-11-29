@@ -1,32 +1,26 @@
 //General Defines
 #define BAUD_RATE 9600
 
-
 // Global vars
-const int LATCH_DELAY_MS = 500;
+const int LATCH_DELAY_MS = 1000;
 int pin = 0;
-// --------------------------------------------//
-//-------------global functions---------------//
 
-//---------------------------------------------//
 void setup(){
   //set 7 digital output pins with the correspnding wire colour
-  pinMode(2, OUTPUT); //brown
-  pinMode(3, OUTPUT); //orange
-  pinMode(4, OUTPUT); //grey
-  pinMode(5, OUTPUT); //red
-  pinMode(6, OUTPUT); //pink
-  pinMode(7, OUTPUT); //blue
-  pinMode(8, OUTPUT); //green
+  pinMode(2, OUTPUT); //brown//black
+  pinMode(3, OUTPUT); //orange//orange
+  pinMode(4, OUTPUT); //grey//grey
+  pinMode(5, OUTPUT); //red//white
+  pinMode(6, OUTPUT); //pink//purple
+  pinMode(7, OUTPUT); //blue//blue
+  pinMode(8, OUTPUT); //green//green
 
-  pinMode(9, OUTPUT); //RESET ?
-
+  pinMode(9, OUTPUT); //RESET ? //TODO connect this
 
   Serial.begin(BAUD_RATE);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-  //create a start up sequence
 }
 
 //-------------------MAIN-------------------//
@@ -49,14 +43,9 @@ void loop(){
     }
     else if(pin!=0){
       Serial.println(pin, HEX);
-      Serial.println("Hello?");
       digitalWrite(pin, HIGH);
       delay(LATCH_DELAY_MS);
       digitalWrite(pin, LOW);
-      Serial.println("Goodbye");
     }
-
-    // Serial.write(pin);
-
   }
 }
