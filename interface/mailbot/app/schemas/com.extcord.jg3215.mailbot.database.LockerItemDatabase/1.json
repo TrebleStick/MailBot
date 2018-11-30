@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5b11ade0e87d9cac766a428a6ff95359",
+    "identityHash": "4726df6f5ff8a58f17eaa3d22199aa9a",
     "entities": [
       {
         "tableName": "lockers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locker_num` INTEGER NOT NULL, `senderName` TEXT, `senderEmail` TEXT, `recipientName` TEXT, `recipientEmail` TEXT, `delivery_location` TEXT, `PINcode` TEXT, PRIMARY KEY(`locker_num`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lockerNo` INTEGER NOT NULL, `senderName` TEXT, `senderEmail` TEXT, `recipientName` TEXT, `recipientEmail` TEXT, `delivery_location` TEXT, `PINcode` TEXT, PRIMARY KEY(`lockerNo`))",
         "fields": [
           {
             "fieldPath": "lockerNo",
-            "columnName": "locker_num",
+            "columnName": "lockerNo",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -53,7 +53,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "locker_num"
+            "lockerNo"
           ],
           "autoGenerate": false
         },
@@ -63,7 +63,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5b11ade0e87d9cac766a428a6ff95359\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4726df6f5ff8a58f17eaa3d22199aa9a\")"
     ]
   }
 }

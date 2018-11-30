@@ -1,6 +1,9 @@
 package com.extcord.jg3215.mailbot.collection_mode;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.LightingColorFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,7 +15,9 @@ import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.database.LockerItem;
+import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -41,6 +46,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
     private LockerManager mLockerManager;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,6 +55,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
         setContentView(R.layout.collection1_activity_locker);
 
         Log.i(TAG, "onCreate: Locker Activity started");
+        mContext = this;
 
         // Get data from previous activity stored in a bundle
         Bundle detailActivityData = this.getIntent().getExtras();
@@ -104,23 +112,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 // TODO: Tell the computer that the locker is closed?
                 // Is there any data that needs to passed on as an extra?
 
-                // Create a database entry for the senderData, recipientData and locker number associated with this mail item
-                LockerItem lockerItem = new LockerItem();
-                lockerItem.setLockerNo(lockerIndex + 1);
-
-                lockerItem.setSenderName(senderData.getName());
-                lockerItem.setSenderEmail(senderData.getEmailAddress());
-
-                lockerItem.setRecipientName(recipientData.getName());
-                lockerItem.setRecipientEmail(recipientData.getEmailAddress());
-
-                lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
-
-                lockerItem.setPINcode(createPIN());
-                checkDatabase();
-
-                MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
-                Log.i(TAG, "Locker item info added to database successfully");
+                // Starts the asynchronous task
+                new addToDatabase(lockerIndex, senderData, recipientData, mContext).execute();
 
                 // Gets the number of available lockers
                 int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
@@ -142,6 +135,90 @@ public class LockerActivity_Collection extends AppCompatActivity {
         });
     }
 
+    // Adding to db needs to be done asynchronously - as do general database queries. Database
+    // handling on main thread is inadvisable
+    // TODO: Find out what parameters do
+    private static class addToDatabase extends AsyncTask<Void, Void, Void> {
+
+        int lockerIndex;
+        PackageData senderData;
+        PackageData recipientData;
+        WeakReference<LockerActivity_Collection> context;
+
+        public addToDatabase(int lockerIndex, PackageData senderData, PackageData recipientData, Context context) {
+            this.lockerIndex = lockerIndex;
+            this.senderData = senderData;
+            this.recipientData = recipientData;
+
+            // using mContext makes the field a location for a memory leak
+            // use a Weak reference instead
+            // TODO: Look into weak references
+            this.context = new WeakReference<>((LockerActivity_Collection) context);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "AsyncTask: Adding database item in the background.");
+            // Create a database entry for the senderData, recipientData and locker number associated with this mail item
+            LockerItem lockerItem = new LockerItem();
+            lockerItem.setLockerNo(lockerIndex + 1);
+
+            lockerItem.setSenderName(senderData.getName());
+            lockerItem.setSenderEmail(senderData.getEmailAddress());
+
+            lockerItem.setRecipientName(recipientData.getName());
+            lockerItem.setRecipientEmail(recipientData.getEmailAddress());
+
+            lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
+
+            lockerItem.setPINcode(createPIN());
+
+            LockerItemDatabase lockerItemDatabase = LockerItemDatabase.getInstance(context.get()); //.getApplicationContext());
+            lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
+
+            Log.i(TAG, "Locker item info added to database successfully");
+            checkDatabase(lockerItemDatabase);
+            return null;
+        }
+
+        private String createPIN() {
+            Log.i(TAG, "createPIN() method called");
+
+            StringBuilder createCode = new StringBuilder("");
+            for (int i = 0; i < 3; i++) {
+                Random rn = new Random();
+                // Generate random number from 0 to 10
+                int digit = rn.nextInt(11);
+                createCode.append(String.valueOf(digit));
+            }
+            Log.i(TAG, "PIN Code: " + createCode.toString());
+            return createCode.toString();
+        }
+
+        private void checkDatabase(LockerItemDatabase lockerItemDatabase) {
+            Log.i(TAG, "checkDatabase() method called");
+            List<LockerItem> lockerItemList = lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+            int count = 0;
+
+            for (LockerItem lockerItems : lockerItemList) {
+                int nLocker = lockerItems.getLockerNo();
+                String sName = lockerItems.getSenderName();
+                String rName = lockerItems.getRecipientName();
+                String dLocation = lockerItems.getDeliveryLocation();
+
+                Log.i(TAG, "Mail Item Count = " + String.valueOf(count));
+                count++;
+                Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.i(TAG, "AsyncTask: Complete.");
+        }
+    }
+
     private void toEndActivity() {
         Log.i(TAG, "toEndActivity() method called");
         String packageTag = "packageType";
@@ -154,9 +231,9 @@ public class LockerActivity_Collection extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
-            // The kind of package the user is sending
-            // The data given to MailBot about the sender
-            // The data given to MailBot about the recipient
+        // The kind of package the user is sending
+        // The data given to MailBot about the sender
+        // The data given to MailBot about the recipient
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
@@ -166,36 +243,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
         startActivity(toEndActivity);
 
         finish();
-    }
-
-    private void checkDatabase() {
-        Log.i(TAG, "checkDatabase() method called");
-        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
-        int count = 0;
-
-        for (LockerItem lockerItems : lockerItemList) {
-            int nLocker = lockerItems.getLockerNo();
-            String sName = lockerItems.getSenderName();
-            String rName = lockerItems.getRecipientName();
-            String dLocation = lockerItems.getDeliveryLocation();
-
-            Log.i(TAG, "Mail Item Count = " + String.valueOf(count));
-            count++;
-            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
-        }
-    }
-
-    private String createPIN() {
-        Log.i(TAG, "createPIN() method called");
-
-        StringBuilder createCode = new StringBuilder("");
-        for (int i = 0; i < 4; i++) {
-            Random rn = new Random();
-            // Generate random number from 0 to 10
-            int digit = rn.nextInt(11);
-            createCode.append(String.valueOf(digit));
-        }
-        return createCode.toString();
     }
 
     protected void onDestroy() {

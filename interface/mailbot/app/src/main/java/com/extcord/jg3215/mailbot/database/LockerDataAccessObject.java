@@ -13,6 +13,7 @@ import java.util.List;
 
 @Dao
 public interface LockerDataAccessObject {
+    // This annotation tells the room that the function allows you to add entries to the database
     @Insert
     public void addUser(LockerItem lockerItem);
 
@@ -20,12 +21,13 @@ public interface LockerDataAccessObject {
     @Query("Select * from lockers")
     public List<LockerItem> readLockerItem();
 
-    @Query("Select * from lockers WHERE locker_num = :lockerNum LIMIT 1")
-    public LockerItem findLockerByID(int lockerNum);
-
     @Query("Select * from lockers WHERE delivery_location = :deliveryLocation")
     public List<LockerItem> findLockerByLocation(String deliveryLocation);
 
     @Delete
     public void deleteLockerItem(LockerItem lockerItem);
+
+    // Deletes all items in the database
+    @Query("DELETE FROM lockers")
+    public void clearDatabase();
 }

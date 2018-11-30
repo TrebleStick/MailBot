@@ -12,6 +12,7 @@ import android.util.Log;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
 import com.extcord.jg3215.mailbot.database.LockerItem;
+import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.email.eMailService;
 
 import java.nio.charset.Charset;
@@ -58,7 +59,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     Log.i(TAG, "Destination Position: " + destinationPos);
 
                     // Get the lockers associated with this delivery address
-                    List<LockerItem> currentLockers = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
+                    List<LockerItem> currentLockers = LockerItemDatabase.getInstance(mContext.getApplicationContext()).lockerDataAccessObject().findLockerByLocation(destinationPos);
                     Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
                     Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
 
@@ -168,7 +169,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     private void sendEmails() {
         Log.i(TAG, "sendEmails() method called");
 
-        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+        List<LockerItem> lockerItemList = LockerItemDatabase.getInstance(mContext.getApplicationContext()).lockerDataAccessObject().readLockerItem();
 
         for (int i = 0; i < lockerItemList.size(); i++) {
             String recipientEmail = lockerItemList.get(i).getRecipientEmail();

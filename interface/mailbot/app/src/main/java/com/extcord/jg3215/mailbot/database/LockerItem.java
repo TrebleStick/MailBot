@@ -13,7 +13,7 @@ import com.extcord.jg3215.mailbot.PackageData;
 @Entity (tableName = "lockers")
 public class LockerItem {
     @PrimaryKey
-    @ColumnInfo (name = "locker_num")
+    @ColumnInfo
     private int lockerNo;
 
     @ColumnInfo

@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import com.extcord.jg3215.mailbot.database.LockerItem;
 import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.delivery_mode.EnRouteActivity_Delivery;
 
+import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Set;
@@ -36,8 +38,9 @@ import java.util.UUID;
 public class MainActivity_Collection extends AppCompatActivity {
 
     // Database is a public, static object so can be accessed by all activities
-    // I assume Android Studio provides security against memory leaks for Rooms
-    public static LockerItemDatabase lockerItemDatabase;
+    // I assume Android Studio provides security against memory leaks for Rooms - WRONG LMAO
+    // private LockerItemDatabase lockerItemDatabase;
+    private final static String DATABASE_NAME = "lockerDB";
 
     // The image views that are being used like buttons
     ImageView letterView;
@@ -73,11 +76,13 @@ public class MainActivity_Collection extends AppCompatActivity {
     private BluetoothDevice deviceConnected;
     private BluetoothAdapter mBluetoothAdapter;
 
-    // TODO: Make this not public static ie create non-public access to this variable
+    // TODO: Make this variable a singleton
     public static BluetoothConnectionService mBluetoothConnection;
 
     private StopWatch scanTimer;
     private boolean startTimer;
+
+    private boolean started = false;
 
     // Listens for message that lockers are full
     BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
@@ -111,7 +116,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                     break;
                 case "list":
                     List<LockerItem> lockerItemList;
-                    lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
+                    lockerItemList = LockerItemDatabase.getInstance(mContext.getApplicationContext()).lockerDataAccessObject().readLockerItem();
                     String deliveryLocations = getDeliveryLocations(lockerItemList);
 
                     Log.i(TAG, "Location List: " + deliveryLocations);
@@ -148,8 +153,16 @@ public class MainActivity_Collection extends AppCompatActivity {
 
             if (connThreadStatus) {
                 Log.i(TAG, "Establishing communication between device and app");
-                // TODO: Do something to test connection?
-                // TODO: Have it such that processes can't start until connection established
+
+                // unregister broadcast receivers here as they should not be needed anymore
+                unregisterReceiver(mBroadcastReceiverScanResult);
+                LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverScanComplete);
+                LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverConnectedThreadAvailable);
+                Log.i(TAG, "Broadcast receivers unregistered");
+
+                String hwResponse = "hey";
+                byte[] hwBytes = hwResponse.getBytes(Charset.defaultCharset());
+                mBluetoothConnection.write(hwBytes);
             }
         }
     };
@@ -233,18 +246,18 @@ public class MainActivity_Collection extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, "lockerInfo").allowMainThreadQueries().build();
-
         // TODO: Make handling of lockerState more robust
         mLockerManager = new LockerManager(this);
         mLockerManager.setLockerState("0000000");
 
+        // TODO: I think a previous instance of the database exists and it is causing issues
+        // TODO: And then further issues are caused as it is searching for this version and it cannot find it
+        // lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+        mContext = this;
+
+        started = new clearDBCheck(started, mContext).execute();
+
         // TODO: Make handling of database more robust
-        try {
-            clearDatabase();
-        } catch (IllegalStateException i) {
-            Log.i(TAG, "Room database does not exist: " + i.getMessage());
-        }
 
         // Register broadcast receiver to this instance of the activity
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
@@ -328,9 +341,36 @@ public class MainActivity_Collection extends AppCompatActivity {
         IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mBroadcastReceiverScanResult, discoverDevicesIntent);
 
-        mContext = this;
-
         startTimer = false;
+    }
+
+    private static class clearDBCheck extends AsyncTask<Void, Void, Boolean> {
+
+        boolean started;
+        WeakReference<MainActivity_Collection> context;
+
+        public clearDBCheck(boolean started, Context mContext) {
+            this.started = started;
+            this.context = new WeakReference<>((MainActivity_Collection) mContext);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if (!started && LockerItemDatabase.getInstance(context.get().getApplicationContext()) != null) {
+                Log.i(TAG, "Started? " + String.valueOf(started) + " but database instance exists.");
+                LockerItemDatabase.getInstance(context.get().getApplicationContext()).lockerDataAccessObject().clearDatabase();
+                started = true;
+                Log.i(TAG, "Started? " + String.valueOf(started) + " database destroyed");
+            }
+            return true;
+        }
+
+        // TODO: Figure out the problem
+        @Override
+        protected void onPostExecute(boolean aBool) {
+            super.onPostExecute(aBool);
+            Log.i(TAG, "AsyncTask: clearCheck Complete");
+        }
     }
 
     @Override
@@ -438,14 +478,7 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         // Bundle added to the intent and contains data indicating what kind of package the user is sending
         toDetailActivity.putExtras(extras);
-
-        // unregister broadcast receivers here as they should not be needed anymore
-        unregisterReceiver(mBroadcastReceiverScanResult);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverScanComplete);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverConnectedThreadAvailable);
-
         startActivity(toDetailActivity);
-
         Log.i(TAG, "Detail Activity started with the extra: " + packageTag + ": " + String.valueOf(packageType));
     }
 
@@ -495,22 +528,6 @@ public class MainActivity_Collection extends AppCompatActivity {
         startActivity(toEnRouteActivityIntent);
     }
 
-    private void clearDatabase() {
-        Log.i(TAG, "clearDatabase() method called");
-        List<LockerItem> lockerItemList = MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().readLockerItem();
-        int itemListLength = lockerItemList.size();
-
-        for (int i = 0; i < itemListLength; i++) {
-            int primaryKey = lockerItemList.get(i).getLockerNo();
-            LockerItem delItem = new LockerItem();
-            delItem.setLockerNo(primaryKey);
-
-            Log.i(TAG, "Item to delete has index = " + String.valueOf(primaryKey));
-            MainActivity_Collection.lockerItemDatabase.lockerDataAccessObject().deleteLockerItem(delItem);
-            Log.i(TAG, "Item successfully deleted");
-        }
-    }
-
     protected void onDestroy() {
         mLockerManager.unregisterListener();
 
@@ -518,6 +535,9 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         Log.i(TAG, "Broadcast Receivers unregistered");
         Log.i(TAG, "onDestroy() complete");
+
+        // mContext.deleteDatabase(DATABASE_NAME);
+        LockerItemDatabase.destroyDatabase();
         super.onDestroy();
     }
 }
