@@ -29,7 +29,7 @@ import time
 def callback(data):
     Linux_port = '/dev/ttyACM0'
     Windows_port = 'COM3'
-
+    print("test")
     latchToOpen = int(data.data)
     # latchToOpen = data.data
 
@@ -46,7 +46,8 @@ def callback(data):
     time.sleep(1)
 
     #-----------SINGLE-LATCH-SCRIPT-----------#
-    channel.write(pins[latchToOpen].encode('utf-8'))
+    channel.write('6'.encode('utf-8'))
+    time.sleep(2)
     # channel.write('6'.encode('utf-8'))
 
     print(pins[latchToOpen].encode('utf-8'))

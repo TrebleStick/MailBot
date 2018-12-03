@@ -1069,6 +1069,8 @@ sensor_msgs/PointCloud2.h
 -
 cstdarg
 -
+sstream
+-
 string
 -
 vector

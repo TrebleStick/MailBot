@@ -43,14 +43,14 @@ print('writing comms init to channel')
 channel.write('9'.encode('utf-8'))
 time.sleep(1)
 
-data = channel.readline()
-if (data[0]-48) == 9 :
-    print('woop')
+# data = channel.readline()
+# if (data[0]-48) == 9 :
+#     print('woop')
 
 #------------DEMO-ALL-LATCHES--------------#
 for i in pins :
     channel.write(i.encode('utf-8'))
-    time.sleep(1)
+    time.sleep(2)
     print(i)
     # print(channel.readline()[0] - 48)
 
