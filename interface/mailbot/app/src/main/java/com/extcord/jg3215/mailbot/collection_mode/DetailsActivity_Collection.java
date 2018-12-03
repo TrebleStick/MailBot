@@ -25,6 +25,7 @@ import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
 import java.nio.charset.Charset;
+import java.util.Random;
 
 // import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
@@ -405,10 +406,15 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     private void toLockerActivity() {
         Log.i(TAG, "toLockerActivity() method called");
+
+        // PIN code generator
+        String pinCode = createPIN();
+
         String packageTag = "packageType";
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
         String lockerIndexTag = "lockerIndex";
+        String pinTag = "pinCode";
 
         Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection.class);
 
@@ -424,6 +430,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
         extras.putInt(lockerIndexTag, lockerIndex);
+        extras.putString(pinTag, pinCode);
 
         // Add all the extras content to the intent
         lockerActivityIntent.putExtras(extras);
@@ -606,6 +613,20 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         }
         state = 3;
         Log.i(TAG, "Layout changed to state: "+ String.valueOf(state));
+    }
+
+    private String createPIN() {
+        Log.i(TAG, "createPIN() method called");
+
+        StringBuilder createCode = new StringBuilder("");
+        while (createCode.length() < 4) {
+            Random rn = new Random();
+            // Generate random number from 0 to 10
+            int digit = rn.nextInt(11);
+            createCode.append(String.valueOf(digit));
+        }
+        Log.i(TAG, "PIN Code: " + createCode.toString());
+        return createCode.toString();
     }
 
     protected void onDestroy() {

@@ -134,7 +134,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverArrival, new IntentFilter("incomingMessage"));
-        sendEmails();
+        //sendEmails();
     }
 
     // Set the BR to this instance of the class again
@@ -171,21 +171,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         finish();
     }
 
-    private void sendEmails() {
-        Log.i(TAG, "sendEmails() method called");
-
-        List<LockerItem> lockerItemList = LockerItemDatabase.getInstance(mContext.getApplicationContext()).lockerDataAccessObject().readLockerItem();
-
-        for (int i = 0; i < lockerItemList.size(); i++) {
-            String recipientEmail = lockerItemList.get(i).getRecipientEmail();
-            // send email to recipient
-            Log.i(TAG, "Email sent to: " + recipientEmail);
-
-            String senderEmail = lockerItemList.get(i).getSenderEmail();
-            // send email to sender
-            Log.i(TAG, "Email sent to: " + senderEmail);
-        }
-
         /* for (String address : senderEmailAddresses) {
             try {
                 eMailService mailService = new eMailService("", "");
@@ -194,5 +179,5 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                 Log.e(TAG, e.getMessage());
             }
         } */
-    }
+
 }
