@@ -1,8 +1,0 @@
-prefix=/home/human/Documents/catkin_ws/install
-
-Name: joy_tutorial
-Description: Description of joy_tutorial
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/human/Documents/catkin_ws/install/lib 
-Requires: 

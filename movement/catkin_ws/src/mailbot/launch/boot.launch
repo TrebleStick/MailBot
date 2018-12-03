@@ -3,6 +3,10 @@
 		<param name="port" value="/dev/ttyUSB0" type="string"/>
 	</node>
 
-	<node pkg="tf" type="static_transform_publisher" name="sonar_tf" args="0 0 0 0 0 0 /base_link /sonar 100" />
+	<!-- Example of how to setup RViz to visualise a robot model (provided in URDF format) -->
+	<!-- URDF file is found in the p2os_urdf package whilst the RViz setup is provided in this package's "config" directory -->
+	<include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
+
+	<node pkg="tf" type="static_transform_publisher" name="sonar_tf" args="0 0 0 0 0 0  /base_link /sonar 100" />
 
 </launch>

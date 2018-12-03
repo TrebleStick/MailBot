@@ -1,2 +1,2 @@
-iai_kinect2/iai_kinect2:iai_kinect2/kinect2_bridge:iai_kinect2/kinect2_calibration:iai_kinect2/kinect2_registration:iai_kinect2/kinect2_viewer:joy_tutorial:mailbot:pointcloud_to_laserscan:rosaria:rosaria_client:tutorial_pub_sub
+depthimage_to_laserscan:iai_kinect2/iai_kinect2:iai_kinect2/kinect2_bridge:iai_kinect2/kinect2_calibration:iai_kinect2/kinect2_registration:iai_kinect2/kinect2_viewer:joy_tutorial:mailbot:openni_camera/openni_camera:openni_camera/openni_description:openni_camera/openni_launch:pointcloud_to_laserscan:rgbd_launch:rosaria:rosaria_client:tutorial_pub_sub
 -DCATKIN_DEVEL_PREFIX=/home/human/Documents/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/human/Documents/catkin_ws/install -G Unix Makefiles

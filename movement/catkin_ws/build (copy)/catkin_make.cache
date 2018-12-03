@@ -1,2 +1,0 @@
-joy_tutorial:pointcloud_to_laserscan:rosaria:rosaria_client:tutorial_pub_sub
--DCATKIN_DEVEL_PREFIX=/home/human/Documents/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/human/Documents/catkin_ws/install -G Unix Makefiles
