@@ -190,7 +190,12 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
             lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
 
+<<<<<<< HEAD
             lockerItem.setPINcode(pinCode);
+=======
+            // TODO: Make PIN code an extra from details activity -> created each time the confirm button is pressed
+            lockerItem.setPINcode(createPIN());
+>>>>>>> 31b63a3357779b3411a1b6ad267e3ad17f1046d5
             lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
 
             Log.i(TAG, "Locker item info added to database successfully");
@@ -198,16 +203,26 @@ public class LockerActivity_Collection extends AppCompatActivity {
             return null;
         }
 
+<<<<<<< HEAD
         /*private String createPIN() {
+=======
+        // TODO: Create some check PIN method to be sure
+        private String createPIN() {
+>>>>>>> 31b63a3357779b3411a1b6ad267e3ad17f1046d5
             Log.i(TAG, "createPIN() method called");
 
             StringBuilder createCode = new StringBuilder("");
-            while (createCode.length() < 4) {
-                Random rn = new Random();
-                // Generate random number from 0 to 10
-                int digit = rn.nextInt(11);
-                createCode.append(String.valueOf(digit));
+            for (int i = 0; i < 4; i++) {
+                if (createCode.length() < 4) {
+                    Random rn = new Random();
+                    // Generate random number from 0 to 10
+                    int digit = rn.nextInt(11);
+                    createCode.append(String.valueOf(digit));
+                } else if (createCode.length() == 4) {
+                    break;
+                }
             }
+
             Log.i(TAG, "PIN Code: " + createCode.toString());
             return createCode.toString();
         }*/
@@ -233,25 +248,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Log.i(TAG, "AsyncTask: Complete.");
-        }
-    }
-
-    private void postDBAction() {
-        // If no lockers are available, app will go to EnRouteActivity
-        // Gets the number of available lockers
-        int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
-
-        if (aLockers > 1) {
-            // Updates lockerState string with one extra full locker
-            Log.i(TAG, "Prior to putting mail item in locker, there were "+ String.valueOf(aLockers) + " available");
-            mLockerManager.updateAvailability(lockerIndex, true);
-
-            toEndActivity();
-        } else {
-            Log.i(TAG, "Locker is full. Closing this activity");
-            mLockerManager.unregisterListener();
-            mLockerManager.updateAvailability(lockerIndex, true);
-            finish();
         }
     }
 

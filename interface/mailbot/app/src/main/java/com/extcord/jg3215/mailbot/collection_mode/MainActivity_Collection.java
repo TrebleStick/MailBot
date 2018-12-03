@@ -82,7 +82,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     private StopWatch scanTimer;
     private boolean startTimer;
 
-    private boolean started = false;
+    private boolean started;
 
     // Listens for message that lockers are full
     BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
@@ -95,7 +95,7 @@ public class MainActivity_Collection extends AppCompatActivity {
             // mBluetoothConnection.setmContext(mContext);
             LocalBroadcastManager.getInstance(mContext).registerReceiver(mBroadcastReceiverComm, new IntentFilter("incomingMessage"));
 
-            String startCommCode = "0507";
+            String startCommCode = "0203";
             byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
             mBluetoothConnection.write(startBytes);
             Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
@@ -110,7 +110,7 @@ public class MainActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "Received: " + text);
 
             switch (text) {
-                case "1409":
+                case "3020":
                     String sendLL = "SLL";
                     byte[] sllBytes = sendLL.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(sllBytes);
@@ -137,7 +137,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                     // restarts the process if none of these values are received
                     // TODO: Have it run a limited number of times at most and throw an exception?
                     Log.i(TAG, "Restarting communication process");
-                    String startCommCode = "0507";
+                    String startCommCode = "0203";
                     byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(startBytes);
                     Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
@@ -153,6 +153,7 @@ public class MainActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "Broadcast Receiver: Connected Thread Available");
             boolean connThreadStatus = intent.getBooleanExtra("Status", true);
             Log.i(TAG, "Connected Thread Update Received: Connection made = " + String.valueOf(connThreadStatus));
+            started = true;
 
             if (connThreadStatus) {
                 Log.i(TAG, "Establishing communication between device and app");
@@ -352,6 +353,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         registerReceiver(mBroadcastReceiverScanResult, discoverDevicesIntent);
 
         startTimer = false;
+        started = false;
     }
 
     /*
@@ -413,6 +415,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         }
     }
 
+    // TODO: Make the two functions below this a part of BluetoothConnectionService
     private void beginDeviceConnection() {
         Log.i(TAG, "beginDeviceConnection() method called");
         Log.i(TAG, "Creating Bluetooth Connection Service");
@@ -460,15 +463,17 @@ public class MainActivity_Collection extends AppCompatActivity {
         } else {
             Log.i(TAG, "Bluetooth is enabled");
 
-            if (!startTimer && !bondExisting()) {
-                Log.i(TAG, "There is no bond between the tablet and computer");
-                scanTimer = new StopWatch(15000, this, true);
+            if (!started) {
+                if (!startTimer && !bondExisting()) {
+                    Log.i(TAG, "There is no bond between the tablet and computer");
+                    scanTimer = new StopWatch(15000, this, true);
 
-                Log.i(TAG, "Timer started");
-                if (deviceConnected == null) {
-                    mBluetoothAdapter.startDiscovery();
+                    Log.i(TAG, "Timer started");
+                    if (deviceConnected == null) {
+                        mBluetoothAdapter.startDiscovery();
+                    }
+                    startTimer = true;
                 }
-                startTimer = true;
             }
         }
 
