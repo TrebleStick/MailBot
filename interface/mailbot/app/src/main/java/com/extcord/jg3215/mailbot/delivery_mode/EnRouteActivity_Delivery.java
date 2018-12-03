@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
 import com.extcord.jg3215.mailbot.database.LockerItem;
@@ -19,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 
-import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
+// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -38,6 +39,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     // For identification purposes of the locker
     private int lockerID;
+
+    private BluetoothConnectionService mBluetoothConnection;
 
     // Listen for message (Serial communication) that MailBot is at destination
     // TODO: Register and unregister Broadcast Receivers in onCreate() and when no longer needed (respectively)
@@ -127,7 +130,9 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         Log.i(TAG, "onCreate() method called");
 
         mContext = this;
-        mBluetoothConnection.setmContext(mContext);
+        // mBluetoothConnection.setmContext(mContext);
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverArrival, new IntentFilter("incomingMessage"));
         sendEmails();
     }

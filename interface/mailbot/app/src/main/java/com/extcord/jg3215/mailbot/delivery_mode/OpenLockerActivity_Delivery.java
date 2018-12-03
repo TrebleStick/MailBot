@@ -11,13 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
 
 import java.nio.charset.Charset;
 
-import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
+// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -35,6 +36,8 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
     private LockerManager mLockerManager;
 
     Button doneButton;
+
+    private BluetoothConnectionService mBluetoothConnection;
 
     private BroadcastReceiver mBroadcastReceiverDeliverySuccess = new BroadcastReceiver() {
         @Override
@@ -72,6 +75,8 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_activity_openlocker);
         Log.i(TAG, "onCreate() method called");
+
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
         mLockerManager = new LockerManager(this);
 

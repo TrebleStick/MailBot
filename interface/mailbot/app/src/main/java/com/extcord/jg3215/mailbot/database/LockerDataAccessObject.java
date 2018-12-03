@@ -3,6 +3,7 @@ package com.extcord.jg3215.mailbot.database;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 @Dao
 public interface LockerDataAccessObject {
     // This annotation tells the room that the function allows you to add entries to the database
-    @Insert
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     public void addUser(LockerItem lockerItem);
 
     // select all columns from [insert tableName]

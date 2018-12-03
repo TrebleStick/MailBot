@@ -22,11 +22,15 @@ public class BluetoothConnectionService {
     private static final String TAG = "BluetoothConnectionServ";
     private static final String appName = "MYAPP";
 
+    private static BluetoothConnectionService bcsInstance = null;
+
     // UUID is a unique identifier for your communication protocol. Needed for devices to recognise each other?
     // NOTE: Copied from the inter-webs. I think this specific UUID is a generic one for Bluetooth?
     // private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // private static final UUID MY_UUID = UUID.fromString("4C4C4544-0053-3810-8058-B5C04F423332");
+
+    private static final UUID MY_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
 
     private final BluetoothAdapter mBluetoothAdapter;
 
@@ -49,6 +53,7 @@ public class BluetoothConnectionService {
         public static final int MESSAGE_WRITE = 1;
     }
 
+    /*
     public BluetoothConnectionService(Context context, UUID deviceUUID) {
 
         setmContext(context);
@@ -60,7 +65,26 @@ public class BluetoothConnectionService {
 
         // executes the synchronised void method. Creates our accept thread and begins cascade of processes
         start();
+    } */
+
+    private BluetoothConnectionService() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.deviceUUID = MY_UUID;
+        start();
+        mHandler = new Handler();
     }
+
+    public static BluetoothConnectionService getBcsInstance() {
+        if (bcsInstance == null) {
+            bcsInstance = new BluetoothConnectionService();
+            Log.i(TAG, "New instance of the Bluetooth connection object created.");
+        }
+        return bcsInstance;
+    }
+
+    /* public void setmHandler(Handler handler) {
+        mHandler = handler;
+    } */
 
     public void setmContext(Context context) {
         this.mContext = context.getApplicationContext();
@@ -297,7 +321,7 @@ public class BluetoothConnectionService {
 
                 Log.i(TAG, "ConnectedThread: Writing to OutputStream (2): " + writeMsg);
                 // writeMsg.sendToTarget();
-                Log.i(TAG, "InputStream: Message written to target");
+                Log.i(TAG, "OutputStream: Message written to target");
             } catch (IOException e) {
                 Log.e(TAG, "ConnectedThread: Error writing to OutputStream: " + e.getMessage());
             }

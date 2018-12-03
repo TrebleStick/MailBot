@@ -113,7 +113,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 // Is there any data that needs to passed on as an extra?
 
                 // Starts the asynchronous task
-                new addToDatabase(lockerIndex, senderData, recipientData, mContext).execute();
+                boolean isEmpty = mLockerManager.getLockerState().equals("0000000");
+                new addToDatabase(lockerIndex, senderData, recipientData, mContext, isEmpty).execute();
 
                 // Gets the number of available lockers
                 int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
@@ -144,8 +145,10 @@ public class LockerActivity_Collection extends AppCompatActivity {
         PackageData senderData;
         PackageData recipientData;
         WeakReference<LockerActivity_Collection> context;
+        // LockerManager lockerManager;
+        boolean empty;
 
-        public addToDatabase(int lockerIndex, PackageData senderData, PackageData recipientData, Context context) {
+        public addToDatabase(int lockerIndex, PackageData senderData, PackageData recipientData, Context context, Boolean isEmpty) {
             this.lockerIndex = lockerIndex;
             this.senderData = senderData;
             this.recipientData = recipientData;
@@ -154,13 +157,24 @@ public class LockerActivity_Collection extends AppCompatActivity {
             // use a Weak reference instead
             // TODO: Look into weak references
             this.context = new WeakReference<>((LockerActivity_Collection) context);
+
+            // this.lockerManager = lockerManager;
+            this.empty = isEmpty;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             Log.i(TAG, "AsyncTask: Adding database item in the background.");
+            LockerItemDatabase lockerItemDatabase = LockerItemDatabase.getInstance(context.get()); //.getApplicationContext());
+
+            if (empty) {
+                lockerItemDatabase.lockerDataAccessObject().clearDatabase();
+                Log.i(TAG, "Database cleared.");
+            }
+
             // Create a database entry for the senderData, recipientData and locker number associated with this mail item
             LockerItem lockerItem = new LockerItem();
+            // lockerItem.setId(0);
             lockerItem.setLockerNo(lockerIndex + 1);
 
             lockerItem.setSenderName(senderData.getName());
@@ -172,8 +186,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
             lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
 
             lockerItem.setPINcode(createPIN());
-
-            LockerItemDatabase lockerItemDatabase = LockerItemDatabase.getInstance(context.get()); //.getApplicationContext());
             lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
 
             Log.i(TAG, "Locker item info added to database successfully");
@@ -185,7 +197,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "createPIN() method called");
 
             StringBuilder createCode = new StringBuilder("");
-            for (int i = 0; i < 3; i++) {
+            while (createCode.length() < 4) {
                 Random rn = new Random();
                 // Generate random number from 0 to 10
                 int digit = rn.nextInt(11);
@@ -216,6 +228,25 @@ public class LockerActivity_Collection extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Log.i(TAG, "AsyncTask: Complete.");
+        }
+    }
+
+    private void postDBAction() {
+        // If no lockers are available, app will go to EnRouteActivity
+        // Gets the number of available lockers
+        int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
+
+        if (aLockers > 1) {
+            // Updates lockerState string with one extra full locker
+            Log.i(TAG, "Prior to putting mail item in locker, there were "+ String.valueOf(aLockers) + " available");
+            mLockerManager.updateAvailability(lockerIndex, true);
+
+            toEndActivity();
+        } else {
+            Log.i(TAG, "Locker is full. Closing this activity");
+            mLockerManager.unregisterListener();
+            mLockerManager.updateAvailability(lockerIndex, true);
+            finish();
         }
     }
 

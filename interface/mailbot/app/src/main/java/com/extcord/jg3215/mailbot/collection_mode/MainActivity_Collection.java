@@ -2,7 +2,6 @@ package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.Manifest;
 import android.app.Activity;
-import android.arch.persistence.room.Room;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -77,7 +76,8 @@ public class MainActivity_Collection extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
 
     // TODO: Make this variable a singleton
-    public static BluetoothConnectionService mBluetoothConnection;
+    // public static BluetoothConnectionService mBluetoothConnection;
+    private BluetoothConnectionService mBluetoothConnection;
 
     private StopWatch scanTimer;
     private boolean startTimer;
@@ -88,10 +88,11 @@ public class MainActivity_Collection extends AppCompatActivity {
     BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Broadcast Receiver: Full Locker");
             String text = intent.getStringExtra("lockerFull");
             Log.i(TAG, "MainActivity: Broadcast received: " + text);
 
-            mBluetoothConnection.setmContext(mContext);
+            // mBluetoothConnection.setmContext(mContext);
             LocalBroadcastManager.getInstance(mContext).registerReceiver(mBroadcastReceiverComm, new IntentFilter("incomingMessage"));
 
             String startCommCode = "0507";
@@ -104,6 +105,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     private BroadcastReceiver mBroadcastReceiverComm = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Broadcast Receiver: Communication");
             String text = intent.getStringExtra("theMessage");
             Log.i(TAG, "Received: " + text);
 
@@ -148,6 +150,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     private BroadcastReceiver mBroadcastReceiverConnectedThreadAvailable = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Broadcast Receiver: Connected Thread Available");
             boolean connThreadStatus = intent.getBooleanExtra("Status", true);
             Log.i(TAG, "Connected Thread Update Received: Connection made = " + String.valueOf(connThreadStatus));
 
@@ -158,7 +161,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                 unregisterReceiver(mBroadcastReceiverScanResult);
                 LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverScanComplete);
                 LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverConnectedThreadAvailable);
-                Log.i(TAG, "Broadcast receivers unregistered");
+                Log.i(TAG, "Broadcast receivers unregistered: Scan result, ConnThread, ScanComplete");
 
                 String hwResponse = "hey";
                 byte[] hwBytes = hwResponse.getBytes(Charset.defaultCharset());
@@ -171,6 +174,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     private BroadcastReceiver mBroadcastReceiverScanResult = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Broadcast Receiver: Scan Result");
             final String action = intent.getAction();
             Log.i(TAG, "onReceive: ACTION FOUND");
 
@@ -207,6 +211,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     private BroadcastReceiver mBroadcastReceiverScanComplete = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Broadcast Receiver: Scan Complete");
             String status = intent.getStringExtra("scanStatus");
             Log.d(TAG, "Scan timeout broadcast received.");
 
@@ -237,6 +242,7 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.collection1_activity_main);
+        Log.i(TAG, "onCreate() method called.");
 
         View decorView = getWindow().getDecorView();
         // Hide both the navigation bar and the status bar.
@@ -245,6 +251,8 @@ public class MainActivity_Collection extends AppCompatActivity {
         // hide the navigation bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+
+        // mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
         // TODO: Make handling of lockerState more robust
         mLockerManager = new LockerManager(this);
@@ -255,12 +263,12 @@ public class MainActivity_Collection extends AppCompatActivity {
         // lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
         mContext = this;
 
-        started = new clearDBCheck(started, mContext).execute();
+        /* if (!started) {
+            new clearDBCheck(mContext).execute();
+            started = true;
+        } */
 
         // TODO: Make handling of database more robust
-
-        // Register broadcast receiver to this instance of the activity
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
 
         letterView = (ImageView) findViewById(R.id.letter);
         letterView.setOnClickListener(new View.OnClickListener() {
@@ -335,6 +343,8 @@ public class MainActivity_Collection extends AppCompatActivity {
             throw new NullPointerException("No BluetoothManager found: " + e.getMessage());
         }
 
+        // Register broadcast receiver to this instance of the activity
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFullLocker, new IntentFilter("lockerFull"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverConnectedThreadAvailable, new IntentFilter("connectedThreadStatusUpdate"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverScanComplete, new IntentFilter("timedBluetoothScan"));
 
@@ -344,34 +354,30 @@ public class MainActivity_Collection extends AppCompatActivity {
         startTimer = false;
     }
 
-    private static class clearDBCheck extends AsyncTask<Void, Void, Boolean> {
+    /*
+    private static class clearDBCheck extends AsyncTask<Void, Void, Void> {
 
-        boolean started;
         WeakReference<MainActivity_Collection> context;
 
-        public clearDBCheck(boolean started, Context mContext) {
-            this.started = started;
+        public clearDBCheck(Context mContext) {
             this.context = new WeakReference<>((MainActivity_Collection) mContext);
         }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-            if (!started && LockerItemDatabase.getInstance(context.get().getApplicationContext()) != null) {
-                Log.i(TAG, "Started? " + String.valueOf(started) + " but database instance exists.");
-                LockerItemDatabase.getInstance(context.get().getApplicationContext()).lockerDataAccessObject().clearDatabase();
-                started = true;
-                Log.i(TAG, "Started? " + String.valueOf(started) + " database destroyed");
+        protected Void doInBackground(Void... voids) {
+            if (LockerItemDatabase.getInstance(context.get().getApplicationContext()) != null) {
+                Log.i(TAG, "Started? False - but database instance exists.");
+                // LockerItemDatabase.getInstance(context.get().getApplicationContext()).lockerDataAccessObject().clearDatabase();
             }
-            return true;
+            return null;
         }
 
-        // TODO: Figure out the problem
         @Override
-        protected void onPostExecute(boolean aBool) {
-            super.onPostExecute(aBool);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
             Log.i(TAG, "AsyncTask: clearCheck Complete");
         }
-    }
+    } */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -410,7 +416,8 @@ public class MainActivity_Collection extends AppCompatActivity {
     private void beginDeviceConnection() {
         Log.i(TAG, "beginDeviceConnection() method called");
         Log.i(TAG, "Creating Bluetooth Connection Service");
-        mBluetoothConnection = new BluetoothConnectionService(MainActivity_Collection.this, MY_UUID); // , deviceUUID);
+        // mBluetoothConnection = new BluetoothConnectionService(MainActivity_Collection.this, MY_UUID); // , deviceUUID);
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
         // startConnection();
     }
 
@@ -424,7 +431,9 @@ public class MainActivity_Collection extends AppCompatActivity {
                 if (currentDevice.getAddress().equals(compAddress)) {
                     Log.i(TAG, "Device is already bonded to phone. Begin connecting.");
                     deviceConnected = currentDevice;
-                    mBluetoothConnection = new BluetoothConnectionService(MainActivity_Collection.this, MY_UUID);
+                    // mBluetoothConnection = new BluetoothConnectionService(MainActivity_Collection.this, MY_UUID);
+                    mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+
                     // startConnection();
                     return true;
                 }
@@ -437,6 +446,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume() method called");
 
         // Check if bluetooth is on. if not, then request that the user puts it on
         // Assume that it is kept on after this action.

@@ -19,13 +19,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
 import java.nio.charset.Charset;
 
-import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
+// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 public class DetailsActivity_Collection extends AppCompatActivity {
 
@@ -97,6 +98,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     private LockerManager mLockerManager;
 
+    private BluetoothConnectionService mBluetoothConnection;
+
     // Broadcast Receiver flags when a message is received on the Bluetooth input stream
     private BroadcastReceiver mBroadcastReceiverLockerComm = new BroadcastReceiver() {
         @Override
@@ -148,7 +151,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         state = 1;
 
         // TODO: Ctrl+Z this lmao
-        mBluetoothConnection.setmContext(this);
+        // mBluetoothConnection.setmContext(this);
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverLockerComm, new IntentFilter("incomingMessage"));
 
         mLockerManager = new LockerManager(this);

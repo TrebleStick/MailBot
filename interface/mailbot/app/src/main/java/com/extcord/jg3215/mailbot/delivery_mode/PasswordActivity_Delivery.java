@@ -14,12 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
 
 import java.nio.charset.Charset;
 
-import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
+// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -42,6 +43,8 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     private int lockerID;
 
     private LockerManager mLockerManager;
+
+    private BluetoothConnectionService mBluetoothConnection;
 
     // Broadcast Receiver flags when a message is received on the Bluetooth input stream
     private BroadcastReceiver mBroadcastReceiverLockerComm = new BroadcastReceiver() {
@@ -86,7 +89,9 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         setContentView(R.layout.delivery_activity_password);
         Log.i(TAG, "onCreate() method called");
 
-        mBluetoothConnection.setmContext(this);
+        // mBluetoothConnection.setmContext(this);
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverLockerComm, new IntentFilter("incomingMessage"));
 
         mLockerManager = new LockerManager(this);
