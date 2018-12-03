@@ -86,7 +86,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                 }
             } else {
                 switch (text) {
-                    case "0507":
+                    case "8062":
                         String responseCode = "1409";
                         byte[] rcBytes = responseCode.getBytes(Charset.defaultCharset());
                         mBluetoothConnection.write(rcBytes);
