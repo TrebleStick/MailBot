@@ -272,7 +272,7 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
             public void run() {
                 try {
                     eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
-                    sender.sendMail("Confirmation: You asked me to deliver a message to " + recipientData.getName(),
+                    sender.sendMail("Confirmation: You asked me to deliver a mail item to " + recipientData.getName(),
                             "Hey " + senderData.getName() + ",\n\nThis is Mailbot! I'm just messaging you to conf"
                             + "irm you have given me a mail item that you want me to deliver to " +
                             recipientData.getName() + ". I will have this delivered to " + recipientData.getDeliveryLocation() +

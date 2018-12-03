@@ -190,12 +190,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
             lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
 
-<<<<<<< HEAD
             lockerItem.setPINcode(pinCode);
-=======
-            // TODO: Make PIN code an extra from details activity -> created each time the confirm button is pressed
-            lockerItem.setPINcode(createPIN());
->>>>>>> 31b63a3357779b3411a1b6ad267e3ad17f1046d5
             lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
 
             Log.i(TAG, "Locker item info added to database successfully");
@@ -203,12 +198,9 @@ public class LockerActivity_Collection extends AppCompatActivity {
             return null;
         }
 
-<<<<<<< HEAD
         /*private String createPIN() {
-=======
         // TODO: Create some check PIN method to be sure
         private String createPIN() {
->>>>>>> 31b63a3357779b3411a1b6ad267e3ad17f1046d5
             Log.i(TAG, "createPIN() method called");
 
             StringBuilder createCode = new StringBuilder("");
@@ -250,6 +242,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "AsyncTask: Complete.");
         }
     }
+
+    //TODO: Did I delete a useful bit (postDBAction()) bc of a merge conflict? check the issues on github
 
     private void toEndActivity() {
         Log.i(TAG, "toEndActivity() method called");
