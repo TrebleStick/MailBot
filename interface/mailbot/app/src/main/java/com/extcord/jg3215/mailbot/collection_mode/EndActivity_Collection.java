@@ -51,12 +51,6 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
 
         mLockerManager = new LockerManager(this);
 
-        /* // PIN code generator
-        Random rand = new Random();
-        LockerItem locker = new LockerItem();
-        String PINcode = Integer.toString(rand.nextInt(9999));
-        locker.setPINcode(PINcode); */
-
         if (lockerActivityData != null) {
             /* try {
                 packageType = lockerActivityData.getInt("packageType");

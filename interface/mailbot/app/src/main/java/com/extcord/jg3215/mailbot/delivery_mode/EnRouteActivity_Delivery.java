@@ -134,7 +134,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverArrival, new IntentFilter("incomingMessage"));
-        //sendEmails();
     }
 
     // Set the BR to this instance of the class again
@@ -170,14 +169,4 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         startActivity(toPasswordActivityIntent);
         finish();
     }
-
-        /* for (String address : senderEmailAddresses) {
-            try {
-                eMailService mailService = new eMailService("", "");
-                mailService.sendMail("Delivery of your mail item", "Your mail item is being delivered to", "", "");
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
-        } */
-
 }

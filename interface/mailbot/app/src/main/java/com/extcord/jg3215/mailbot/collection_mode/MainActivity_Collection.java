@@ -2,6 +2,7 @@ package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -84,6 +85,8 @@ public class MainActivity_Collection extends AppCompatActivity {
 
     private boolean started;
 
+    private LockerItemDatabase lockerItemDatabase;
+
     // Listens for message that lockers are full
     BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
         @Override
@@ -117,8 +120,9 @@ public class MainActivity_Collection extends AppCompatActivity {
                     Log.i(TAG, "Written: " + sendLL + " to Output Stream");
                     break;
                 case "list":
+                    lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
                     List<LockerItem> lockerItemList;
-                    lockerItemList = LockerItemDatabase.getInstance(mContext.getApplicationContext()).lockerDataAccessObject().readLockerItem();
+                    lockerItemList = lockerItemDatabase.lockerDataAccessObject().readLockerItem();
                     String deliveryLocations = getDeliveryLocations(lockerItemList);
 
                     Log.i(TAG, "Location List: " + deliveryLocations);
@@ -254,6 +258,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         // mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+        lockerItemDatabase = LockerItemDatabase.getInstance(this.getApplicationContext());
 
         // TODO: Make handling of lockerState more robust
         mLockerManager = new LockerManager(this);
@@ -355,31 +360,6 @@ public class MainActivity_Collection extends AppCompatActivity {
         startTimer = false;
         started = false;
     }
-
-    /*
-    private static class clearDBCheck extends AsyncTask<Void, Void, Void> {
-
-        WeakReference<MainActivity_Collection> context;
-
-        public clearDBCheck(Context mContext) {
-            this.context = new WeakReference<>((MainActivity_Collection) mContext);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if (LockerItemDatabase.getInstance(context.get().getApplicationContext()) != null) {
-                Log.i(TAG, "Started? False - but database instance exists.");
-                // LockerItemDatabase.getInstance(context.get().getApplicationContext()).lockerDataAccessObject().clearDatabase();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.i(TAG, "AsyncTask: clearCheck Complete");
-        }
-    } */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -515,12 +495,12 @@ public class MainActivity_Collection extends AppCompatActivity {
                 locationList.append(dLocation);
                 locationList.append(" ");
             } else {
-                locationList.append(locationList);
+                locationList.append(dLocation);
             }
 
             Log.i(TAG, "Index = " + String.valueOf(index));
-            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName + ", Delivery Location: " + dLocation);
-
+            Log.i(TAG, "Location at this index = " + dLocation);
+            Log.i(TAG, "Locker Number: " + String.valueOf(nLocker) + ", Sender Name: " + sName + ", Recipient Name: " + rName);
             index++;
         }
 
@@ -556,3 +536,29 @@ public class MainActivity_Collection extends AppCompatActivity {
         super.onDestroy();
     }
 }
+
+
+    /*
+    private static class clearDBCheck extends AsyncTask<Void, Void, Void> {
+
+        WeakReference<MainActivity_Collection> context;
+
+        public clearDBCheck(Context mContext) {
+            this.context = new WeakReference<>((MainActivity_Collection) mContext);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (LockerItemDatabase.getInstance(context.get().getApplicationContext()) != null) {
+                Log.i(TAG, "Started? False - but database instance exists.");
+                // LockerItemDatabase.getInstance(context.get().getApplicationContext()).lockerDataAccessObject().clearDatabase();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.i(TAG, "AsyncTask: clearCheck Complete");
+        }
+    } */

@@ -46,7 +46,7 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
             Log.i(TAG, "Received: " + text);
 
             switch (text) {
-                case "1409":
+                case "5060":
                     String goToNext = "GTN";
                     byte[] gtnBytes = goToNext.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(gtnBytes);
@@ -59,8 +59,8 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                     Log.i(TAG, "Written: " + response + " to Output Stream");
 
                     int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
-                    Log.i(TAG, "Number of available lockers: " + String.valueOf(aLockers));
-                    if (aLockers > 0) {
+                    Log.i(TAG, "Number of full lockers: " + String.valueOf(7 - aLockers));
+                    if (aLockers != 7) {
                         toEnRouteActivity();
                     } else {
                         returnToMainActivity();
@@ -90,7 +90,7 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                 Log.i(TAG, "onClick() button listener method called");
 
                 // Tell computer that delivery was successful and take MailBot to next location
-                String startCommCode = "0507";
+                String startCommCode = "0605";
                 byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
                 mBluetoothConnection.write(startBytes);
                 Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
