@@ -36,8 +36,8 @@ public class LockerActivity_Collection extends AppCompatActivity {
     TextView goodFitView;
 
     private int packageType;
-
     private int lockerIndex;
+    private String pinCode;
 
     private final static String TAG = "LockerActivity";
 
@@ -79,6 +79,9 @@ public class LockerActivity_Collection extends AppCompatActivity {
             lockerIndex = detailActivityData.getInt("lockerIndex");
             Log.i(TAG, "Locker to open = " + String.valueOf(lockerIndex + 1));
 
+            pinCode = detailActivityData.getString("pinCode");
+            Log.i(TAG, "PIN code to open locker = " + pinCode);
+
             //Set the opened locker number in speech bubble in LockerActivity_Collection
             TextView LockerText = (TextView) findViewById(R.id.textLockerOpened);
             LockerText.setText("I have opened locker " + String.valueOf(lockerIndex + 1) + " for your mail item! Please store it there so I can deliver it, and close the locker before continuing.");
@@ -114,7 +117,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
                 // Starts the asynchronous task
                 boolean isEmpty = mLockerManager.getLockerState().equals("0000000");
-                new addToDatabase(lockerIndex, senderData, recipientData, mContext, isEmpty).execute();
+                new addToDatabase(lockerIndex, senderData, recipientData, mContext, isEmpty, pinCode).execute();
 
                 // Gets the number of available lockers
                 int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
@@ -145,13 +148,15 @@ public class LockerActivity_Collection extends AppCompatActivity {
         PackageData senderData;
         PackageData recipientData;
         WeakReference<LockerActivity_Collection> context;
+        String pinCode;
         // LockerManager lockerManager;
         boolean empty;
 
-        public addToDatabase(int lockerIndex, PackageData senderData, PackageData recipientData, Context context, Boolean isEmpty) {
+        public addToDatabase(int lockerIndex, PackageData senderData, PackageData recipientData, Context context, Boolean isEmpty, String pinCode) {
             this.lockerIndex = lockerIndex;
             this.senderData = senderData;
             this.recipientData = recipientData;
+            this.pinCode = pinCode;
 
             // using mContext makes the field a location for a memory leak
             // use a Weak reference instead
@@ -185,8 +190,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
             lockerItem.setDeliveryLocation(recipientData.getDeliveryLocation());
 
-            // TODO: Make PIN code an extra from details activity -> created each time the confirm button is pressed
-            lockerItem.setPINcode(createPIN());
+            lockerItem.setPINcode(pinCode);
             lockerItemDatabase.lockerDataAccessObject().addUser(lockerItem);
 
             Log.i(TAG, "Locker item info added to database successfully");
@@ -194,6 +198,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
             return null;
         }
 
+        /*private String createPIN() {
         // TODO: Create some check PIN method to be sure
         private String createPIN() {
             Log.i(TAG, "createPIN() method called");
@@ -212,7 +217,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
             Log.i(TAG, "PIN Code: " + createCode.toString());
             return createCode.toString();
-        }
+        }*/
 
         private void checkDatabase(LockerItemDatabase lockerItemDatabase) {
             Log.i(TAG, "checkDatabase() method called");
@@ -238,11 +243,14 @@ public class LockerActivity_Collection extends AppCompatActivity {
         }
     }
 
+    //TODO: Did I delete a useful bit (postDBAction()) bc of a merge conflict? check the issues on github
+
     private void toEndActivity() {
         Log.i(TAG, "toEndActivity() method called");
         String packageTag = "packageType";
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
+        String pinTag = "pinCode";
 
         Intent toEndActivity = new Intent(this, EndActivity_Collection.class);
 
@@ -256,6 +264,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
+        extras.putString(pinTag, pinCode);
 
         // Add all the extras content to the intent
         toEndActivity.putExtras(extras);

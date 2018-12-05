@@ -64,27 +64,27 @@ public class eMailService extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients, String PINcode) throws Exception {
+    public synchronized void sendMail(String subject, String body, String senderMail, String recipientMail) throws Exception {
         try {
 
-            // Code for mail including pin code - first one needed for the demo
+            // Code for mail including pin code - first one needed for the demo - BODY TEXT EDIT MOVED TO ENDACTIVITY
 
-            body = "Dear " + recipients + "\n\nI am MailBot and I have received a mail item for you"
+        /*    body = "Dear " + recipientName + "\n\nI am MailBot and I have received a mail item for you"
                     + " from " + sender + ". It will be delivered within the next half hour to your"
                     + " office. Your password for collecting it will be:\n\n" + PINcode + "\n\nReme"
                     + "mber the password - it will be needed to open the locker containing your mai"
-                    + "l.\n\n See you soon!\n\nMailBot";
+                    + "l.\n\nSee you soon!\n\nMailBot";*/
 
             MimeMessage message = new MimeMessage(session);
             DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
 
-            message.setFrom(new InternetAddress(sender));
+            //message.setFrom(new InternetAddress(senderMail)); --- this doesn't change anything?
             message.setSubject(subject);
             message.setText(body);
             message.setDataHandler(handler);
 
             // Should only be one recipient for each mail
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientMail));
 
             Transport.send(message);
 

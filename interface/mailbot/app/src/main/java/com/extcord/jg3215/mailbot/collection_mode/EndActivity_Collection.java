@@ -1,6 +1,7 @@
 package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +14,9 @@ import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.database.LockerItem;
+import com.extcord.jg3215.mailbot.email.eMailService;
 
+import java.util.List;
 import java.util.Random;
 
 public class EndActivity_Collection extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
@@ -26,6 +29,7 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
     // Incoming extras
     private PackageData senderData;
     private PackageData recipientData;
+    private String pinCode;
 
     private int packageType;
 
@@ -73,15 +77,27 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
             try {
                 recipientData = lockerActivityData.getParcelable("recipientData");
                 if (recipientData != null) {
-                    Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+                    Log.i(TAG, " Recipient data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
                 }
             } catch (NullPointerException e) {
                 Log.i(TAG, "No recipient data received: " + e.getMessage());
             }
+
+            try {
+                pinCode = lockerActivityData.getString("pinCode");
+                if (pinCode != null) {
+                    Log.i(TAG, "PIN data: " + pinCode);
+                }
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No PIN data received: " + e.getMessage());
+            }
+
         } else {
             // No intent data received from the previous activity
             throw new NullPointerException("No data sent from previous activity");
         }
+
+        sendEmails();
 
         toSameRecipientButton = (Button) findViewById(R.id.btnToSameRecipient);
         toSameRecipientButton.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +220,75 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
     protected void onDestroy() {
         mLockerManager.unregisterListener();
         super.onDestroy();
+    }
+
+    private void sendEmails() {
+        Log.i(TAG, "sendEmails() method called");
+
+        String recipientEmail = senderData.getEmailAddress();
+        // send email to recipient
+
+        final ProgressDialog dialog = new ProgressDialog(EndActivity_Collection.this);
+        dialog.setTitle("Sending Confirmation Emails");
+        dialog.setMessage("Please wait");
+        dialog.show();
+
+        final Thread recipient = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
+                    sender.sendMail("Someone gave me a mail item for you!",
+                            "Dear " + recipientData.getName() + "\n\nI am MailBot and I have received a mail item for you"
+                            + " from " + senderData.getName() + ". It will be delivered to "
+                            + recipientData.getDeliveryLocation() + " within the next half hour to your"
+                            + " office. Your password for collecting it will be:\n\n" + pinCode + "\n\nReme"
+                            + "mber the password - it will be needed to open the locker containing your mai"
+                            + "l.\n\nSee you soon!\n\nMailBot",
+                            senderData.getEmailAddress(),
+                            recipientData.getEmailAddress());
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    Log.e("mylog", "Error: " + e.getMessage());
+                }
+            }
+        });
+        recipient.start();
+
+        //
+        Log.i(TAG, "Email sent to: " + recipientEmail);
+
+        String senderEmail = recipientData.getEmailAddress();
+
+        // send email to sender
+
+        final ProgressDialog dialog2 = new ProgressDialog(EndActivity_Collection.this);
+        dialog2.setTitle("Sending Confirmation Emails");
+        dialog2.setMessage("Please wait");
+        dialog2.show();
+
+        Thread sender = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
+                    sender.sendMail("Confirmation: You asked me to deliver a mail item to " + recipientData.getName(),
+                            "Hey " + senderData.getName() + ",\n\nThis is Mailbot! I'm just messaging you to conf"
+                            + "irm you have given me a mail item that you want me to deliver to " +
+                            recipientData.getName() + ". I will have this delivered to " + recipientData.getDeliveryLocation() +
+                            " as soon as I can!\n\nI will let you know if it goes well," + "\n\nMailBot",
+                            recipientData.getEmailAddress(),
+                            senderData.getEmailAddress());
+                    dialog2.dismiss();
+                } catch (Exception e) {
+                    Log.e("mylog", "Error: " + e.getMessage());
+                }
+            }
+        });
+        sender.start();
+
+        //
+        Log.i(TAG, "Email sent to: " + senderEmail);
     }
 }
 
