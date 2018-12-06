@@ -8,20 +8,30 @@ from std_msgs.msg import String
 
 open_locker_topic = 'openLocker'
 delivery_locations_topic = 'deliveryLocations'
-rospy.init_node('bltPublish', anonymous=True)
 
-def talker(pub_str, topic):
-    try:
-        pub = rospy.Publisher(topic, String)
-        rospy.loginfo(pub_str)
-        pub.publish(pub_str)
-    except rospy.ROSInterruptException:
-        pass
+class Talker(object):
+    def __init__(self, publishers=None):
+        if not publishers:
+            self.publishers = {}
+        else:
+            self.publsihers = publishers
 
-def break_the_loop(data, self):
-    an_object.break_loop = True
+    def publish(self, pub_str, topic):
+        try:
+            if topic not in self.publishers:
+                self.publishers[topic] = rospy.Publisher(topic, String)
+            rospy.init_node('bltPublish', anonymous=True)
+            rospy.loginfo(pub_str)
+            print('publishing', pub_str, 'to topic', topic,
+                  'using publisher', self.publishers[topic])
+            self.publishers[topic].publish(pub_str)
+        except rospy.ROSInterruptException:
+            pass
 
-def Listener(object):
+def break_the_loop(data, listener):
+    listener.break_loop = True
+
+class Listener(object):
 
     def __init__(self, break_loop=False):
         self.break_loop = break_loop
@@ -49,7 +59,7 @@ def getLockerToOpen(btSocket):
             # should print a number (the locker to be opened)
             print appMsg
             # should publish the locker number to open_locker_topic
-            talker(appMsg, open_locker_topic)
+            talker.publish(appMsg, open_locker_topic)
             break
         time.sleep(0.01)
 
@@ -69,7 +79,7 @@ def getLocationList(btSocket):
             # should print a space delimited list of locations
             print appMsg
             # should publish a space delimited list of locations to delivery_locations_topic
-            talker(appMsg, delivery_locations_topic)
+            talker.publish(appMsg, delivery_locations_topic)
             return appMsg
         time.sleep(0.01)
 
@@ -142,6 +152,7 @@ sock.connect((host, port))
 
 start = False
 waitingToArrive = False
+talker = Talker()
 # sock.send("hello!!")
 while 1:
 

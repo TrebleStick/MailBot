@@ -1,14 +1,14 @@
 <launch>
 
-   <master auto="start"/>
+   <!-- <master auto="start"/> -->
  <!-- Run the map server -->
     <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find my_map_package)/my_map.pgm my_map_resolution"/> -->
 
  <!--- Run AMCL -->
-    <include file="$(find amcl)/examples/amcl_omni.launch" />
+    <include file="$(find mailbot)/launch/amclStart.launch" />
 
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find mailbot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find mailbot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find mailbot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find mailbot)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find mailbot)/config/global_costmap_params.yaml" command="load" />

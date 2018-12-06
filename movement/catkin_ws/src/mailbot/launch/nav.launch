@@ -1,0 +1,34 @@
+<launch>
+<!-- Convenience launch file to launch odometry, rtabmap and rtabmapviz nodes at once -->
+
+  <!-- Fake LaserScan data (using kinect ) ? -->
+  <arg name="fakeLasers"              default="true" />
+
+  <!-- RTABMAPPING LOCALIZATION -->
+    <!-- Allow visualization -->
+    <arg name="rtabmapviz"              default="true" />
+    <arg name="rviz"                    default="false" />
+    <!-- Localization-only mode -->
+    <arg name="localization"            default="true"/>
+    <!-- Corresponding config files -->
+    <arg name="gui_cfg"                 default="~/.ros/rtabmap_gui.ini" />
+    <arg name="rviz_cfg"                default="$(find rtabmap_ros)/launch/config/rgbd.rviz" />
+    <arg name="database_path"           default="~/.ros/rtabmap.db"/> <!--   Where stores & loads database (e.g. map)-->
+
+    <include file="$(find mailbot)/launch/rtabmap_mailbot.launch">
+      <!-- We now can pass in the values that are set above into the launch file -->
+      <arg name="fakeLasers"              value="$(arg fakeLasers)"/>
+      <arg name="localization"            value="$(arg localization)"/>
+      <!-- Allow visualization -->
+      <arg name="rtabmapviz"              value="$(arg rtabmapviz)" />
+      <arg name="rviz"                    value="$(arg rviz)" />
+      <arg name="database_path"           value="$(arg database_path)" />
+    </include>
+
+  <!--  Sonar as Laserscan -->
+      <node if="$(arg fakeLasers)" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="tf_pointcloud_to_laserscan" args="cloud_in:=/RosAria/sonar_pointcloud2"/>
+
+  <!--  Start AMCL -->
+      <include file="$(find mailbot)/launch/move_base.launch" />
+
+</launch>

@@ -3,17 +3,17 @@
 <!-- remap: the package expects certain names for the input and output, remap allows you to associate them to different names -->
 <!-- arg: a variable that can be accssed by the rest of the launch file-->
 <!-- http://wiki.ros.org/roslaunch/XML -->
-<!-- This launch file has been modified rom the rtabmap.launch file that comes with rtabmap_ros 
+<!-- This launch file has been modified rom the rtabmap.launch file that comes with rtabmap_ros
     We do this naturally using the 'include' syntax, that allows us to  specify arguments to the launch file
     just as we do <parameter name>:=<value> when calling in the command line -->
     <!-- default=   means it can be overwridden by commandline arguments
          values     means it cannot be overwridden   -->
-  
-  <!-- Fake LaserScan data ? -->
-  <arg name="fakeLasers"              default="true" /> 
+
+  <!-- Fake LaserScan data (using kinect) ? -->
+  <arg name="fakeLasers"              default="true" />
 
   <!-- Allow visualization -->
-  <arg name="rtabmapviz"              default="true" /> 
+  <arg name="rtabmapviz"              default="true" />
   <arg name="rviz"                    default="false" />
 
   <!-- Localization-only mode -->
@@ -23,7 +23,8 @@
   <arg name="gui_cfg"                 default="~/.ros/rtabmap_gui.ini" />
   <arg name="rviz_cfg"                default="$(find rtabmap_ros)/launch/config/rgbd.rviz" />
   <arg name="frame_id"                default="base_link"/>     <!-- Fixed frame id, you may set "base_link", "base_footprint", or "camera link" if they are published -->
-  <arg name="args"                    default=""/>              <!-- delete_db_on_start, udebug -->
+  <arg name="database_path"           default="~/.ros/rtabmap.db"/> <!--   Where stores & loads database (e.g. map)-->
+  <arg name="args"                    default="--Reg/Force3DoF true --RGBD/ProximityBySpace false --RGBD/AngularUpdate 0.01 --RGBD/LinearUpdate 0.01 --RGBD/OptimizeFromGraphEnd false --Vis/MinInliers 12"/>              <!--e.g. delete_db_on_start, udebug -->
   <arg name="output"                  default="screen"/>        <!-- Control node output (screen or log) -->
 
   <!-- RGB-D related topics -->
@@ -40,7 +41,7 @@
 
   <!-- Laser Scan Subscription -->
   <arg if="$(arg fakeLasers)" name="subscribe_scan"          default="true"/>  <!-- If we are using fakeLasers, we should subscribe to scan -->
-  <arg if="$(arg fakeLasers)" name="scan_topic"          default="kinect_scan"/>  <!-- If we are using fakeLasers, we should set the right topic (defined below) -->
+  <arg if="$(arg fakeLasers)" name="scan_topic"          default="/kinect_scan"/>  <!-- If we are using fakeLasers, we should set the right topic (defined below) -->
   <arg name="subscribe_scan_cloud"    default="false"/>
   <arg name="scan_cloud_topic"        default="/scan_cloud"/>
 
@@ -56,7 +57,7 @@
   <!-- Odometry Related -->
   <arg name="visual_odometry"          default="false"/>          <!-- Launch rtabmap visual odometry node -->
   <arg name="icp_odometry"             default="false"/>         <!-- Launch rtabmap icp odometry node -->
-  <arg name="odom_topic"               default="odom"/>          <!-- Odometry topic name -->
+  <arg name="odom_topic"               default="/RosAria/pose"/>          <!-- Odometry topic name -->
   <arg name="vo_frame_id"              default="$(arg odom_topic)"/> <!-- Visual/Icp odometry frame ID for TF -->
 
   <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
@@ -64,7 +65,7 @@
     <!-- Mainly including those where we have changed the defaults -->
 
     <!-- Turn Off Visual Odometry -->
-    <arg name="visual_odometry"          value="$(arg visual_odometry)"/>   
+    <arg name="visual_odometry"          value="$(arg visual_odometry)"/>
     <arg name="odom_topic"               value="$(arg odom_topic)" />
 
     <!-- Laser Scan Subscription -->
@@ -77,15 +78,19 @@
     <arg name="localization"            value="$(arg localization)"/>
 
     <!-- Corresponding config files -->
-    <arg name="gui_cfg"                 value="$(arg localization)" />
+    <arg name="gui_cfg"                 value="$(arg gui_cfg)" />
     <arg name="rviz_cfg"                value="$(find rviz_cfg" />
     <arg name="frame_id"                value="$(arg frame_id)"/>     <!-- Fixed frame id, you may set "base_link", "base_footprint", or "camera link" if they are published -->
+    <arg name="database_path"           value="$(arg database_path)" /> <!-- Where database is stored and loaded from -->
     <arg name="args"                    value="$(arg args)"/>              <!-- delete_db_on_start, udebug -->
     <arg name="output"                  value="$(arg output)"/>        <!-- Control node output (screen or log) -->
 
     <!-- Allow visualization -->
-    <arg name="rtabmapviz"              value="$(arg rtabmapviz)" /> 
+    <arg name="rtabmapviz"              value="$(arg rtabmapviz)" />
     <arg name="rviz"                    value="$(arg rviz)" />
+
+
+
 
 
   </include>
