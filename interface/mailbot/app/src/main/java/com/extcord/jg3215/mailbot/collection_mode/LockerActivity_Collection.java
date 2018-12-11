@@ -131,7 +131,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
                     mLockerManager.updateAvailability(lockerIndex, true);
 
                     toEndActivity();
-                } else if (mLockerManager.getLockerState().equals(LockerManager.FULL_LOCKER)) {
+                } else {
                     Log.i(TAG, "Locker is full. Closing this activity");
                     mLockerManager.unregisterListener();
                     mLockerManager.updateAvailability(lockerIndex, true);
@@ -238,9 +238,10 @@ public class LockerActivity_Collection extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
-        // The kind of package the user is sending
-        // The data given to MailBot about the sender
-        // The data given to MailBot about the recipient
+            // The kind of package the user is sending
+            // The data given to MailBot about the sender
+            // The data given to MailBot about the recipient
+            // The pin code generated for the mail item
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
@@ -286,6 +287,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
     }
 
     protected void onDestroy() {
+        Log.i(TAG, "onDestroy() method called");
         if (mLockerManager != null) {
             mLockerManager.unregisterListener();
         }

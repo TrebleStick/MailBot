@@ -10,9 +10,9 @@ public class PackageData implements Parcelable{
     private String deliveryLocation;
 
     // Constructor
-    public PackageData(String userName, String userEmail) {
-        name = userName;
-        emailAddress = userEmail;
+    public PackageData(String name, String emailAddress) {
+        this.name = name;
+        this.emailAddress = emailAddress;
     }
 
     // Set methods might only be necessary for delivery location

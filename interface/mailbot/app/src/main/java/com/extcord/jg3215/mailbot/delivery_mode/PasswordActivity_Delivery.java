@@ -126,7 +126,7 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
                     pinAttempt++;
 
                     // Tells user that pin was incorrect and how many attempts they have left
-                    Toast.makeText(PasswordActivity_Delivery.this, (getResources().getString(R.string.incorrectPin)) + " " + String.valueOf(3 - pinAttempt), Toast.LENGTH_LONG).show();
+                    Toast.makeText(PasswordActivity_Delivery.this, (getResources().getString(R.string.incorrectPin)) + " " + String.valueOf(3 - pinAttempt), Toast.LENGTH_SHORT).show();
 
                     if (pinAttempt == 3) {
                         toUnsuccessfulActivity();

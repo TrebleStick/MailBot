@@ -75,7 +75,7 @@ public class StopWatch {
         StartTime = SystemClock.uptimeMillis();
         UpdateTime = 0L;
 
-        this.mContext = mContext;
+        this.mContext = context;
         this.isExecuting = true;
 
         this.state = state;
