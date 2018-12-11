@@ -12,7 +12,7 @@
 ## Installation
 
 ### Interface
-Android application created for the Lenovo Tab 2 A-10 70F (Android Version:), on Android Studio (3.1).
+Android application created for the Lenovo Tab 2 A-10 70F (Android Version:6), on Android Studio (3.1).
 
 ### ROS
 The `MailBot/movement/` folder contains the catkin workspace `catkin_ws`.
