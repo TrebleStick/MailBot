@@ -131,7 +131,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
                     mLockerManager.updateAvailability(lockerIndex, true);
 
                     toEndActivity();
-                } else if (mLockerManager.getLockerState().equals(LockerManager.FULL_LOCKER)) {
+                } else {
                     Log.i(TAG, "Locker is full. Closing this activity");
                     mLockerManager.unregisterListener();
                     mLockerManager.updateAvailability(lockerIndex, true);
@@ -222,8 +222,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "AsyncTask: Complete.");
         }
     }
-
-    //TODO: Did I delete a useful bit (postDBAction()) bc of a merge conflict? check the issues on github
 
     private void toEndActivity() {
         Log.i(TAG, "toEndActivity() method called");

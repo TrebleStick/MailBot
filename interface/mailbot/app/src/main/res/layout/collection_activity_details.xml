@@ -201,5 +201,14 @@
             android:text="@string/btnProblem"
             android:visibility="gone"/>
 
+        <Button
+            android:id="@+id/demobutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/botFace"
+            android:layout_alignStart="@+id/botFace"
+            android:layout_marginBottom="23dp"
+            android:text="Demo" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

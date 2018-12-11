@@ -65,6 +65,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     // User selects this button if there is an error with the details entered
     Button problemButton;
 
+    // Demo button to automatically fill the fields
+    Button demoButton;
+
     // indicates whether user is in a state because they came from problem button listener
     private boolean fromProblemButtonListener = false;
 
@@ -341,6 +344,33 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         mBluetoothConnection.write(startBytes);
                         break;
                 }
+            }
+        });
+
+        //for demo purposes, fills up all fields and goes forward
+        demoButton = (Button) findViewById(R.id.demobutton);
+        demoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            // Method that is called once click listener registers that button has been clicked
+            public void onClick(View view) {
+
+                Log.i(TAG, "Demo button pressed");
+
+                senderData = new PackageData("DemoSender", "demosender@gmail.com");
+                recipientData = new PackageData("DemoRecipient", "demorecipient@gmail.com");
+                recipientData.setDeliveryLocation("508");
+
+                Log.i(TAG, "Details confirmed");
+
+                mLockerManager.setSelectLockerIndex(packageType);
+                lockerIndex = mLockerManager.getSelectLockerIndex();
+                Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(lockerIndex + 1));
+
+                // Sends a serial message to ROS to request locker opening
+                String startCommCode = "0507";
+                byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                mBluetoothConnection.write(startBytes);
+
             }
         });
 

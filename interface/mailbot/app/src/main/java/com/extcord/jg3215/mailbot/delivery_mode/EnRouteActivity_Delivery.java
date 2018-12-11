@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
+import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.StopWatch;
 import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
@@ -60,6 +61,10 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private Button enRouteTest;
 
+    private PackageData SenderDetails;
+
+    private PackageData RecipientDetails;
+
     // Listen for message (Serial communication) that MailBot is at destination
     private BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {
         @Override
@@ -92,6 +97,11 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     // TODO: Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
                         // No - each item will have a different PIN Code
                     lockerID = currentLockers.get(0).getLockerNo();
+
+                    // Retrieve sender/recipient data
+
+                    SenderDetails = new PackageData(currentLockers.get(0).getSenderName(), currentLockers.get(0).getSenderEmail());
+                    RecipientDetails = new PackageData(currentLockers.get(0).getRecipientName(), currentLockers.get(0).getRecipientEmail());
 
                     // Make the TextView visible and play the knock-knock sound until it is pressed
                     // Essentially a replacement for the person detected thing
@@ -261,13 +271,35 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     private void toUnsuccessfulActivity() {
         Log.i(TAG, "toUnsuccessfulActivity() method called");
 
+
         Intent toUnsuccessfulIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
+
+        String senderDataTag = "senderData";
+        String recipientDataTag = "recipientData";
+
+        // Create a bundle for holding the extras
+        Bundle extras = new Bundle();
+
+        // Adds this extra detail to the intent which indicates:
+        // The data given to MailBot about the sender
+        // The data given to MailBot about the recipient
+
+        extras.putParcelable(senderDataTag, SenderDetails);
+        extras.putParcelable(recipientDataTag, RecipientDetails);
+
+        // Add all the extras content to the intent
+        toUnsuccessfulIntent.putExtras(extras);
+
+
         startActivity(toUnsuccessfulIntent);
         finish();
     }
 
     private void toPasswordActivity() {
         Log.i(TAG, "toPasswordActivity() method called");
+
+        String senderDataTag = "senderData";
+        String recipientDataTag = "recipientData";
         String pinCodeTag = "lockerPINCode";
         String lockerTag = "lockerID";
 
@@ -277,7 +309,10 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         Bundle extras = new Bundle();
         extras.putString(pinCodeTag, pinCode);
         extras.putInt(lockerTag, lockerID);
-        Log.i(TAG, "extras added: " + pinCodeTag + ": " + pinCode + ", " + lockerTag + ": " + String.valueOf(lockerID));
+        extras.putParcelable(senderDataTag, SenderDetails);
+        extras.putParcelable(recipientDataTag, RecipientDetails);
+
+        Log.i(TAG, "extras added: " + pinCodeTag + ": " + pinCode + ", " + lockerTag + ": " + String.valueOf(lockerID) + senderDataTag + ": " + SenderDetails.getName() + ", " + recipientDataTag + ": " + RecipientDetails.getName());
 
         toPasswordActivityIntent.putExtras(extras);
         startActivity(toPasswordActivityIntent);

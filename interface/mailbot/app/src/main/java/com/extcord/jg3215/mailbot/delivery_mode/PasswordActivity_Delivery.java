@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
+import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
 import java.nio.charset.Charset;
@@ -41,6 +42,10 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     private String pinCode;
 
     private int lockerID;
+
+    private PackageData SenderDetails;
+
+    private PackageData RecipientDetails;
 
     private LockerManager mLockerManager;
 
@@ -104,6 +109,23 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
             } catch (NullPointerException e) {
                 Log.i(TAG, "No ID data: " + e.getMessage());
             }
+
+            try {
+                // Gets Sender details
+                SenderDetails = enRouteActivityData.getParcelable("senderData");
+                Log.i(TAG, "Sender Data: Name: " + SenderDetails.getName() + ", E-mail: " + SenderDetails.getEmailAddress());
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No Sender Data: " + e.getMessage());
+            }
+
+            try {
+                // Gets Sender details
+                RecipientDetails = enRouteActivityData.getParcelable("recipientData");
+                Log.i(TAG, "Recipient Data: Name: " + RecipientDetails.getName() + ", E-mail: " + RecipientDetails.getEmailAddress());
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No Recipient Data: " + e.getMessage());
+            }
+
         } else {
             Log.i(TAG, "Bundle contains no data, RIP");
             // throw an exception mebbe
@@ -143,8 +165,26 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     }
 
     private void toUnsuccessfulActivity() {
-        Intent toUnsuccessfulActivityIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
-        startActivity(toUnsuccessfulActivityIntent);
+        Intent toUnsuccessfulIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
+
+        String senderDataTag = "senderData";
+        String recipientDataTag = "recipientData";
+
+        // Create a bundle for holding the extras
+        Bundle extras = new Bundle();
+
+        // Adds this extra detail to the intent which indicates:
+        // The data given to MailBot about the sender
+        // The data given to MailBot about the recipient
+
+        extras.putParcelable(senderDataTag, SenderDetails);
+        extras.putParcelable(recipientDataTag, RecipientDetails);
+
+        // Add all the extras content to the intent
+        toUnsuccessfulIntent.putExtras(extras);
+
+
+        startActivity(toUnsuccessfulIntent);
         finish();
     }
 
