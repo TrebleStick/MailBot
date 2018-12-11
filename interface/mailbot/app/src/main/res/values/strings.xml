@@ -55,6 +55,7 @@
 
     <!--En Route Activity Strings-->
     <string name="enRouteActivitySpeech">I am now delivering the mail items that have been handed to me! If you want to send your own mail item, find me in reception at the next collection time!</string>
+    <string name="recipientText">I am expecting mail!</string>
 
     <!--Password Activity Strings-->
     <string name="PasswordActivitySpeech">Please enter the personal PIN code that has been sent to you via e-mail to open the locker containing your mail item.</string>

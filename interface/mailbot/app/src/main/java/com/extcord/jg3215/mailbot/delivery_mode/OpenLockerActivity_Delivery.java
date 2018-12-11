@@ -28,11 +28,6 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
 
     private final static String TAG = "OpenLockerActivity";
 
-    // Integers used to represent the type of mail that is being sent
-    private static final int LETTER_STANDARD = 1;
-    private static final int LETTER_LARGE = 2;
-    private static final int PARCEL = 3;
-
     private LockerManager mLockerManager;
 
     Button doneButton;
@@ -58,13 +53,11 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                     mBluetoothConnection.write(resBytes);
                     Log.i(TAG, "Written: " + response + " to Output Stream");
 
-                    int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
+                    int aLockers = mLockerManager.getAvailability(LockerManager.LETTER_STANDARD) + mLockerManager.getAvailability(LockerManager.LETTER_LARGE) + mLockerManager.getAvailability(LockerManager.PARCEL);
                     Log.i(TAG, "Number of full lockers: " + String.valueOf(7 - aLockers));
-                    if (aLockers != 7) {
-                        toEnRouteActivity();
-                    } else {
-                        returnToMainActivity();
-                    }
+
+                    // You are routed back to MainActivity from EnRouteActivity
+                    toEnRouteActivity();
                     break;
             }
         }

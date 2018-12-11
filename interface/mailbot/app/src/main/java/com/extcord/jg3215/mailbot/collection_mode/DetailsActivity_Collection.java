@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,7 +30,9 @@ import java.util.Random;
 
 public class DetailsActivity_Collection extends AppCompatActivity {
 
-    // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
+    // TODO: Make sure delivery location is in correct format
+
+    // Sometimes "Search" appears in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
         // Can be fixed by changing the string's value and then changing it back after building
 
@@ -108,6 +109,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             String text = intent.getStringExtra("theMessage");
             Log.i(TAG, "Received: " + text);
 
+            // TODO: Add a default case that restarts communication process?
             switch (text) {
                 case "1409":
                     String requestLO = "RLO";
@@ -124,15 +126,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                     // Assume locker opens once requested
                     toLockerActivity();
                     break;
-                default:
-                    // restarts the process if none of these values are received
-                    // TODO: Have it run a limited number of times at most and throw an exception?
-                    Log.i(TAG, "Restarting communication process");
-                    String startCommCode = "0507";
-                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
-                    mBluetoothConnection.write(startBytes);
-                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
-                    break;
             }
         }
     };
@@ -141,7 +134,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.collection1_activity_details);
+        setContentView(R.layout.collection_activity_details);
 
         // Removed the navigation bar code because it makes this activity look weird as it is created
 
@@ -151,7 +144,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // 3. Confirming details with user
         state = 1;
 
-        // TODO: Ctrl+Z this lmao
         // mBluetoothConnection.setmContext(this);
         mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
@@ -304,7 +296,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         String recipientName = topEntry.getText().toString();
                         String recipientEmailAddress = midEntry.getText().toString();
 
-                        // TODO: Ensure that delivery Location is in the right format
                         String recipientLocation = btmEntry.getText().toString();
 
                         if (!entryChecks(recipientName, recipientEmailAddress)) {
@@ -344,7 +335,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         lockerIndex = mLockerManager.getSelectLockerIndex();
                         Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(lockerIndex + 1));
 
-                        // TODO: Send a serial message to ROS to request locker opening
+                        // Sends a serial message to ROS to request locker opening
                         String startCommCode = "0507";
                         byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
                         mBluetoothConnection.write(startBytes);
@@ -353,22 +344,22 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             }
         });
 
-        Bundle endActivityData = this.getIntent().getExtras();
-        if (endActivityData != null) {
+        Bundle otherActivityData = this.getIntent().getExtras();
+        if (otherActivityData != null) {
             // Gets the package type that is being delivered from the intent
             try {
-                packageType = endActivityData.getInt("packageType");
+                packageType = otherActivityData.getInt("packageType");
                 Log.i(TAG, "Package Type: " + String.valueOf(packageType));
             } catch (NullPointerException e) {
                 Log.i(TAG, "No package data provided from endActivity: " + e.getMessage());
             }
 
-            if (endActivityData.getBoolean("dataProvided")) {
+            if (otherActivityData.getBoolean("dataProvided")) {
                 // Object data already provided by the user
                 Log.i(TAG, "Data has already been provided by the user");
 
                 try {
-                    senderData = endActivityData.getParcelable("senderData");
+                    senderData = otherActivityData.getParcelable("senderData");
 
                     if (senderData != null) {
                         Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
@@ -382,7 +373,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 }
 
                 try {
-                    recipientData = endActivityData.getParcelable("recipientData");
+                    recipientData = otherActivityData.getParcelable("recipientData");
 
                     if (recipientData != null) {
                         Log.i(TAG, "Recipient data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
@@ -399,8 +390,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 // Takes the user to the third state of this activity
                 toLayoutStateThree(1);
             }
-        } else {
-            throw new NullPointerException("No data provided from endActivity");
         }
     }
 
@@ -615,6 +604,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "Layout changed to state: "+ String.valueOf(state));
     }
 
+    // TODO: Check code length method?
     private String createPIN() {
         Log.i(TAG, "createPIN() method called");
 

@@ -60,7 +60,30 @@
                 android:textColor="@color/postRed"
                 android:textSize="@dimen/_10sdp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textRecipient"
+                android:layout_width="@dimen/_125sdp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/speechBubbleMain"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_centerHorizontal="true"
+                android:text="@string/recipientText"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold"
+                android:visibility="gone"/>
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/btnDemo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="420dp"
+            android:layout_marginTop="40dp"
+            android:text="Simulate at Location" />
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

@@ -70,15 +70,6 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
                     mLockerManager.updateAvailability((lockerID - 1), false);
                     toOpenLockerActivity();
                     break;
-                default:
-                    // restarts the process if none of these values are received
-                    // TODO: Have it run a limited number of times at most and throw an exception?
-                    Log.i(TAG, "Restarting communication process");
-                    String startCommCode = "0507";
-                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
-                    mBluetoothConnection.write(startBytes);
-                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
-                    break;
             }
         }
     };
@@ -96,10 +87,10 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
 
         mLockerManager = new LockerManager(this);
 
-        // TODO: Get pinCode from intent created in EnRouteActivity
         Bundle enRouteActivityData = this.getIntent().getExtras();
         if (enRouteActivityData != null) {
             try {
+                // Gets pin code
                 pinCode = enRouteActivityData.getString("lockerPINCode");
                 Log.i(TAG, "Pin code successfully retrieved = " + pinCode);
             } catch (NullPointerException e){
@@ -126,7 +117,7 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
             public void onClick(View v) {
                 if (pinEditText.getText().toString().equals(pinCode)) {
 
-                    // TODO: Send a serial message to ROS to request locker opening
+                    // Sends a serial message to ROS to request locker opening
                     String startCommCode = "0507";
                     byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(startBytes);

@@ -7,8 +7,6 @@ import android.os.Parcelable;
 public class PackageData implements Parcelable{
     private String name;
     private String emailAddress;
-
-    // TODO: Check what the format of the delivery location is going to be
     private String deliveryLocation;
 
     // Constructor

@@ -2,7 +2,6 @@ package com.extcord.jg3215.mailbot.collection_mode;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.LightingColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,16 +18,9 @@ import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
 public class LockerActivity_Collection extends AppCompatActivity {
-
-    // TODO: Send a PIN code for each package to the computer as the mail item is locked away
-    // Integers used to represent the type of mail that is being sent
-    private static final int LETTER_STANDARD = 1;
-    private static final int LETTER_LARGE = 2;
-    private static final int PARCEL = 3;
 
     // The TextViews for the two options given at the start of this activity
         // 'Parcel fits' vs 'Parcel does not fit'
@@ -52,7 +44,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.collection1_activity_locker);
+        setContentView(R.layout.collection_activity_locker);
 
         Log.i(TAG, "onCreate: Locker Activity started");
         mContext = this;
@@ -98,7 +90,19 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 Log.i(TAG, "badFitView text pressed");
                 if (packageType != 3) {
                     Log.i(TAG, "Need to attempt to use a bigger locker");
-                    // TODO: Check if a bigger size locker is available
+
+                    // Check if a bigger size locker is available
+                    if (packageType == LockerManager.LETTER_STANDARD) {
+                        int aLockersLL = mLockerManager.getAvailability(LockerManager.LETTER_LARGE);
+                        Log.i(TAG, "There are " + String.valueOf(aLockersLL) + " large letter lockers available");
+                        packageType = LockerManager.LETTER_LARGE;
+                        redoDetailsActivity();
+                    } else if (packageType == LockerManager.LETTER_LARGE) {
+                        int aLockersP = mLockerManager.getAvailability(LockerManager.PARCEL);
+                        Log.i(TAG, "There are " + String.valueOf(aLockersP) + " parcel lockers available");
+                        packageType = LockerManager.PARCEL;
+                        redoDetailsActivity();
+                    }
                 } else {
                     Log.i(TAG, "The mail item will not fit in MailBot");
                     Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.packageTooBig), Toast.LENGTH_LONG).show();
@@ -112,15 +116,13 @@ public class LockerActivity_Collection extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "goodFitView text pressed");
-                // TODO: Tell the computer that the locker is closed?
-                // Is there any data that needs to passed on as an extra?
 
                 // Starts the asynchronous task
-                boolean isEmpty = mLockerManager.getLockerState().equals("0000000");
+                boolean isEmpty = mLockerManager.getLockerState().equals(LockerManager.EMPTY_LOCKER);
                 new addToDatabase(lockerIndex, senderData, recipientData, mContext, isEmpty, pinCode).execute();
 
                 // Gets the number of available lockers
-                int aLockers = mLockerManager.getAvailability(LETTER_STANDARD) + mLockerManager.getAvailability(LETTER_LARGE) + mLockerManager.getAvailability(PARCEL);
+                int aLockers = mLockerManager.getAvailability(LockerManager.LETTER_STANDARD) + mLockerManager.getAvailability(LockerManager.LETTER_LARGE) + mLockerManager.getAvailability(LockerManager.PARCEL);
 
                 // If no lockers are available, app will go to EnRouteActivity
                 if (aLockers > 1) {
@@ -129,7 +131,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
                     mLockerManager.updateAvailability(lockerIndex, true);
 
                     toEndActivity();
-                } else {
+                } else if (mLockerManager.getLockerState().equals(LockerManager.FULL_LOCKER)) {
                     Log.i(TAG, "Locker is full. Closing this activity");
                     mLockerManager.unregisterListener();
                     mLockerManager.updateAvailability(lockerIndex, true);
@@ -141,7 +143,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
 
     // Adding to db needs to be done asynchronously - as do general database queries. Database
     // handling on main thread is inadvisable
-    // TODO: Find out what parameters do
     private static class addToDatabase extends AsyncTask<Void, Void, Void> {
 
         int lockerIndex;
@@ -198,27 +199,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
             return null;
         }
 
-        /*private String createPIN() {
-        // TODO: Create some check PIN method to be sure
-        private String createPIN() {
-            Log.i(TAG, "createPIN() method called");
-
-            StringBuilder createCode = new StringBuilder("");
-            for (int i = 0; i < 4; i++) {
-                if (createCode.length() < 4) {
-                    Random rn = new Random();
-                    // Generate random number from 0 to 10
-                    int digit = rn.nextInt(11);
-                    createCode.append(String.valueOf(digit));
-                } else if (createCode.length() == 4) {
-                    break;
-                }
-            }
-
-            Log.i(TAG, "PIN Code: " + createCode.toString());
-            return createCode.toString();
-        }*/
-
         private void checkDatabase(LockerItemDatabase lockerItemDatabase) {
             Log.i(TAG, "checkDatabase() method called");
             List<LockerItem> lockerItemList = lockerItemDatabase.lockerDataAccessObject().readLockerItem();
@@ -270,6 +250,38 @@ public class LockerActivity_Collection extends AppCompatActivity {
         toEndActivity.putExtras(extras);
         startActivity(toEndActivity);
 
+        finish();
+    }
+
+    private void redoDetailsActivity() {
+        Log.i(TAG, "redoDetailsActivity() method called");
+
+        String packageTag = "packageType";
+        String senderDataTag = "senderData";
+        String recipientDataTag = "recipientData";
+        String dataProvidedTag = "dataProvided";
+
+        Intent redoDetailsActivityIntent = new Intent(this, DetailsActivity_Collection.class);
+
+        // Create a bundle for holding the extras
+        Bundle extras = new Bundle();
+
+        // Adds this extra detail to the intent which indicates:
+            // The kind of package the user is sending
+            // The data given to MailBot about the sender
+            // The data given to MailBot about the recipient
+            // Whether or not data has been provided by a previous activity
+        extras.putInt(packageTag, packageType);
+        extras.putParcelable(senderDataTag, senderData);
+        extras.putParcelable(recipientDataTag, recipientData);
+        extras.putBoolean(dataProvidedTag, true);
+        Log.i(TAG, "Extras added to bundle");
+
+        // Add all the extras content to the intent
+        redoDetailsActivityIntent.putExtras(extras);
+
+        startActivity(redoDetailsActivityIntent);
+        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag + ", " + dataProvidedTag);
         finish();
     }
 

@@ -32,6 +32,14 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
     // Variable that will contain the string representing locker state
     private String lockerState;
 
+    public final static String EMPTY_LOCKER = "0000000";
+    public final static String FULL_LOCKER = "1111111";
+
+    // Integers used to represent the type of mail that is being sent
+    public static final int LETTER_STANDARD = 1;
+    public static final int LETTER_LARGE = 2;
+    public static final int PARCEL = 3;
+
     // Edit the contents of the sharedPreference file
     private SharedPreferences.Editor editor;
 
@@ -63,7 +71,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
             int aCount = 0;
 
             // 4 small, 2 medium, 1 big
-            if (packageType == 1) {
+            if (packageType == LETTER_STANDARD) {
                 for (int i = 0; i < 4; i++) {
                     if (lockerState.charAt(i) == '0') {
                         // if the character at that index is '0', the locker is free
@@ -73,7 +81,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
 
                 Log.i(TAG, "Lockers available: " + String.valueOf(aCount));
                 return aCount;
-            } else if(packageType == 2) {
+            } else if(packageType == LETTER_LARGE) {
                 for (int i = 4; i < 6; i++) {
                     if (lockerState.charAt(i) == '0') {
                         aCount++;
@@ -82,7 +90,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
 
                 Log.i(TAG, "Lockers available: " + String.valueOf(aCount));
                 return aCount;
-            } else {
+            } else if (packageType == PARCEL) {
                 if (lockerState.charAt(6) == '0') {
                     aCount++;
                 }
@@ -131,7 +139,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
         Log.i(TAG, mContext.getClass().getSimpleName() + ": setSelectLockerIndex() method called");
 
         switch (packageType) {
-            case 1:
+            case LETTER_STANDARD:
                 for (int i = 0; i < 4; i++) {
                     if (this.lockerState.charAt(i) == '0') {
                         selectLockerIndex = i;
@@ -141,7 +149,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
                     }
                 }
                 break;
-            case 2:
+            case LETTER_LARGE:
                 for (int i = 4; i < 6; i++) {
                     if (lockerState.charAt(i) == '0') {
                         selectLockerIndex = i;
@@ -151,7 +159,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
                     }
                 }
                 break;
-            case 3:
+            case PARCEL:
                 // should only call this function if a large locker is available so if-statement is redundant
                 Log.i(TAG, mContext.getClass().getSimpleName() + ": setSelectLockerIndex(): Locker available at index 6");
                 selectLockerIndex = 6;
@@ -182,7 +190,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
 
             previousLockerState = lockerState;
 
-            if (lockerState.equals("1111111")) {
+            if (lockerState.equals(FULL_LOCKER)) {
                 Log.i(TAG, mContext.getClass().getSimpleName() + ": Locker is full");
                 String fullLockerString = "toEnRouteActivity";
                 Intent incomingMessageIntent = new Intent("lockerFull");
@@ -196,28 +204,3 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 }
-
-
-
-        /* if (sharedPreferences.getString(key, null) == null || testMode) {
-            if (testMode) {
-                // Locker state string variable set to 0000000 in the constructor of LockerManager object
-                lockerState = "0000000";
-
-                String currentState = sharedPreferences.getString(key, null);
-                if (currentState != null && currentState.equals(lockerState)) {
-                    Log.i(TAG, "LockerManager constructor: lockerState string already set to default");
-                } else {
-                    Log.i(TAG, "LockerManager constructor: Putting " + lockerState + " to sharedPreference file");
-
-                    editor.putString(key, lockerState);
-
-                    // Commit changes to the sharedPreference file
-                    editor.apply();
-                }
-            }
-        // } else {
-            Log.i(TAG, "LockerManager constructor: sharedPreference file contains states");
-            lockerState = sharedPreferences.getString(key, null);
-            Log.i(TAG, "LockerManager constructor: lockerState = " + lockerState);
-        } */

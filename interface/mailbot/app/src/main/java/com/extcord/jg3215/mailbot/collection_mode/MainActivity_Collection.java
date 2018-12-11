@@ -10,7 +10,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,18 +28,16 @@ import com.extcord.jg3215.mailbot.database.LockerItem;
 import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.delivery_mode.EnRouteActivity_Delivery;
 
-import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class MainActivity_Collection extends AppCompatActivity {
 
-    // Database is a public, static object so can be accessed by all activities
     // I assume Android Studio provides security against memory leaks for Rooms - WRONG LMAO
-    // private LockerItemDatabase lockerItemDatabase;
+    // Database is a singleton object
     private final static String DATABASE_NAME = "lockerDB";
+    private LockerItemDatabase lockerItemDatabase;
 
     // The image views that are being used like buttons
     ImageView letterView;
@@ -51,9 +48,9 @@ public class MainActivity_Collection extends AppCompatActivity {
     TextView lockerTextView;
 
     // Integers used to represent the type of mail that is being sent
-    private static final int LETTER_STANDARD = 1;
+    /* private static final int LETTER_STANDARD = 1;
     private static final int LETTER_LARGE = 2;
-    private static final int PARCEL = 3;
+    private static final int PARCEL = 3; */
 
     // Tag for debugging
     private static final String TAG = "MainActivity";
@@ -69,26 +66,25 @@ public class MainActivity_Collection extends AppCompatActivity {
     private final String compAddress = "B8:8A:60:62:1E:A6";
 
     // Android server UUID
-    private static final UUID MY_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
-    private UUID deviceUUID;
+    // private static final UUID MY_UUID = UUID.fromString("00001800-0000-1000-8000-00805f9b34fb");
 
-    // TODO: Send these to subsequent activities as parcelable extras?
     private BluetoothDevice deviceConnected;
     private BluetoothAdapter mBluetoothAdapter;
 
-    // TODO: Make this variable a singleton
     // public static BluetoothConnectionService mBluetoothConnection;
+    // This object is a singleton
     private BluetoothConnectionService mBluetoothConnection;
 
+    // StopWatch is used to determine when scan times out
     private StopWatch scanTimer;
+    // Boolean indicates whether or not the timer has started
     private boolean startTimer;
 
+    // Indicates whether the app processes have been started - used in onResume to determine if a bond exists
     private boolean started;
 
-    private LockerItemDatabase lockerItemDatabase;
-
     // Listens for message that lockers are full
-    BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
+    private BroadcastReceiver mBroadcastReceiverFullLocker = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "Broadcast Receiver: Full Locker");
@@ -112,6 +108,8 @@ public class MainActivity_Collection extends AppCompatActivity {
             String text = intent.getStringExtra("theMessage");
             Log.i(TAG, "Received: " + text);
 
+            // Removed default case (restarts communication)
+            // TODO: Add an error case if there is no communication
             switch (text) {
                 case "3020":
                     String sendLL = "SLL";
@@ -120,6 +118,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                     Log.i(TAG, "Written: " + sendLL + " to Output Stream");
                     break;
                 case "list":
+                    // Ideally, this should be done asynchronously so the query is done by the time the data is needed
                     lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
                     List<LockerItem> lockerItemList;
                     lockerItemList = lockerItemDatabase.lockerDataAccessObject().readLockerItem();
@@ -133,18 +132,8 @@ public class MainActivity_Collection extends AppCompatActivity {
                     LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverComm);
                     Log.i(TAG, "Unregistered mBroadcastReceiverComm");
 
-                    // TODO: Check if it better to have this here or the locker full BR
                     // Go to EnRouteActivity
                     toEnRouteActivity();
-                    break;
-                default:
-                    // restarts the process if none of these values are received
-                    // TODO: Have it run a limited number of times at most and throw an exception?
-                    Log.i(TAG, "Restarting communication process");
-                    String startCommCode = "0203";
-                    byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
-                    mBluetoothConnection.write(startBytes);
-                    Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
                     break;
             }
         }
@@ -199,7 +188,7 @@ public class MainActivity_Collection extends AppCompatActivity {
                         deviceConnected = device;
 
                         try {
-                            deviceUUID = UUID.fromString(deviceConnected.getUuids()[0].getUuid().toString());
+                            // UUID deviceUUID = UUID.fromString(deviceConnected.getUuids()[0].getUuid().toString());
                             Log.i(TAG, "UUID: " + deviceConnected.getUuids()[0].getUuid().toString());
                             beginDeviceConnection();
                         } catch (NullPointerException e) {
@@ -231,7 +220,7 @@ public class MainActivity_Collection extends AppCompatActivity {
 
                 if (!bondExisting()) {
                     Log.i(TAG, "There is no bond between the tablet and computer");
-                    scanTimer = new StopWatch(15000, mContext, true);
+                    scanTimer = new StopWatch(15000, mContext, 1);
 
                     Log.i(TAG, "Timer started");
                     if (deviceConnected == null) {
@@ -246,7 +235,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.collection1_activity_main);
+        setContentView(R.layout.collection_activity_main);
         Log.i(TAG, "onCreate() method called.");
 
         View decorView = getWindow().getDecorView();
@@ -260,21 +249,12 @@ public class MainActivity_Collection extends AppCompatActivity {
         // mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
         lockerItemDatabase = LockerItemDatabase.getInstance(this.getApplicationContext());
 
-        // TODO: Make handling of lockerState more robust
         mLockerManager = new LockerManager(this);
-        mLockerManager.setLockerState("0000000");
+        mLockerManager.setLockerState(LockerManager.EMPTY_LOCKER);
 
-        // TODO: I think a previous instance of the database exists and it is causing issues
-        // TODO: And then further issues are caused as it is searching for this version and it cannot find it
+        // Solved unique constraint error by adding an 'OnConflictStrategy' in the DAO
         // lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
         mContext = this;
-
-        /* if (!started) {
-            new clearDBCheck(mContext).execute();
-            started = true;
-        } */
-
-        // TODO: Make handling of database more robust
 
         letterView = (ImageView) findViewById(R.id.letter);
         letterView.setOnClickListener(new View.OnClickListener() {
@@ -283,10 +263,10 @@ public class MainActivity_Collection extends AppCompatActivity {
                 Log.i(TAG, "letter View selected");
 
                 // Determines whether there is a locker free
-                int aLockers = mLockerManager.getAvailability(LETTER_STANDARD);
+                int aLockers = mLockerManager.getAvailability(LockerManager.LETTER_STANDARD);
                 if (aLockers > 0) {
                     Log.i(TAG, "Lockers available = " + String.valueOf(aLockers));
-                    toDetailsActivity(LETTER_STANDARD);
+                    toDetailsActivity(LockerManager.LETTER_STANDARD);
                 } else {
                     Log.i(TAG, "No lockers available");
                     Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
@@ -304,10 +284,10 @@ public class MainActivity_Collection extends AppCompatActivity {
                 Log.i(TAG, "Large letter View selected");
 
                 // Determines whether there is a locker free
-                int aLockers = mLockerManager.getAvailability(LETTER_LARGE);
+                int aLockers = mLockerManager.getAvailability(LockerManager.LETTER_LARGE);
                 if (aLockers > 0) {
                     Log.i(TAG, "Lockers available = " + String.valueOf(aLockers));
-                    toDetailsActivity(LETTER_LARGE);
+                    toDetailsActivity(LockerManager.LETTER_LARGE);
                 } else {
                     Log.i(TAG, "No lockers available");
                     Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
@@ -322,10 +302,10 @@ public class MainActivity_Collection extends AppCompatActivity {
                 Log.i(TAG, "parcel View selected");
 
                 // Determines whether there is a locker free
-                int aLockers = mLockerManager.getAvailability(PARCEL);
+                int aLockers = mLockerManager.getAvailability(LockerManager.PARCEL);
                 if (aLockers > 0) {
                     Log.i(TAG, "Lockers available = " + String.valueOf(aLockers));
-                    toDetailsActivity(PARCEL);
+                    toDetailsActivity(LockerManager.PARCEL);
                 } else {
                     Log.i(TAG, "No lockers available");
                     Toast.makeText(MainActivity_Collection.this, getResources().getString(R.string.lockerSizeUnavailable), Toast.LENGTH_SHORT).show();
@@ -446,7 +426,7 @@ public class MainActivity_Collection extends AppCompatActivity {
             if (!started) {
                 if (!startTimer && !bondExisting()) {
                     Log.i(TAG, "There is no bond between the tablet and computer");
-                    scanTimer = new StopWatch(15000, this, true);
+                    scanTimer = new StopWatch(15000, this, StopWatch.BT_TIMER);
 
                     Log.i(TAG, "Timer started");
                     if (deviceConnected == null) {
@@ -536,29 +516,3 @@ public class MainActivity_Collection extends AppCompatActivity {
         super.onDestroy();
     }
 }
-
-
-    /*
-    private static class clearDBCheck extends AsyncTask<Void, Void, Void> {
-
-        WeakReference<MainActivity_Collection> context;
-
-        public clearDBCheck(Context mContext) {
-            this.context = new WeakReference<>((MainActivity_Collection) mContext);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if (LockerItemDatabase.getInstance(context.get().getApplicationContext()) != null) {
-                Log.i(TAG, "Started? False - but database instance exists.");
-                // LockerItemDatabase.getInstance(context.get().getApplicationContext()).lockerDataAccessObject().clearDatabase();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.i(TAG, "AsyncTask: clearCheck Complete");
-        }
-    } */

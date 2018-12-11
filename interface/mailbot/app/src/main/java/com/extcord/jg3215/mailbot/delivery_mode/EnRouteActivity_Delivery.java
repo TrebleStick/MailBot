@@ -1,16 +1,23 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.extcord.jg3215.mailbot.BluetoothConnectionService;
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.StopWatch;
 import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
 import com.extcord.jg3215.mailbot.database.LockerItem;
 import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
@@ -29,11 +36,10 @@ import java.util.concurrent.locks.Lock;
 public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private final static String TAG = "EnRouteActivity";
+    private final static String DATABASE_NAME = "lockerDB";
 
     // Indicates whether a person has been detected to delivery to
     // private boolean personDetected = false;
-
-    private Context mContext;
 
     private String pinCode;
 
@@ -42,9 +48,20 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private BluetoothConnectionService mBluetoothConnection;
 
+    private Context mContext;
+
+    private boolean finished;
+
+    private LockerManager mLockerManager;
+
+    private TextView recipientTv;
+
+    private StopWatch knockTimer;
+
+    private Button enRouteTest;
+
     // Listen for message (Serial communication) that MailBot is at destination
-    // TODO: Register and unregister Broadcast Receivers in onCreate() and when no longer needed (respectively)
-    BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {
+    private BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("theMessage");
@@ -62,7 +79,9 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     Log.i(TAG, "Destination Position: " + destinationPos);
 
                     // Get the lockers associated with this delivery address
-                    List<LockerItem> currentLockers = LockerItemDatabase.getInstance(mContext.getApplicationContext()).lockerDataAccessObject().findLockerByLocation(destinationPos);
+                    LockerItemDatabase lockerItemDatabase;
+                    lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+                    List<LockerItem> currentLockers = lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
                     Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
                     Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
 
@@ -70,24 +89,32 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     pinCode = currentLockers.get(0).getPINcode();
                     Log.i(TAG, "Pin Code: " + pinCode);
 
+                    // TODO: Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
+                        // No - each item will have a different PIN Code
                     lockerID = currentLockers.get(0).getLockerNo();
 
-                    // Play knock sound 4 times over the space of 2 minutes
-                    // Begin a timer at the first knock
+                    // Make the TextView visible and play the knock-knock sound until it is pressed
+                    // Essentially a replacement for the person detected thing
+                    recipientTv.setVisibility(View.VISIBLE);
 
-                    // Assume all delivery attempts are successful for now
-                    toPasswordActivity();
+                    // Play knock sound 4 times over the space of 2 minutes
+                        // First knock: 3s after you arrive at destination
+                        // Second knock: 20s after you arrive at destination
+                        // Third knock: 60s after you arrive at destination
+                        // Fourth knock: 120s after you arrive at destination
+                    knockTimer = new StopWatch(mContext, StopWatch.KNOCK_TIMER, 0);
+                    // Set timerDuration to 0 as it is preset in StopWatch class
 
                     // Might not need this here (below)
                     // LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverArrival);
                 } else {
-                    Log.i(TAG, "Data length: " + separated.length);
+                    Log.i(TAG, "Data length: " + separated.length + ", Text: " + text);
                     // Il y a un probleme le lmao
                 }
             } else {
                 switch (text) {
                     case "8062":
-                        String responseCode = "1409";
+                        String responseCode = "6208";
                         byte[] rcBytes = responseCode.getBytes(Charset.defaultCharset());
                         mBluetoothConnection.write(rcBytes);
                         Log.i(TAG, "Written: " + responseCode + " to Output Stream");
@@ -110,9 +137,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     };
 
     // Listen for message (Serial communication) that MailBot has detected a person
-    // TODO: Register and unregister Broadcast Receivers in onCreate() or when no longer needed
-    // TODO: To use later skater -> stretch goals
-    /* BroadcastReceiver mBroadcastReceiverPersonDetected = new BroadcastReceiver() {
+    /* private BroadcastReceiver mBroadcastReceiverPersonDetected = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String text = intent.getStringExtra("detectPerson");
@@ -123,27 +148,116 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         }
     }; */
 
+    private BroadcastReceiver mBroadcastReceiverKnock = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Intent to play knocking sound received");
+
+            // Is the knock sound long enough?
+            final MediaPlayer mp = MediaPlayer.create(mContext, R.raw.knock_sound);
+            mp.start();
+        }
+    };
+
+    private BroadcastReceiver mBroadcastReceiverFail = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "Timer has timed out. Delivery considered unsuccessful.");
+            toUnsuccessfulActivity();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_activity_enroute);
         Log.i(TAG, "onCreate() method called");
 
-        mContext = this;
-        // mBluetoothConnection.setmContext(mContext);
-        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+        mLockerManager = new LockerManager(this);
+        if (!mLockerManager.getLockerState().equals("0000000")) {
+            mContext = this;
+            // mBluetoothConnection.setmContext(mContext);
+            mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverArrival, new IntentFilter("incomingMessage"));
+            // Register receivers
+            LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverArrival, new IntentFilter("incomingMessage"));
+            LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverKnock, new IntentFilter("playKnock"));
+            LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFail, new IntentFilter("failNotification"));
+
+            recipientTv = (TextView) findViewById(R.id.textRecipient);
+            recipientTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // The person who the mail item is intended for has been detected
+                    Log.i(TAG, "TextView onClickListener method has been called");
+
+                    // Stop the timer
+                    knockTimer.stopExecuting();
+                    toPasswordActivity();
+                }
+            });
+
+            enRouteTest = (Button) findViewById(R.id.btnDemo);
+            enRouteTest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String destinationPos = "0";
+
+                    // Get the lockers associated with this delivery address
+                    LockerItemDatabase lockerItemDatabase;
+                    lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+                    List<LockerItem> currentLockers = lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
+                    Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
+                    Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
+
+                    // Get the pin code for this mail item
+                    pinCode = currentLockers.get(0).getPINcode();
+                    Log.i(TAG, "Pin Code: " + pinCode);
+
+                    // TODO: Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
+                        // No - each item will have a different PIN Code
+                    lockerID = currentLockers.get(0).getLockerNo();
+
+                    // Make the TextView visible and play the knock-knock sound until it is pressed
+                    // Essentially a replacement for the person detected thing
+                    recipientTv.setVisibility(View.VISIBLE);
+
+                    // Play knock sound 4 times over the space of 2 minutes
+                        // First knock: 3s after you arrive at destination
+                        // Second knock: 20s after you arrive at destination
+                        // Third knock: 60s after you arrive at destination
+                        // Fourth knock: 120s after you arrive at destination
+                    knockTimer = new StopWatch(mContext, StopWatch.KNOCK_TIMER, 0);
+                    // Set timerDuration to 0 as it is preset in StopWatch class
+                }
+            });
+        }
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        if (mLockerManager.getLockerState().equals(LockerManager.EMPTY_LOCKER)) {
+            Log.i(TAG, "Finishing EnRouteActivity");
+            finished = true;
+            // TODO: Check that calling finish() here does not cause any problems
+            finish();
+        }
     }
 
     // Set the BR to this instance of the class again
     protected void onDestroy() {
         Log.i(TAG, "onDestroy() method called");
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverArrival);
+
+        if (!finished) {
+            Log.i(TAG, "Broadcast Receivers unregistered");
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverArrival);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFail);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverKnock);
+        }
         super.onDestroy();
     }
 
-    // Currently useless
     private void toUnsuccessfulActivity() {
         Log.i(TAG, "toUnsuccessfulActivity() method called");
 

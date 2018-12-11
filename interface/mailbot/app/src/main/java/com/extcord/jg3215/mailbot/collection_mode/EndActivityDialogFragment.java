@@ -39,7 +39,7 @@ public class EndActivityDialogFragment extends DialogFragment {
 
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.collection1_activity_end_dialog, null);
+        final View view = inflater.inflate(R.layout.collection_activity_end_dialog, null);
 
         // Attaches a listener to this image in the fragment view
         final ImageView letterImage = (ImageView) view.findViewById(R.id.smallLockerImageView);
