@@ -64,13 +64,14 @@
     <!-- We now can pass in the values that are set above into the launch file -->
     <!-- Mainly including those where we have changed the defaults -->
 
-    <!-- Turn Off Visual Odometry -->
+    <!-- Turn Off Visual Odometry and subscribe to robot's odom topic -->
+    <arg name="icp_odometry"             default="false"/>
     <arg name="visual_odometry"          value="$(arg visual_odometry)"/>
     <arg name="odom_topic"               value="$(arg odom_topic)" />
 
     <!-- Laser Scan Subscription -->
-    <arg name="subscribe_scan"          value="$(arg subscribe_scan)"/>  <!-- If we are using fakeLasers, we should subscribe to scan -->
-    <arg name="scan_topic"              value="$(arg scan_topic)"/>  <!-- If we are using fakeLasers, we should set the right topic (defined below) -->
+    <arg name="subscribe_scan"          value="$(arg subscribe_scan)"/>
+    <arg name="scan_topic"              value="$(arg scan_topic)"/>
     <arg name="subscribe_scan_cloud"    value="$(arg subscribe_scan_cloud)"/>  <!-- Not sure if this needs to be true or not -->
     <arg name="scan_cloud_topic"        value="$(arg scan_cloud_topic)"/>
 
@@ -80,18 +81,15 @@
     <!-- Corresponding config files -->
     <arg name="gui_cfg"                 value="$(arg gui_cfg)" />
     <arg name="rviz_cfg"                value="$(find rviz_cfg" />
-    <arg name="frame_id"                value="$(arg frame_id)"/>     <!-- Fixed frame id, you may set "base_link", "base_footprint", or "camera link" if they are published -->
-    <arg name="database_path"           value="$(arg database_path)" /> <!-- Where database is stored and loaded from -->
-    <arg name="args"                    value="$(arg args)"/>              <!-- delete_db_on_start, udebug -->
-    <arg name="output"                  value="$(arg output)"/>        <!-- Control node output (screen or log) -->
+    <arg name="frame_id"                value="$(arg frame_id)"/>
+
+    <arg name="database_path"           value="$(arg database_path)" />
+    <arg name="args"                    value="$(arg args)"/>
+    <arg name="output"                  value="$(arg output)"/>
 
     <!-- Allow visualization -->
     <arg name="rtabmapviz"              value="$(arg rtabmapviz)" />
     <arg name="rviz"                    value="$(arg rviz)" />
-
-
-
-
 
   </include>
 

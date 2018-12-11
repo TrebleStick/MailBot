@@ -112,6 +112,6 @@
     <arg name="camera" value="$(arg camera)" />
   </include>
 
-	<node pkg="tf" type="static_transform_publisher" name="camera_tf" args="0 0 0.35 0 0 0  /base_link /camera_link 100" />
+	<node pkg="tf" type="static_transform_publisher" name="camera_tf" args="0 0 1.05 0 0 0  /base_link /camera_link 100" />
 
 </launch>

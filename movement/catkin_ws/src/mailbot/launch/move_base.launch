@@ -5,7 +5,8 @@
     <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find my_map_package)/my_map.pgm my_map_resolution"/> -->
 
  <!--- Run AMCL -->
-    <include file="$(find mailbot)/launch/amclStart.launch" />
+  <include file="$(find mailbot)/launch/amclStart.launch">
+  </include>
 
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find mailbot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
@@ -13,6 +14,11 @@
     <rosparam file="$(find mailbot)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find mailbot)/config/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find mailbot)/config/base_local_planner_params.yaml" command="load" />
+
+    <remap from="/map"       to="/rtabmap/grid_map"/>
+    <remap from="/cmd_vel"       to="/RosAria/cmd_vel"/>
+    <remap from="/odom"       to="/RosAria/pose"/>
+
  </node>
 
 </launch>

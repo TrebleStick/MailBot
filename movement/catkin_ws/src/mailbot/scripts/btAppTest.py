@@ -63,7 +63,7 @@ def notifyArrival(btSocket):
         elif str(appMsg) == "ref":
             print str(appMsg)
             # should print ref
-            btSocket.send("l,1")
+            btSocket.send("l,0")
             # should really be sending l,destinationNumber
             break
         time.sleep(0.01)
@@ -117,6 +117,7 @@ sock.connect((host, port))
 
 start = False
 waitingToArrive = False
+test = False
 # sock.send("hello!!")
 while 1:
 
@@ -153,10 +154,19 @@ while 1:
                 # it is waiting to arrive at a mail item destination
                 waitingToArrive = True
                 continue
-        else:
+        if waitingToArrive:
             # gets here when it is waiting to arrive at a location
             arrivalCount = 0
-            # should wait for some message from ROS?
+            time.sleep(5)
+            if not test:
+                print "not test"
+                notifyArrival(sock)
+                arrivalCount = arrivalCount + 1
+                test = True
+                continue
+
+            # should wait for some message from ROS
+            # if at location do notifyArrival(sock)
 
     except IOError:
         pass

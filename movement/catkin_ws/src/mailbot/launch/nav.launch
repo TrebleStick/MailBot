@@ -1,3 +1,4 @@
+
 <launch>
 <!-- Convenience launch file to launch odometry, rtabmap and rtabmapviz nodes at once -->
 
@@ -29,6 +30,11 @@
       <node if="$(arg fakeLasers)" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="tf_pointcloud_to_laserscan" args="cloud_in:=/RosAria/sonar_pointcloud2"/>
 
   <!--  Start AMCL -->
-      <include file="$(find mailbot)/launch/move_base.launch" />
+      <!-- <include file="$(find mailbot)/launch/move_base.launch"> -->
+        <!-- <remap from="/map"       to="/rtabmap/grid_map"/>
+        <remap from="/cmd_vel"       to="/RosAria/cmd_vel"/>
+        <remap from="/odom"       to="/RosAria/pose"/> -->
+            <!-- /rtabmap/grid_map -->
+      <!-- </include> -->
 
 </launch>
