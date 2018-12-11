@@ -11,7 +11,7 @@
 
     <string name="letterStandardText">Letter\n(Standard size)</string>
     <string name="letterLargeText">Large Letter\n(around A4)</string>
-    <string name="parcelText">Parcel\n(up to 00x00cm)</string>
+    <string name="parcelText">Parcel (up\nto 20x35x45 cm)</string>
 
     <string name="lockerSizeUnavailable">All lockers of this size are full</string>
     <string name="lockerSizePrompt">Please select a locker size as before!</string>

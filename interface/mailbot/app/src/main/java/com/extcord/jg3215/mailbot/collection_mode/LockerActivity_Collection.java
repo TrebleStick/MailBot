@@ -223,8 +223,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
         }
     }
 
-    //TODO: Did I delete a useful bit (postDBAction()) bc of a merge conflict? check the issues on github
-
     private void toEndActivity() {
         Log.i(TAG, "toEndActivity() method called");
         String packageTag = "packageType";
