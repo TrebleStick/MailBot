@@ -639,10 +639,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "createPIN() method called");
 
         StringBuilder createCode = new StringBuilder("");
-        while (createCode.length() < 4) {
+        for (int pCounter = 1; pCounter <= 4; pCounter++) {
             Random rn = new Random();
-            // Generate random number from 0 to 10
-            int digit = rn.nextInt(11);
+            // Generate random number from 0 to 9
+            int digit = rn.nextInt(10);
             createCode.append(String.valueOf(digit));
         }
         Log.i(TAG, "PIN Code: " + createCode.toString());

@@ -25,6 +25,9 @@ public interface LockerDataAccessObject {
     @Query("Select * from lockers WHERE delivery_location = :deliveryLocation")
     public List<LockerItem> findLockerByLocation(String deliveryLocation);
 
+    @Query("Select * from lockers WHERE locker_no = :lockerNo")
+    public LockerItem findLockerByID(int lockerNo);
+
     @Delete
     public void deleteLockerItem(LockerItem lockerItem);
 

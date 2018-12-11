@@ -86,7 +86,10 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     // Get the lockers associated with this delivery address
                     LockerItemDatabase lockerItemDatabase;
                     lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+
+                    // TODO: Turn this into a try-catch in case there has been an error (ie no matches)
                     List<LockerItem> currentLockers = lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
+
                     Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
                     Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
 
@@ -94,12 +97,14 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     pinCode = currentLockers.get(0).getPINcode();
                     Log.i(TAG, "Pin Code: " + pinCode);
 
-                    // TODO: Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
+                    // Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
                         // No - each item will have a different PIN Code
                     lockerID = currentLockers.get(0).getLockerNo();
 
-                    // Retrieve sender/recipient data
+                    // TODO: Tell the user the packageType that is being delivered (in case they are expecting multiple
+                    // items and have multiple lockers (/PINs)
 
+                    // Retrieve sender/recipient data
                     SenderDetails = new PackageData(currentLockers.get(0).getSenderName(), currentLockers.get(0).getSenderEmail());
                     RecipientDetails = new PackageData(currentLockers.get(0).getRecipientName(), currentLockers.get(0).getRecipientEmail());
 
@@ -107,6 +112,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     // Essentially a replacement for the person detected thing
                     recipientTv.setVisibility(View.VISIBLE);
 
+                    // TODO: Change knock timer length back to original time
                     // Play knock sound 4 times over the space of 2 minutes
                         // First knock: 3s after you arrive at destination
                         // Second knock: 20s after you arrive at destination
@@ -224,7 +230,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     pinCode = currentLockers.get(0).getPINcode();
                     Log.i(TAG, "Pin Code: " + pinCode);
 
-                    // TODO: Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
+                    // Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
                         // No - each item will have a different PIN Code
                     lockerID = currentLockers.get(0).getLockerNo();
 
@@ -289,7 +295,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
         // Add all the extras content to the intent
         toUnsuccessfulIntent.putExtras(extras);
-
 
         startActivity(toUnsuccessfulIntent);
         finish();

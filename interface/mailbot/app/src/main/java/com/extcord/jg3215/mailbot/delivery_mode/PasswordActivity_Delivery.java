@@ -1,5 +1,6 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +19,11 @@ import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
+import com.extcord.jg3215.mailbot.database.LockerItem;
+import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 
 import java.nio.charset.Charset;
+import java.util.List;
 
 // import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
@@ -30,6 +34,8 @@ import java.nio.charset.Charset;
 public class PasswordActivity_Delivery extends AppCompatActivity {
 
     private final static String TAG = "PasswordActivity";
+
+    private final static String DATABASE_NAME = "lockerDB";
 
     // User use this button to submit the pin code they have typed in
     Button submitButton;
@@ -73,6 +79,12 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
 
                     // Assume locker opens once requested
                     mLockerManager.updateAvailability((lockerID - 1), false);
+
+                    // Update database
+                    LockerItemDatabase lockerItemDatabase;
+                    lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+                    LockerItem currentLocker = lockerItemDatabase.lockerDataAccessObject().findLockerByID(lockerID);
+                    lockerItemDatabase.lockerDataAccessObject().deleteLockerItem(currentLocker);
                     toOpenLockerActivity();
                     break;
             }
