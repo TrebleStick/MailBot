@@ -6,11 +6,44 @@ from ast import literal_eval as make_tuple
 import rospy
 from std_msgs.msg import String
 
-# def talker(pub_str):
-#     pub = rospy.Publisher('deliveryLocations', String)
-#     rospy.init_node('deliverLocationPub', anonymous=True)
-#     rospy.loginfo(pub_str)
-#     pub.publish(pub_str)
+def at_location(data, talker):
+    talker.tmp = str(data.data)
+
+open_locker_topic = 'openLocker'
+delivery_locations_topic = 'deliveryLocations'
+delivery_complete_topic = 'deliveryComplete'
+
+at_location_topic = ('atLocation', at_location)
+
+class Talker(object):
+    def __init__(self, publishers, subscribers):
+        self.publishers = {}
+        for topic in publishers:
+            self.publishers[topic] = rospy.Publisher(topic, String)
+
+        self.subscribers = {}
+        for topic, function in subscribers:
+            self.subscribers[topic] = rospy.Subscriber(topic, String, function, callback_args=self)
+        rospy.init_node('bltTalker', anonymous=True)
+
+    def publish(self, pub_str, topic):
+        try:
+            print('publishing', pub_str, 'to topic', topic,
+                  'using publisher', self.publishers[topic])
+            self.publishers[topic].publish(pub_str)
+        except rospy.ROSInterruptException:
+            pass
+    def listen(self):
+        self.tmp = None
+        while not self.tmp:
+            time.sleep(0.1)
+        else:
+            return self.tmp
+
+publishers = [open_locker_topic, delivery_locations_topic, delivery_complete_topic]
+subscribers = [at_location_topic]
+
+talker = Talker(publishers, subscribers)
 
 def getLockerToOpen(btSocket):
     print "getLockerToOpen()"
@@ -27,6 +60,7 @@ def getLockerToOpen(btSocket):
         else:
             print appMsg
             # should print a number (the locker to be opened)
+            talker.publish(appMsg, open_locker_topic)
             break
         time.sleep(0.01)
 
@@ -45,11 +79,12 @@ def getLocationList(btSocket):
         else:
             print appMsg
             # should print a space delimited list of locations
+            talker.publish(appMsg, delivery_locations_topic)
             return appMsg
         time.sleep(0.01)
 
-def notifyArrival(btSocket):
-    print "notifyArrival()"
+def notifyArrival(btSocket, location):
+    print"notifyArrival()"
     btSocket.send("8062")
     while 1:
         appMsg = btSocket.recv(1024)
@@ -63,7 +98,7 @@ def notifyArrival(btSocket):
         elif str(appMsg) == "ref":
             print str(appMsg)
             # should print ref
-            btSocket.send("l,508")
+            btSocket.send("l,"+location)
             # should really be sending l,destinationNumber
             break
         time.sleep(0.01)
@@ -83,6 +118,7 @@ def getDeliveryComplete(btSocket):
         else:
             print str(appMsg)
             # should print a space delimited list of locations
+            talker.publish(appMsg, delivery_complete_topic)
             # return appMsg
             break
         time.sleep(0.01)
@@ -95,8 +131,6 @@ service_matches = []
 
 while not service_matches:
     service_matches = bluetooth.find_service( name = 'MYAPP', address = tabAddress )
-
-    give me the puussss$$$$yyyyyy b0ss
 
 print service_matches
 
@@ -126,16 +160,10 @@ while 1:
     if waitingToArrive:
         # gets here when it is waiting to arrive at a location
         print "Waiting to arrive"
-        # arrivalCount = 0
-        time.sleep(3)
-        if test < 2:
-            print "not test"
-            notifyArrival(sock)
-            # arrivalCount = arrivalCount + 1
-            # print "Arrival count = " + str(arrivalCount)
-            test = True
-            # should wait for some message from ROS
-            # if at location do notifyArrival(sock)
+        location = talker.listen()
+        print('Arrived  ')
+        notifyArrival(sock, location)
+        waitingToArrive = False
 
     try:
         print "getting data"
@@ -168,12 +196,9 @@ while 1:
                 # it is waiting to arrive at a mail item destination
                 waitingToArrive = True
                 print "waitingToArrive = true"
-            continue
-        else:
-            if str(data) == "0507":
-                getLockerToOpen(sock)
-            if str(data) == "0605":
+            elif str(data) == "0605":
                 getDeliveryComplete(sock)
+                waitingToArrive = True
             continue
 
     except IOError:

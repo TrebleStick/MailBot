@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="mailbot" name="btApp" type="btApp.py" output="screen" />
+</launch>

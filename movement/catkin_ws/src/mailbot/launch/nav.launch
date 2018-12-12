@@ -18,6 +18,7 @@
 
     <include file="$(find mailbot)/launch/rtabmap_mailbot.launch">
       <!-- We now can pass in the values that are set above into the launch file -->
+
       <arg name="fakeLasers"              value="$(arg fakeLasers)"/>
       <arg name="localization"            value="$(arg localization)"/>
       <!-- Allow visualization -->
@@ -26,15 +27,5 @@
       <arg name="database_path"           value="$(arg database_path)" />
     </include>
 
-  <!--  Sonar as Laserscan -->
-      <node if="$(arg fakeLasers)" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="tf_pointcloud_to_laserscan" args="cloud_in:=/RosAria/sonar_pointcloud2"/>
-
-  <!--  Start AMCL -->
-      <!-- <include file="$(find mailbot)/launch/move_base.launch"> -->
-        <!-- <remap from="/map"       to="/rtabmap/grid_map"/>
-        <remap from="/cmd_vel"       to="/RosAria/cmd_vel"/>
-        <remap from="/odom"       to="/RosAria/pose"/> -->
-            <!-- /rtabmap/grid_map -->
-      <!-- </include> -->
 
 </launch>
