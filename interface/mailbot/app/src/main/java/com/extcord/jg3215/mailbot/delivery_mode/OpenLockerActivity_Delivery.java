@@ -73,7 +73,7 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
 
         mLockerManager = new LockerManager(this);
 
-        mBluetoothConnection.setmContext(this);
+        // mBluetoothConnection.setmContext(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverDeliverySuccess, new IntentFilter("incomingMessage"));
 
         doneButton = (Button) findViewById(R.id.btnStartAgain);

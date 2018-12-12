@@ -491,13 +491,15 @@ public class MainActivity_Collection extends AppCompatActivity {
     private void toEnRouteActivity() {
         Log.i(TAG, "toEnRouteActivity() method called");
         Intent toEnRouteActivityIntent = new Intent(this, EnRouteActivity_Delivery.class);
-        Bundle extras = new Bundle();
 
         startActivity(toEnRouteActivityIntent);
     }
 
     protected void onDestroy() {
-        mLockerManager.unregisterListener();
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+            mLockerManager = null;
+        }
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFullLocker);
 

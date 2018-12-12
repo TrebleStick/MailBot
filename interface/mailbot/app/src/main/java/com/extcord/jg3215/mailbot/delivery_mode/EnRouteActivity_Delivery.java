@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -52,19 +55,16 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private Context mContext;
 
-    private boolean finished;
-
     private LockerManager mLockerManager;
 
     private TextView recipientTv;
 
     private StopWatch knockTimer;
 
-    private Button enRouteTest;
-
     private PackageData SenderDetails;
-
     private PackageData RecipientDetails;
+
+    private AudioManager audioManager;
 
     // Listen for message (Serial communication) that MailBot is at destination
     private BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {
@@ -181,8 +181,20 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "Intent to play knocking sound received");
 
-            // Is the knock sound long enough?
-            final MediaPlayer mp = MediaPlayer.create(mContext, R.raw.knock_sound);
+            // TODO: Check that this plays music out of the speakers!
+            AudioManager audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
+            if (audioManager != null) {
+                // Turns tablet speakerphone on
+                if (!audioManager.isSpeakerphoneOn()) {
+                    audioManager.setSpeakerphoneOn(true);
+                }
+            } else {
+                Log.i(TAG, "audioManager is null");
+            }
+
+            AudioAttributes attributes = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
+                                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
+            final MediaPlayer mp = MediaPlayer.create(mContext, R.raw.knock_sound, attributes, 0);
             mp.start();
         }
     };
@@ -191,6 +203,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "Timer has timed out. Delivery considered unsuccessful.");
+            audioManager.setSpeakerphoneOn(false);
             toUnsuccessfulActivity();
         }
     };
@@ -221,11 +234,12 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
                     // Stop the timer
                     knockTimer.stopExecuting();
+                    audioManager.setSpeakerphoneOn(false);
                     toPasswordActivity();
                 }
             });
 
-            enRouteTest = (Button) findViewById(R.id.btnDemo);
+            Button enRouteTest = (Button) findViewById(R.id.btnDemo);
             enRouteTest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -259,33 +273,21 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     // Set timerDuration to 0 as it is preset in StopWatch class
                 }
             });
+
+             audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
         }
     }
 
     protected void onResume() {
         super.onResume();
 
+        // TODO: Wait for computer to tell interface that it is at "LoadingBay" to cue finish();
+            // Get rid of the finish() in this onResume method
+            // Get rid of the if lockerState == EMPTY LOCKER in onCreate()
         if (mLockerManager.getLockerState().equals(LockerManager.EMPTY_LOCKER)) {
             Log.i(TAG, "Finishing EnRouteActivity");
-            finished = true;
             finish();
         }
-    }
-
-    // Set the BR to this instance of the class again
-    protected void onDestroy() {
-        Log.i(TAG, "onDestroy() method called");
-
-        // TODO: Figure out why I had this if-statement. It seems unnecessary
-        // if (!finished) {
-            Log.i(TAG, "Broadcast Receivers unregistered");
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverArrival);
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFail);
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverKnock);
-
-            mLockerManager.unregisterListener();
-        // }
-        super.onDestroy();
     }
 
     private void toUnsuccessfulActivity() {
@@ -342,5 +344,21 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         Intent returnToMainIntent = new Intent(this, MainActivity_Collection.class);
         startActivity(returnToMainIntent);
         finish();
+    }
+
+    // Set the BR to this instance of the class again
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy() method called");
+
+        Log.i(TAG, "Broadcast Receivers unregistered");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverArrival);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFail);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverKnock);
+
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+        }
+        mLockerManager = null;
+        super.onDestroy();
     }
 }

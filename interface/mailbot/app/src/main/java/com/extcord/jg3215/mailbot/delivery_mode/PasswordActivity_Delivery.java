@@ -25,8 +25,6 @@ import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import java.nio.charset.Charset;
 import java.util.List;
 
-// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
-
 /**
  * Created by javigeis on 12/11/2018.
  */
@@ -171,12 +169,17 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     }
 
     private void toOpenLockerActivity() {
+        Log.i(TAG, "toOpenLockerActivity() called");
         Intent toOpenLockerActivityIntent = new Intent(this, OpenLockerActivity_Delivery.class);
+
+        // TODO: Add senderDetails as an extra (if you wish to send the email in OpenLockerActivity
+
         startActivity(toOpenLockerActivityIntent);
         finish();
     }
 
     private void toUnsuccessfulActivity() {
+        Log.i(TAG, "toUnsuccessfulActivity() called");
         Intent toUnsuccessfulIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
 
         String senderDataTag = "senderData";
@@ -186,8 +189,8 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
-        // The data given to MailBot about the sender
-        // The data given to MailBot about the recipient
+            // The data given to MailBot about the sender
+            // The data given to MailBot about the recipient
 
         extras.putParcelable(senderDataTag, SenderDetails);
         extras.putParcelable(recipientDataTag, RecipientDetails);
@@ -201,6 +204,7 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     }
 
     protected void onDestroy() {
+        Log.i(TAG, "onDestroy() called");
         if (mLockerManager != null) {
             mLockerManager.unregisterListener();
         }

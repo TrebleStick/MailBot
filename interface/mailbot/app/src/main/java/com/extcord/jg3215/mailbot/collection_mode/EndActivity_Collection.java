@@ -208,7 +208,9 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
     }
 
     protected void onDestroy() {
-        mLockerManager.unregisterListener();
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+        }
         super.onDestroy();
     }
 

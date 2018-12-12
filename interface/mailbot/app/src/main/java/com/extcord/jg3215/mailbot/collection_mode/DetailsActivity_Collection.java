@@ -26,7 +26,6 @@ import com.extcord.jg3215.mailbot.R;
 import java.nio.charset.Charset;
 import java.util.Random;
 
-// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 public class DetailsActivity_Collection extends AppCompatActivity {
 
@@ -654,8 +653,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         recipientData = null;
         senderData = null;
 
-        mLockerManager.unregisterListener();
-        mLockerManager = null;
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+            mLockerManager = null;
+        }
 
         // unregister receiver from this activity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverLockerComm);

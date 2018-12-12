@@ -202,6 +202,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
     }
 
     public void unregisterListener() {
+        Log.i(TAG, "Un-registering shared preference listener from: " + mContext.getClass().getSimpleName());
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 }

@@ -10,11 +10,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.extcord.jg3215.mailbot.BluetoothConnectionService;
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.StopWatch;
 import com.extcord.jg3215.mailbot.delivery_mode.UnsuccessfulActivity_Delivery;
 import com.extcord.jg3215.mailbot.email.eMailService;
+
+import java.nio.charset.Charset;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -24,17 +28,47 @@ public class UnsuccessfulActivity_Delivery extends AppCompatActivity {
 
     private final static String TAG = "UnsuccessfulActivity";
 
-    private StopWatch activityTimer;
-
     private PackageData SenderDetails;
-
     private PackageData RecipientDetails;
+
+    private BluetoothConnectionService mBluetoothConnection;
 
     private BroadcastReceiver mBroadcastReceiverFail = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "Timer has timed out. Delivery considered unsuccessful.");
-            toEnRouteActivity();
+
+            // Tell computer that delivery attempt is complete
+            String startCommCode = "0605";
+            byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+            mBluetoothConnection.write(startBytes);
+            Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
+        }
+    };
+
+    private BroadcastReceiver mBroadcastReceiverAttemptComplete = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra("theMessage");
+            Log.i(TAG, "Received: " + text);
+
+            switch (text) {
+                case "5060":
+                    String goToNext = "GTN";
+                    byte[] gtnBytes = goToNext.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(gtnBytes);
+                    Log.i(TAG, "Written: " + goToNext + " to Output Stream");
+                    break;
+                case "done":
+                    String response = "yes";
+                    byte[] resBytes = response.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(resBytes);
+                    Log.i(TAG, "Written: " + response + " to Output Stream");
+
+                    // Return toEnRouteActivity
+                    toEnRouteActivity();
+                    break;
+            }
         }
     };
 
@@ -42,6 +76,9 @@ public class UnsuccessfulActivity_Delivery extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_activity_unsuccessful);
+        Log.i(TAG, "onCreate() method called");
+
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
         // Bundle boi
 
@@ -75,19 +112,18 @@ public class UnsuccessfulActivity_Delivery extends AppCompatActivity {
         // Notify the computer that the delivery was unsuccessful
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverFail, new IntentFilter("failNotification"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverAttemptComplete, new IntentFilter("incomingMessage"));
 
-        // Timer begins thread that runs for 15s then sends a message to say that it is done
+        // Timer begins thread that runs for 10s then sends a message to say that it is done
         // BR registered to this activity is called when the message is received and triggers transition
         // back to enRouteActivity
-        activityTimer = new StopWatch(this, StopWatch.TIMER, 15);
+        StopWatch activityTimer = new StopWatch(this, StopWatch.TIMER, 10);
     }
 
     private void toEnRouteActivity() {
         Log.i(TAG, "toEnRouteActivity() method called");
 
         Intent toEnRouteIntent = new Intent(this, EnRouteActivity_Delivery.class);
-
-        // Add extras?
 
         startActivity(toEnRouteIntent);
         finish();
@@ -164,5 +200,6 @@ public class UnsuccessfulActivity_Delivery extends AppCompatActivity {
         super.onDestroy();
         Log.i(TAG, "Broadcast Receiver unregistered.");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFail);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverAttemptComplete);
     }
 }
