@@ -109,7 +109,6 @@ public class MainActivity_Collection extends AppCompatActivity {
             Log.i(TAG, "Received: " + text);
 
             // Removed default case (restarts communication)
-            // TODO: Add an error case if there is no communication
             switch (text) {
                 case "3020":
                     String sendLL = "SLL";
@@ -491,14 +490,8 @@ public class MainActivity_Collection extends AppCompatActivity {
 
     private void toEnRouteActivity() {
         Log.i(TAG, "toEnRouteActivity() method called");
-        String locationsTag = "locations";
-        String recipientEmailTag = "rEmail";
-        String senderEmailTag = "sEmail";
-
         Intent toEnRouteActivityIntent = new Intent(this, EnRouteActivity_Delivery.class);
         Bundle extras = new Bundle();
-
-        // TODO: Figure out extras to send
 
         startActivity(toEnRouteActivityIntent);
     }

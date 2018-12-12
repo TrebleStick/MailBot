@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
@@ -83,46 +84,57 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     String destinationPos = separated[1];
                     Log.i(TAG, "Destination Position: " + destinationPos);
 
-                    // Get the lockers associated with this delivery address
                     LockerItemDatabase lockerItemDatabase;
                     lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
 
-                    // TODO: Turn this into a try-catch in case there has been an error (ie no matches)
-                    List<LockerItem> currentLockers = lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
+                    if (destinationPos.equals(LockerManager.HOME)) {
+                        // If the tablet gets this location, it will interpret MailBot's state as completely empty
+                        lockerItemDatabase.lockerDataAccessObject().clearDatabase();
+                        mLockerManager.setLockerState(LockerManager.EMPTY_LOCKER);
+                        returnToMainActivity();
+                    } else {
+                        // This is a try-catch in case there has been an error (ie no matches for destinationPos)
+                        List<LockerItem> currentLockers;
+                        try {
+                            // Get the lockers associated with this delivery address
+                            // This is what could bring up the exception
+                            currentLockers = lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
 
-                    Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
-                    Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
+                            if (currentLockers != null) {
+                                Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
+                                Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
 
-                    // Get the pin code for this mail item
-                    pinCode = currentLockers.get(0).getPINcode();
-                    Log.i(TAG, "Pin Code: " + pinCode);
+                                // Get the pin code for this mail item
+                                pinCode = currentLockers.get(0).getPINcode();
+                                Log.i(TAG, "Pin Code: " + pinCode);
 
-                    // Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
-                        // No - each item will have a different PIN Code
-                    lockerID = currentLockers.get(0).getLockerNo();
+                                // Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
+                                    // No - each item will have a different PIN Code
+                                lockerID = currentLockers.get(0).getLockerNo();
 
-                    // TODO: Tell the user the packageType that is being delivered (in case they are expecting multiple
-                    // items and have multiple lockers (/PINs)
+                                // TODO: Tell the user the packageType that is being delivered (in case they are expecting multiple items
 
-                    // Retrieve sender/recipient data
-                    SenderDetails = new PackageData(currentLockers.get(0).getSenderName(), currentLockers.get(0).getSenderEmail());
-                    RecipientDetails = new PackageData(currentLockers.get(0).getRecipientName(), currentLockers.get(0).getRecipientEmail());
+                                // Retrieve sender/recipient data
+                                SenderDetails = new PackageData(currentLockers.get(0).getSenderName(), currentLockers.get(0).getSenderEmail());
+                                RecipientDetails = new PackageData(currentLockers.get(0).getRecipientName(), currentLockers.get(0).getRecipientEmail());
 
-                    // Make the TextView visible and play the knock-knock sound until it is pressed
-                    // Essentially a replacement for the person detected thing
-                    recipientTv.setVisibility(View.VISIBLE);
+                                // Make the TextView visible and play the knock-knock sound until it is pressed
+                                // Essentially a replacement for the person detected thing
+                                recipientTv.setVisibility(View.VISIBLE);
 
-                    // TODO: Change knock timer length back to original time
-                    // Play knock sound 4 times over the space of 2 minutes
-                        // First knock: 3s after you arrive at destination
-                        // Second knock: 20s after you arrive at destination
-                        // Third knock: 60s after you arrive at destination
-                        // Fourth knock: 120s after you arrive at destination
-                    knockTimer = new StopWatch(mContext, StopWatch.KNOCK_TIMER, 0);
-                    // Set timerDuration to 0 as it is preset in StopWatch class
-
-                    // Might not need this here (below)
-                    // LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mBroadcastReceiverArrival);
+                                // Play knock sound 4 times over the space of 2 minutes
+                                    // First knock: 3s after you arrive at destination
+                                    // Second knock: 20s after you arrive at destination
+                                    // Third knock: 60s after you arrive at destination
+                                    // Fourth knock: 120s after you arrive at destination
+                                knockTimer = new StopWatch(mContext, StopWatch.KNOCK_TIMER, 0);
+                                // Set timerDuration to 0 as it is preset in StopWatch class
+                            }
+                        } catch (Exception e) {
+                            Log.i(TAG, "There are no locker items at: " + destinationPos + ": " + e.getMessage());
+                            Toast.makeText(EnRouteActivity_Delivery.this, getResources().getString(R.string.locationMissing) + ": " + destinationPos, Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 } else {
                     Log.i(TAG, "Data length: " + separated.length + ", Text: " + text);
                     // Il y a un probleme le lmao
@@ -256,7 +268,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         if (mLockerManager.getLockerState().equals(LockerManager.EMPTY_LOCKER)) {
             Log.i(TAG, "Finishing EnRouteActivity");
             finished = true;
-            // TODO: Check that calling finish() here does not cause any problems
             finish();
         }
     }
@@ -265,18 +276,20 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     protected void onDestroy() {
         Log.i(TAG, "onDestroy() method called");
 
-        if (!finished) {
+        // TODO: Figure out why I had this if-statement. It seems unnecessary
+        // if (!finished) {
             Log.i(TAG, "Broadcast Receivers unregistered");
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverArrival);
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFail);
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverKnock);
-        }
+
+            mLockerManager.unregisterListener();
+        // }
         super.onDestroy();
     }
 
     private void toUnsuccessfulActivity() {
         Log.i(TAG, "toUnsuccessfulActivity() method called");
-
 
         Intent toUnsuccessfulIntent = new Intent(this, UnsuccessfulActivity_Delivery.class);
 
@@ -287,9 +300,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
-        // The data given to MailBot about the sender
-        // The data given to MailBot about the recipient
-
+            // The data given to MailBot about the sender
+            // The data given to MailBot about the recipient
         extras.putParcelable(senderDataTag, SenderDetails);
         extras.putParcelable(recipientDataTag, RecipientDetails);
 
@@ -321,6 +333,14 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
         toPasswordActivityIntent.putExtras(extras);
         startActivity(toPasswordActivityIntent);
+        finish();
+    }
+
+    private void returnToMainActivity() {
+        Log.i(TAG, "returnToMainActivity() method called");
+
+        Intent returnToMainIntent = new Intent(this, MainActivity_Collection.class);
+        startActivity(returnToMainIntent);
         finish();
     }
 }

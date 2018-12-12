@@ -85,7 +85,7 @@ public class StopWatch {
             secondKnock = false;
             thirdKnock = false;
 
-            this.timerDuration = 30000; // 135000;
+            this.timerDuration = 135000;
         } else if (state == TIMER) {
             // Convert duration to seconds
             this.timerDuration = (timerDuration * 1000);
@@ -176,15 +176,15 @@ public class StopWatch {
                             Log.i(TAG, "First knock played at UpdateTime = " + String.valueOf(getUpdateTime()));
                             knockBroadcast();
                             setFirstKnock(true);
-                        } else if (!secondKnock && UpdateTime > 9000) { //20
+                        } else if (!secondKnock && UpdateTime > 20000) {
                             Log.i(TAG, "Second knock played at UpdateTime = " + String.valueOf(getUpdateTime()));
                             knockBroadcast();
                             setSecondKnock(true);
-                        } else if (!thirdKnock && UpdateTime > 15000) { //60
+                        } else if (!thirdKnock && UpdateTime > 60000) {
                             Log.i(TAG, "Third knock played at UpdateTime = " + String.valueOf(getUpdateTime()));
                             knockBroadcast();
                             setThirdKnock(true);
-                        } else if (!fourthKnock && UpdateTime > 21000) { //120
+                        } else if (!fourthKnock && UpdateTime > 120000) {
                             Log.i(TAG, "Fourth knock played at UpdateTime = " + String.valueOf(getUpdateTime()));
                             setFourthKnock(true);
                             knockBroadcast();

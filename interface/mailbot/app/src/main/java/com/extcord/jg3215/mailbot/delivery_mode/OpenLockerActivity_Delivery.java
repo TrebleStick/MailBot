@@ -87,6 +87,8 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                 byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
                 mBluetoothConnection.write(startBytes);
                 Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
+
+                // TODO: Send an email to the sender informing them that the delivery was successful
             }
         });
     }
@@ -96,21 +98,18 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
 
         Intent toEnRouteIntent = new Intent(this, EnRouteActivity_Delivery.class);
 
-        // Change speech bubble text to "Thank you" for ~20s
-
-        // Add extras?
-
+        // TODO: Briefly change speech bubble to Thank you?
         startActivity(toEnRouteIntent);
         finish();
     }
 
-    private void returnToMainActivity() {
+    /* private void returnToMainActivity() {
         Log.i(TAG, "returnToMainActivity() method called");
 
         Intent returnToMainIntent = new Intent(this, MainActivity_Collection.class);
         startActivity(returnToMainIntent);
         finish();
-    }
+    } */
 
     protected void onDestroy() {
         if (mLockerManager != null) {

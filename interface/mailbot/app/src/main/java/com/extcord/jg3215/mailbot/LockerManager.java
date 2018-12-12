@@ -34,6 +34,7 @@ public class LockerManager implements SharedPreferences.OnSharedPreferenceChange
 
     public final static String EMPTY_LOCKER = "0000000";
     public final static String FULL_LOCKER = "1111111";
+    public final static String HOME = "LoadingBay";
 
     // Integers used to represent the type of mail that is being sent
     public static final int LETTER_STANDARD = 1;

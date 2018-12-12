@@ -30,7 +30,7 @@ import java.util.Random;
 
 public class DetailsActivity_Collection extends AppCompatActivity {
 
-    // TODO: Make sure delivery location is in correct format
+    // TODO: Get delivery locations
 
     // Sometimes "Search" appears in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
@@ -112,7 +112,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             String text = intent.getStringExtra("theMessage");
             Log.i(TAG, "Received: " + text);
 
-            // TODO: Add a default case that restarts communication process?
             switch (text) {
                 case "1409":
                     String requestLO = "RLO";
@@ -634,7 +633,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "Layout changed to state: "+ String.valueOf(state));
     }
 
-    // TODO: Check code length method?
     private String createPIN() {
         Log.i(TAG, "createPIN() method called");
 
