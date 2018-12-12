@@ -213,6 +213,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_activity_enroute);
+        hideNavigationBar();
         Log.i(TAG, "onCreate() method called");
 
         mLockerManager = new LockerManager(this);
@@ -247,7 +248,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
             if (mLockerManager.getLockerState().equals(LockerManager.FULL_LOCKER)) {
                 new sendUpdateEmails(EnRouteActivity_Delivery.this).execute();
             }
-            
+
             audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
         }
     }
@@ -334,8 +335,10 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         }
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
+        hideNavigationBar();
 
         // TODO: Wait for computer to tell interface that it is at "LoadingBay" to cue finish();
             // Get rid of the finish() in this onResume method
@@ -344,6 +347,19 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
             Log.i(TAG, "Finishing EnRouteActivity");
             finish();
         }
+    }
+
+    private void hideNavigationBar() {
+        Log.i(TAG, "hideNavigationBar() method called");
+        this.getWindow().getDecorView()
+                .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                );
     }
 
     private void toUnsuccessfulActivity() {

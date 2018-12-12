@@ -93,6 +93,7 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delivery_activity_password);
+        hideNavigationBar();
         Log.i(TAG, "onCreate() method called");
 
         // mBluetoothConnection.setmContext(this);
@@ -218,6 +219,25 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
 
         startActivity(toUnsuccessfulIntent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+    }
+
+    private void hideNavigationBar() {
+        Log.i(TAG, "hideNavigationBar() method called");
+        this.getWindow().getDecorView()
+                .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                );
     }
 
     protected void onDestroy() {

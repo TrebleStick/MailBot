@@ -237,13 +237,7 @@ public class MainActivity_Collection extends AppCompatActivity {
         setContentView(R.layout.collection_activity_main);
         Log.i(TAG, "onCreate() method called.");
 
-        View decorView = getWindow().getDecorView();
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-        // a general rule, you should design your app to hide the status bar whenever you
-        // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        hideNavigationBar();
 
         // mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
         lockerItemDatabase = LockerItemDatabase.getInstance(this.getApplicationContext());
@@ -405,9 +399,23 @@ public class MainActivity_Collection extends AppCompatActivity {
     }
     // ----------------------------------------
 
+    private void hideNavigationBar() {
+        Log.i(TAG, "hideNavigationBar() method called");
+        this.getWindow().getDecorView()
+                .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                );
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        hideNavigationBar();
         Log.i(TAG, "onResume() method called");
 
         // Check if bluetooth is on. if not, then request that the user puts it on

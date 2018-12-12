@@ -41,6 +41,7 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.collection_activity_end);
+        hideNavigationBar();
 
         // Get data from previous activity stored in a bundle
         Bundle lockerActivityData = this.getIntent().getExtras();
@@ -110,6 +111,25 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+    }
+
+    private void hideNavigationBar() {
+        Log.i(TAG, "hideNavigationBar() method called");
+        this.getWindow().getDecorView()
+                .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                );
     }
 
     // Produces the dialogFragment on the screen
@@ -207,13 +227,6 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
         finish();
     }
 
-    protected void onDestroy() {
-        if (mLockerManager != null) {
-            mLockerManager.unregisterListener();
-        }
-        super.onDestroy();
-    }
-
     private void sendEmails() {
         Log.i(TAG, "sendEmails() method called");
 
@@ -281,5 +294,12 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
 
         //
         Log.i(TAG, "Email sent to: " + senderEmail);
+    }
+
+    protected void onDestroy() {
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+        }
+        super.onDestroy();
     }
 }
