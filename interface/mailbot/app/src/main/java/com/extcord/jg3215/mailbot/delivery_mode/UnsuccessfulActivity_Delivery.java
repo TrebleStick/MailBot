@@ -100,7 +100,7 @@ public class UnsuccessfulActivity_Delivery extends AppCompatActivity {
         // send email to recipient
 
         final ProgressDialog dialog = new ProgressDialog(UnsuccessfulActivity_Delivery.this);
-        dialog.setTitle("Sending Confirmation Emails");
+        dialog.setTitle("Sending Delivery Update to Recipient");
         dialog.setMessage("Please wait");
         dialog.show();
 
@@ -131,7 +131,7 @@ public class UnsuccessfulActivity_Delivery extends AppCompatActivity {
         // send email to sender
 
         final ProgressDialog dialog2 = new ProgressDialog(UnsuccessfulActivity_Delivery.this);
-        dialog2.setTitle("Sending Confirmation Emails");
+        dialog2.setTitle("Sending Delivery Update to Sender");
         dialog2.setMessage("Please wait");
         dialog2.show();
 

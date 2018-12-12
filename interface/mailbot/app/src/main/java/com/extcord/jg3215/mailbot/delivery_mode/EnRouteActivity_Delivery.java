@@ -1,5 +1,6 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -286,6 +287,40 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
             mLockerManager.unregisterListener();
         // }
         super.onDestroy();
+    }
+
+    private void sendEmails() {
+        Log.i(TAG, "sendEmails() method called");
+
+        String recipientEmail = SenderDetails.getEmailAddress();
+        // send email to recipient
+
+        final ProgressDialog dialog = new ProgressDialog(EnRouteActivity_Delivery.this);
+        dialog.setTitle("Sending Delivery Update to Recipient");
+        dialog.setMessage("Please wait");
+        dialog.show();
+
+        final Thread recipient = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
+                    sender.sendMail("Your mail item is on its way!",
+                            "Dear " + RecipientDetails.getName() + "\n\nA mail item addressed to you"
+                                    + " from " + SenderDetails.getName() + " is on its way to you just now. " +
+                                    "Make sure to be at the delivery location to receive it. Remember that the" +
+                                    " pin code to open the locker will be " + pinCode + ".\n\nSee you soon!\n\nMailBot",
+                            SenderDetails.getEmailAddress(),
+                            RecipientDetails.getEmailAddress());
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    Log.e("recipient error: ", "Error: " + e.getMessage());
+                }
+            }
+        });
+        recipient.start();
+
+        Log.i(TAG, "Email sent to: " + recipientEmail);
     }
 
     private void toUnsuccessfulActivity() {

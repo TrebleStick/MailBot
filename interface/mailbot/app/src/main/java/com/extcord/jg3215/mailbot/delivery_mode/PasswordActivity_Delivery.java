@@ -172,6 +172,23 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
 
     private void toOpenLockerActivity() {
         Intent toOpenLockerActivityIntent = new Intent(this, OpenLockerActivity_Delivery.class);
+
+        String senderDataTag = "senderData";
+        String recipientDataTag = "recipientData";
+
+        // Create a bundle for holding the extras
+        Bundle extras = new Bundle();
+
+        // Adds this extra detail to the intent which indicates:
+        // The data given to MailBot about the sender
+        // The data given to MailBot about the recipient
+
+        extras.putParcelable(senderDataTag, SenderDetails);
+        extras.putParcelable(recipientDataTag, RecipientDetails);
+
+        // Add all the extras content to the intent
+        toOpenLockerActivityIntent.putExtras(extras);
+
         startActivity(toOpenLockerActivityIntent);
         finish();
     }
