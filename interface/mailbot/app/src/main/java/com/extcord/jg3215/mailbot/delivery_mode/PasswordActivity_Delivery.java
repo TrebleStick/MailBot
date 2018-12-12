@@ -175,6 +175,7 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         // TODO: Add senderDetails as an extra (if you wish to send the email in OpenLockerActivity
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
+        String lockerTag = "lockerID";
 
         // Create a bundle for holding the extras
         Bundle extras = new Bundle();
@@ -185,6 +186,7 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
 
         extras.putParcelable(senderDataTag, SenderDetails);
         extras.putParcelable(recipientDataTag, RecipientDetails);
+        extras.putInt(lockerTag, lockerID);
 
         // Add all the extras content to the intent
         toOpenLockerActivityIntent.putExtras(extras);

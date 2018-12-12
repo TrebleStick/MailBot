@@ -72,4 +72,5 @@
     <!--Open Locker Activity Strings-->
     <string name="openLockerActivitySpeech">That\'s the correct password! A locker for your mail item has been opened! Please retrieve your item, and then close the locker.</string>
     <string name="btnDone">DONE</string>
+    <string name="btnRetry">REOPEN LOCKER</string>
 </resources>
