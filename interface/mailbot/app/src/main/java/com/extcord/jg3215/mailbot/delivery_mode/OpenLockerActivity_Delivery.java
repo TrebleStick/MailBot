@@ -1,10 +1,10 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +20,6 @@ import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
 import com.extcord.jg3215.mailbot.email.eMailService;
 
 import java.nio.charset.Charset;
-
-// import static com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection.mBluetoothConnection;
 
 /**
  * Created by javigeis on 12/11/2018.
@@ -121,7 +119,7 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                 mBluetoothConnection.write(startBytes);
                 Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
 
-                // TODO: Send an email to the sender informing them that the delivery was successful
+                new sendDeliveryCompleteEmails(SenderDetails, RecipientDetails).execute();
             }
         });
     }
@@ -144,72 +142,89 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
         finish();
     } */
 
-    private void sendEmails() {
-        Log.i(TAG, "sendEmails() method called");
+    private static class sendDeliveryCompleteEmails extends AsyncTask<Void, Void, Void> {
 
-        String recipientEmail = SenderDetails.getEmailAddress();
-        // send email to recipient
+        String senderName;
+        String senderEmail;
 
-        final ProgressDialog dialog = new ProgressDialog(OpenLockerActivity_Delivery.this);
-        dialog.setTitle("Sending Delivery Update to Recipient");
-        dialog.setMessage("Please wait");
-        dialog.show();
+        String recipientName;
+        String recipientEmail;
 
-        final Thread recipient = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
-                    sender.sendMail("We successfully delivered you a mail item! :)",
-                            "Dear " + RecipientDetails.getName() + "\n\nI am MailBot and I messaged you to notify you I delivered a mail item for you"
-                                    + " from " + SenderDetails.getName() + " just now. Hope your experience with me as your mail delivery method was great! " +
-                                    "You can meet me at the collection point to send a parcel or a letter in the future." + "\n\nSee you soon!\n\nMailBot",
-                            SenderDetails.getEmailAddress(),
-                            RecipientDetails.getEmailAddress());
-                    dialog.dismiss();
-                } catch (Exception e) {
-                    Log.e("recipient error: ", "Error: " + e.getMessage());
+        public sendDeliveryCompleteEmails(PackageData senderData, PackageData recipientData) {
+            senderName = senderData.getName();
+            senderEmail = senderData.getEmailAddress();
+
+            recipientName = recipientData.getName();
+            recipientEmail = recipientData.getEmailAddress();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            recipientEmail(senderName, senderEmail, recipientName, recipientEmail);
+            senderEmail(senderName, senderEmail, recipientName, recipientEmail);
+            return null;
+        }
+
+        private void recipientEmail(final String senderName, final String senderEmail, final String recipientName, final String recipientEmail) {
+            Log.i(TAG, "AsyncTask: recipientEmail() method called");
+            // send email to recipient
+            /* final ProgressDialog dialog = new ProgressDialog(OpenLockerActivity_Delivery.this);
+            dialog.setTitle("Sending Delivery Update to Recipient");
+            dialog.setMessage("Please wait");
+            dialog.show(); */
+
+            final Thread recipient = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
+                        sender.sendMail("We successfully delivered you a mail item! :)",
+                                "Dear " + recipientName + "\n\nI am MailBot and I messaged you to notify you I delivered a mail item for you"
+                                        + " from " + senderName + " just now. Hope your experience with me as your mail delivery method was great! " +
+                                        "You can meet me at the collection point to send a parcel or a letter in the future." + "\n\nSee you soon!\n\nMailBot",
+                                senderEmail,
+                                recipientEmail);
+                        // dialog.dismiss();
+                    } catch (Exception e) {
+                        Log.e("recipient error: ", "Error: " + e.getMessage());
+                    }
                 }
-            }
-        });
-        recipient.start();
+            });
+            recipient.start();
+            Log.i(TAG, "AsyncTask: Email sent to: " + recipientEmail);
+        }
 
-        //
-        Log.i(TAG, "Email sent to: " + recipientEmail);
+        private void senderEmail(final String senderName, final String senderEmail, final String recipientName, final String recipientEmail) {
+            Log.i(TAG, "AsyncTask: senderEmail() method called");
 
-        String senderEmail = RecipientDetails.getEmailAddress();
+            // send email to sender
+            /* final ProgressDialog dialog2 = new ProgressDialog(OpenLockerActivity_Delivery.this);
+            dialog2.setTitle("Sending Delivery Update to Sender");
+            dialog2.setMessage("Please wait");
+            dialog2.show(); */
 
-        // send email to sender
-
-        final ProgressDialog dialog2 = new ProgressDialog(OpenLockerActivity_Delivery.this);
-        dialog2.setTitle("Sending Delivery Update to Sender");
-        dialog2.setMessage("Please wait");
-        dialog2.show();
-
-        Thread sender = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
-                    sender.sendMail("Delivery of your mail item to " + RecipientDetails.getName() + " was successful! :)",
-                            "Hey " + SenderDetails.getName() + ",\n\nThis is Mailbot! I'm just messaging you to inform"
-                                    + " you that you gave me a mail item that you wanted me to deliver to " +
-                                    RecipientDetails.getName() + ". This delivery was carried out successfully, and I'm sure " + RecipientDetails.getName() +
-                                    " loved it. \n\nThanks for trusting me with this delivery, and hope to see you again!" + "\n\nMailBot",
-                            RecipientDetails.getEmailAddress(),
-                            SenderDetails.getEmailAddress());
-                    dialog2.dismiss();
-                } catch (Exception e) {
-                    Log.e("E-mail failed: ", "Error: " + e.getMessage());
+            Thread sender = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
+                        sender.sendMail("Delivery of your mail item to " + recipientName + " was successful! :)",
+                                "Hey " + senderName + ",\n\nThis is Mailbot! I'm just messaging you to inform"
+                                        + " you that you gave me a mail item that you wanted me to deliver to " +
+                                        recipientName + ". This delivery was carried out successfully, and I'm sure " + recipientName +
+                                        " loved it. \n\nThanks for trusting me with this delivery, and hope to see you again!" + "\n\nMailBot",
+                                recipientEmail,
+                                senderEmail);
+                        // dialog2.dismiss();
+                    } catch (Exception e) {
+                        Log.e("E-mail failed: ", "Error: " + e.getMessage());
+                    }
                 }
-            }
-        });
-        sender.start();
-
-        //
-        Log.i(TAG, "Email sent to: " + senderEmail);
+            });
+            sender.start();
+            Log.i(TAG, "AsyncTask: Email sent to: " + senderEmail);
+        }
     }
-
 
     protected void onDestroy() {
         if (mLockerManager != null) {

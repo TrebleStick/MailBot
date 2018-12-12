@@ -88,11 +88,14 @@ public class LockerActivity_Collection extends AppCompatActivity {
             @Override
             public void onClick (View view){
                 Log.i(TAG, "badFitView text pressed");
-                if (packageType != 3) {
+                if (packageType != LockerManager.PARCEL) {
+                    // TODO: Check that this badFit button works as intended
                     Log.i(TAG, "Need to attempt to use a bigger locker");
+                    Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.badFitSuggestion), Toast.LENGTH_LONG).show();
+                    finish();
 
                     // Check if a bigger size locker is available
-                    if (packageType == LockerManager.LETTER_STANDARD) {
+                    /* if (packageType == LockerManager.LETTER_STANDARD) {
                         int aLockersLL = mLockerManager.getAvailability(LockerManager.LETTER_LARGE);
                         Log.i(TAG, "There are " + String.valueOf(aLockersLL) + " large letter lockers available");
                         packageType = LockerManager.LETTER_LARGE;
@@ -102,7 +105,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "There are " + String.valueOf(aLockersP) + " parcel lockers available");
                         packageType = LockerManager.PARCEL;
                         redoDetailsActivity();
-                    }
+                    } */
                 } else {
                     Log.i(TAG, "The mail item will not fit in MailBot");
                     Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.packageTooBig), Toast.LENGTH_LONG).show();

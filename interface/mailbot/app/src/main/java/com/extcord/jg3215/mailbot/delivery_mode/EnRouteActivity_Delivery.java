@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,7 +30,9 @@ import com.extcord.jg3215.mailbot.database.LockerItem;
 import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.email.eMailService;
 
+import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 
@@ -65,6 +68,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private AudioManager audioManager;
 
+    private LockerItemDatabase lockerItemDatabase;
+
     // Listen for message (Serial communication) that MailBot is at destination
     private BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {
         @Override
@@ -82,9 +87,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     // The location the MailBot is when it is ready to deliver item
                     String destinationPos = separated[1];
                     Log.i(TAG, "Destination Position: " + destinationPos);
-
-                    LockerItemDatabase lockerItemDatabase;
-                    lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
 
                     if (destinationPos.equals(LockerManager.HOME)) {
                         // If the tablet gets this location, it will interpret MailBot's state as completely empty
@@ -238,7 +240,15 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                 }
             });
 
-            Button enRouteTest = (Button) findViewById(R.id.btnDemo);
+            // Only sends emails if all lockers are perceived as being full
+            // This avoids sending the email each time EnRouteActivity is created
+
+            lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+            if (mLockerManager.getLockerState().equals(LockerManager.FULL_LOCKER)) {
+                new sendUpdateEmails(EnRouteActivity_Delivery.this).execute();
+            }
+
+            /* Button enRouteTest = (Button) findViewById(R.id.btnDemo);
             enRouteTest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -271,9 +281,91 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
                     knockTimer = new StopWatch(mContext, StopWatch.KNOCK_TIMER, 0);
                     // Set timerDuration to 0 as it is preset in StopWatch class
                 }
-            });
+            }); */
 
              audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
+        }
+    }
+
+    private static class sendUpdateEmails extends AsyncTask<Void, Void, Void> {
+
+        WeakReference<EnRouteActivity_Delivery> context;
+
+        public sendUpdateEmails(Context context) {
+            this.context = new WeakReference<>((EnRouteActivity_Delivery) context);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i(TAG, "AsyncTask: Sending update emails to recipients in the background.");
+            LockerItemDatabase lockerItemDatabase = LockerItemDatabase.getInstance(context.get());
+
+            // Used to check if interface has already sent an email to this recipient from the specific sender
+            List<String> srList = new ArrayList<>();
+
+            for (int i = 1; i <= 7; i++) {
+                LockerItem cLocker = lockerItemDatabase.lockerDataAccessObject().findLockerByID(i);
+                StringBuilder srTag = new StringBuilder("");
+
+                String senderName = cLocker.getSenderName();
+                srTag.append(senderName);
+                String senderEmail = cLocker.getSenderEmail();
+
+                String recipientName = cLocker.getRecipientName();
+                srTag.append(recipientName);
+                String recipientEmail = cLocker.getRecipientEmail();
+
+                String srTagFinal = srTag.toString();
+                Log.i(TAG, "Async Task: srTag = " + srTagFinal);
+                String pinCode = cLocker.getPINcode();
+
+                // This should make it only send an email to repeat sender-recipient pair once
+                if (!srList.contains(srTagFinal)) {
+                    srList.add(srTagFinal);
+                    sendEmails(senderName, senderEmail, recipientName, recipientEmail, pinCode);
+                    Log.i(TAG, "AsyncTask: Emails sent");
+                }
+            }
+            return null;
+        }
+
+        private void sendEmails(final String senderName, final String senderEmail, final String recipientName, final String recipientEmail, final String pinCode) {
+            Log.i(TAG, "sendEmails() method called");
+
+            // Task runs in the background so do not load up the progress dialog
+            /* final ProgressDialog dialog = new ProgressDialog(context.get());
+            dialog.setTitle("Sending Delivery Update to Recipient");
+            dialog.setMessage("Please wait");
+            dialog.show(); */
+
+            final Thread recipient = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // send email to recipient
+                        eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
+                        sender.sendMail("Your mail item is on its way!",
+                                "Dear " + recipientName + "\n\nA mail item addressed to you"
+                                        + " from " + senderName + " is on its way to you just now. " +
+                                        "Make sure to be at the delivery location to receive it. Remember that the" +
+                                        " pin code to open the locker will be " + pinCode + ".\n\nSee you soon!\n\nMailBot",
+                                senderEmail,
+                                recipientEmail);
+                        // dialog.dismiss();
+                    } catch (Exception e) {
+                        Log.e("recipient error: ", "Error: " + e.getMessage());
+                    }
+                }
+            });
+            recipient.start();
+
+            Log.i(TAG, "Email sent to: " + recipientEmail);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.i(TAG, "AsyncTask: Complete.");
+            super.onPostExecute(aVoid);
         }
     }
 
@@ -287,40 +379,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
             Log.i(TAG, "Finishing EnRouteActivity");
             finish();
         }
-    }
-
-    private void sendEmails() {
-        Log.i(TAG, "sendEmails() method called");
-
-        String recipientEmail = SenderDetails.getEmailAddress();
-        // send email to recipient
-
-        final ProgressDialog dialog = new ProgressDialog(EnRouteActivity_Delivery.this);
-        dialog.setTitle("Sending Delivery Update to Recipient");
-        dialog.setMessage("Please wait");
-        dialog.show();
-
-        final Thread recipient = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    eMailService sender = new eMailService("mailbot.noreply18@gmail.com", "mailbotHCR");
-                    sender.sendMail("Your mail item is on its way!",
-                            "Dear " + RecipientDetails.getName() + "\n\nA mail item addressed to you"
-                                    + " from " + SenderDetails.getName() + " is on its way to you just now. " +
-                                    "Make sure to be at the delivery location to receive it. Remember that the" +
-                                    " pin code to open the locker will be " + pinCode + ".\n\nSee you soon!\n\nMailBot",
-                            SenderDetails.getEmailAddress(),
-                            RecipientDetails.getEmailAddress());
-                    dialog.dismiss();
-                } catch (Exception e) {
-                    Log.e("recipient error: ", "Error: " + e.getMessage());
-                }
-            }
-        });
-        recipient.start();
-
-        Log.i(TAG, "Email sent to: " + recipientEmail);
     }
 
     private void toUnsuccessfulActivity() {

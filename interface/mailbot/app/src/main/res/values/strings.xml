@@ -44,6 +44,7 @@
     <string name="lockerActivityBadFit">It doesn\'t fit!</string>
     <string name="lockerActivityGoodFit">I put the parcel in and closed the locker!</string>
     <string name="packageTooBig">The mail item is too big to fit in MailBot</string>
+    <string name="badFitSuggestion">Please try a bigger locker</string>
 
     <!--End Activity Strings-->
     <string name="endActivitySpeech">Thank you for giving me your mail! It will be delivered in the next delivery slot time, and a confirmation e-mail with the security code for the recipient to open the locker has been sent to both you and the recipient.
