@@ -247,43 +247,8 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
             if (mLockerManager.getLockerState().equals(LockerManager.FULL_LOCKER)) {
                 new sendUpdateEmails(EnRouteActivity_Delivery.this).execute();
             }
-
-            /* Button enRouteTest = (Button) findViewById(R.id.btnDemo);
-            enRouteTest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String destinationPos = "0";
-
-                    // Get the lockers associated with this delivery address
-                    LockerItemDatabase lockerItemDatabase;
-                    lockerItemDatabase = Room.databaseBuilder(getApplicationContext(), LockerItemDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
-                    List<LockerItem> currentLockers = lockerItemDatabase.lockerDataAccessObject().findLockerByLocation(destinationPos);
-                    Log.i(TAG, "At the location: " + destinationPos + " there are: " + String.valueOf(currentLockers.size()) + " items to be delivered.");
-                    Log.i(TAG, "Recipient ID: " + currentLockers.get(0).getLockerNo());
-
-                    // Get the pin code for this mail item
-                    pinCode = currentLockers.get(0).getPINcode();
-                    Log.i(TAG, "Pin Code: " + pinCode);
-
-                    // Is it possible to open multiple lockers at once? In case a recipient has multiple items to collect
-                        // No - each item will have a different PIN Code
-                    lockerID = currentLockers.get(0).getLockerNo();
-
-                    // Make the TextView visible and play the knock-knock sound until it is pressed
-                    // Essentially a replacement for the person detected thing
-                    recipientTv.setVisibility(View.VISIBLE);
-
-                    // Play knock sound 4 times over the space of 2 minutes
-                        // First knock: 3s after you arrive at destination
-                        // Second knock: 20s after you arrive at destination
-                        // Third knock: 60s after you arrive at destination
-                        // Fourth knock: 120s after you arrive at destination
-                    knockTimer = new StopWatch(mContext, StopWatch.KNOCK_TIMER, 0);
-                    // Set timerDuration to 0 as it is preset in StopWatch class
-                }
-            }); */
-
-             audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
+            
+            audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
         }
     }
 

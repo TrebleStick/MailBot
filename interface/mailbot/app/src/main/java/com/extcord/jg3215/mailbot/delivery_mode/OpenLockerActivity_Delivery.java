@@ -1,5 +1,6 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
+import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,8 @@ import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
+import com.extcord.jg3215.mailbot.database.LockerItem;
+import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.email.eMailService;
 
 import java.nio.charset.Charset;
@@ -32,10 +35,12 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
     private LockerManager mLockerManager;
 
     private PackageData SenderDetails;
-
     private PackageData RecipientDetails;
 
+    private int lockerID;
+
     Button doneButton;
+    Button retryButton;
 
     private BluetoothConnectionService mBluetoothConnection;
 
@@ -46,6 +51,23 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
             Log.i(TAG, "Received: " + text);
 
             switch (text) {
+                // The first two cases executed if the lockers are being opened again
+                // Locker Re-Open
+                case "1409":
+                    String requestLO = "RLO";
+                    byte[] rloBytes = requestLO.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(rloBytes);
+                    Log.i(TAG, "Written: " + requestLO + " to output stream");
+                    break;
+                case "num":
+                    String lockToOpen = String.valueOf(lockerID);
+                    byte[] lockNumBytes = lockToOpen.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(lockNumBytes);
+                    Log.i(TAG, "Written: " + lockToOpen + " to output stream");
+                    break;
+
+                // The last two cases are executed upon delivery success
+                // Delivery Complete
                 case "5060":
                     String goToNext = "GTN";
                     byte[] gtnBytes = goToNext.getBytes(Charset.defaultCharset());
@@ -95,6 +117,12 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                 Log.i(TAG, "No Recipient Data: " + e.getMessage());
             }
 
+            try {
+                lockerID = OpenLockerActivityData.getInt("lockerID");
+                Log.i(TAG, "Locker ID: " + String.valueOf(lockerID));
+            } catch (NullPointerException e) {
+                Log.i(TAG, "No lockerID Data: " + e.getMessage());
+            }
         } else {
             Log.i(TAG, "Bundle contains no data, RIP");
             // throw an exception mebbe
@@ -120,6 +148,20 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
                 Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
 
                 new sendDeliveryCompleteEmails(SenderDetails, RecipientDetails).execute();
+            }
+        });
+
+        retryButton = (Button) findViewById(R.id.btnReopen);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick() button listener method called. Retry button clicked");
+
+                // Sends a serial message to ROS to request locker opening
+                String startCommCode = "0507";
+                byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                mBluetoothConnection.write(startBytes);
+                Log.i(TAG, "Written: " + startCommCode + " to Output Stream");
             }
         });
     }

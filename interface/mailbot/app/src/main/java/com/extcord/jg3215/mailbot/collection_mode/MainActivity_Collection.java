@@ -495,17 +495,15 @@ public class MainActivity_Collection extends AppCompatActivity {
     }
 
     protected void onDestroy() {
+        Log.i(TAG, "onDestroy() called");
         if (mLockerManager != null) {
             mLockerManager.unregisterListener();
             mLockerManager = null;
         }
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverFullLocker);
-
         Log.i(TAG, "Broadcast Receivers unregistered");
-        Log.i(TAG, "onDestroy() complete");
 
-        // mContext.deleteDatabase(DATABASE_NAME);
         LockerItemDatabase.destroyDatabase();
         super.onDestroy();
     }

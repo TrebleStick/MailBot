@@ -91,7 +91,7 @@ public class LockerActivity_Collection extends AppCompatActivity {
                 if (packageType != LockerManager.PARCEL) {
                     // TODO: Check that this badFit button works as intended
                     Log.i(TAG, "Need to attempt to use a bigger locker");
-                    Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.badFitSuggestion), Toast.LENGTH_LONG).show();
+                    Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.badFitSuggestion), Toast.LENGTH_SHORT).show();
                     finish();
 
                     // Check if a bigger size locker is available
