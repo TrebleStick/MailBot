@@ -50,6 +50,7 @@
                 android:src="@mipmap/speechbubble" />
 
             <TextView
+                android:id="@+id/openLockerDel"
                 android:layout_width="@dimen/_190sdp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

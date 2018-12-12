@@ -70,6 +70,6 @@
     <string name="UnsuccessfulActivitySpeech_knock">Sorry, nobody was around to collect the mail item so the locker will remain secured. The sender will be able to retrieve it at the next collection time.</string>
 
     <!--Open Locker Activity Strings-->
-    <string name="openLockerActivitySpeech">That\'s the correct password! A locker for your mail item has been opened! Please retrieve your item, and then close the locker.</string>
+    <string name="openLockerActivitySpeech">That\'s the correct password! Locker X containing your mail item has been opened! Please retrieve your item, and then close the locker.</string>
     <string name="btnDone">DONE</string>
 </resources>
