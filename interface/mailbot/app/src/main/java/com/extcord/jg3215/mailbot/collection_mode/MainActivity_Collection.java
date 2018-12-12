@@ -491,7 +491,6 @@ public class MainActivity_Collection extends AppCompatActivity {
     private void toEnRouteActivity() {
         Log.i(TAG, "toEnRouteActivity() method called");
         Intent toEnRouteActivityIntent = new Intent(this, EnRouteActivity_Delivery.class);
-
         startActivity(toEnRouteActivityIntent);
     }
 
