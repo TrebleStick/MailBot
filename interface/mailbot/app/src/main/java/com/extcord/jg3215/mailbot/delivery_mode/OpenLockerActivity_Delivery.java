@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
@@ -128,6 +129,10 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
             // throw an exception mebbe
         }
 
+        //Set the opened locker number in speech bubble in LockerActivity_Collection
+        TextView LockerText = (TextView) findViewById(R.id.textLockerOpened);
+        LockerText.setText("That/'s the correct password! Locker " + String.valueOf(lockerID) + " containing your mail item has been opened! Please retrieve your item, and then close the locker.");
+        
         mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 
         mLockerManager = new LockerManager(this);
