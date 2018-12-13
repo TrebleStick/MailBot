@@ -5,6 +5,49 @@ import time
 from ast import literal_eval as make_tuple
 import rospy
 from std_msgs.msg import String
+from serial import Serial
+
+def openAllLatches(pins=None):
+    Linux_port = '/dev/ttyACM0'
+    Windows_port = 'COM3'
+
+    if not pins:
+        pins = ['1','2','3','4','5','6','7']
+         # These are actually the latch numbers, the arduino code +1 to each of these to get the correct pins
+    print('Opening the following latches:')
+    print(pins)
+    channel = Serial(Linux_port, baudrate = 9600, timeout = 2)
+
+    # channel.open()
+    if channel.is_open :
+        print('Serial channel open')
+    else :
+        print('Serial Channel not opened check port setting')
+
+    time.sleep(2)
+
+
+
+
+    #------------DEMO-ALL-LATCHES--------------#
+    for i in pins :
+        channel.write(i.encode('utf-8'))
+        time.sleep(2)
+        print('Latch: ',i,', wrote: ', i.encode('utf-8'))
+        # print(channel.readline()[0] - 48)
+
+    print('Latch demo complete')
+    #-----------SINGLE-LATCH-SCRIPT-----------#
+    # pin = unpack(data)
+    # channel.write(pin.encode('utf-8'))
+    # print(pin)
+    #---------------CLOSE---------------------#
+    time.sleep(1)
+    channel.close()
+    if channel.is_open :
+        print('Channel close unsuccessful')
+    else :
+        print('Channel closed')
 
 def at_location(data, talker):
     talker.tmp = str(data.data)
@@ -61,6 +104,7 @@ def getLockerToOpen(btSocket):
             print appMsg
             # should print a number (the locker to be opened)
             talker.publish(appMsg, open_locker_topic)
+            openAllLatches([str(appMsg)])
             break
         time.sleep(0.01)
 

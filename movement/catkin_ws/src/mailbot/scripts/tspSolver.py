@@ -8,17 +8,30 @@ import numpy as np
 # from tsp_solver.util import path_cost
 import rospy
 from std_msgs.msg import String
+import rooms as rm
 
 def callback(data):
     # Read node distances from file
     # File location is in Home
+    roomlist = [508, 507, 510]
     pub = rospy.Publisher('solvedPath', String, queue_size=10)
     d = pd.read_csv("weights.csv", header=None)
     d  = d.values
 
+    rospy.loginfo("Received locations")
+
     # get nodes to traverse
-    nodes = data.data.split()
-    nodes = [int(i) for i in nodes]
+    # node_list = np.asarray(data.data.split(), int)
+    node_list = np.asarray(data.data.split(), int)
+    nodes = rm.arrayToIndex(node_list)
+    # nodes = np.empty((node_list.shape))
+    #
+    # for i in range(len(node_list)):
+    #     try:
+    #         nodes[i] = np.argwhere(roomlist == node_list[i])
+    #     except IndexError:
+    #         print('Room ', node_list[i], ' not valid.')
+    #         nodes[i] = -1
     #print(nodes)
     # create a smaller distance matrix to solve from nodes to traverse
     row_idx = np.array(nodes)
@@ -35,6 +48,7 @@ def callback(data):
     path = [0]*len(nodes)
     for j in range(0, len(relpath)):
         path[j] = nodes[relpath[j]]
+    print("path: ", path)
 
     # print the path cost
     # print(path_cost(d, path))
