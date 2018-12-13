@@ -53,8 +53,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     private static final String TAG = "DetailsActivity";
 
-    private static final String[] inputDetailList = {"Sender Details", "Recipient Details"};
-
     // Sends the user back to the main menu
     Button cancelButton;
 
@@ -77,7 +75,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     EditText midEntry;
 
     // Used to give recipient location -> 2nd state only
-    EditText btmEntry;
+    // EditText btmEntry;
 
     // Bottom field
     TextView btmField;
@@ -90,11 +88,19 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     // Spinner is a dropdown list that presents loads up details associated with selected person (sender or recipient)
     Spinner inputDetails;
     private int spinnerListItem;
+    private static final String[] inputDetailList = {"Sender Details", "Recipient Details"};
 
     ArrayAdapter<String> adapter;
     // data obtained from the user about the sender and the recipient
     // senderName, senderEmail, recipientName, recipientEmail, recipientLocation
     private String[] storedData = new String [5];
+
+    // Spinner is a dropdown of locations that user can choose for delivery (so long as they do not press the demo button
+    Spinner locationOptions;
+    private int locationItem;
+    private static final String[] locationList = {"507", "508", "510"};
+
+    ArrayAdapter<String> adapterLocations;
 
     // Package details - could make this one class
     private PackageData senderData;
@@ -153,8 +159,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
-        btmEntry = (EditText) findViewById(R.id.deliveryLocation);
-        btmEntry.setVisibility(View.GONE);
+        // btmEntry = (EditText) findViewById(R.id.deliveryLocation);
+        // btmEntry.setVisibility(View.GONE);
 
         // Bottom field in state 2 -> Delivery Location
         // Bottom field only visible for recipient details spinner
@@ -181,6 +187,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Sender data, Name: " + senderData.getName() + ", Email Address: " + senderData.getEmailAddress());
 
                         confirmBtmEnt.setVisibility(View.GONE);
+                        // locationOptions.setVisibility(View.GONE);
                         btmField.setVisibility(View.GONE);
 
                         confirmTopEnt.setText(storedData[0]);
@@ -193,11 +200,13 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Recipient data, Name: " + recipientData.getName() + ", Email Address: " + recipientData.getEmailAddress() + ", Delivery Location: " + recipientData.getDeliveryLocation());
 
                         confirmBtmEnt.setVisibility(View.VISIBLE);
+                        // locationOptions.setVisibility(View.VISIBLE);
                         btmField.setVisibility(View.VISIBLE);
 
                         confirmTopEnt.setText(storedData[2]);
                         confirmMidEnt.setText(storedData[3]);
                         confirmBtmEnt.setText(storedData[4]);
+                        // locationOptions.setSelection(adapterLocations.getPosition(storedData[4]));
                         break;
                     default:
                         Log.i(TAG, "Item list exception: i = " + String.valueOf(i));
@@ -207,6 +216,33 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+        // Add a dropdown
+        locationOptions = (Spinner) findViewById(R.id.locationSpinner);
+        adapterLocations = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, locationList);
+        locationOptions.setAdapter(adapterLocations);
+        locationOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position) {
+                    case 0:
+                        Log.i(TAG, "Room 507 selected");
+                        break;
+                    case 1:
+                        Log.i(TAG, "Room 508 selected");
+                        break;
+                    case 2:
+                        Log.i(TAG, "Room 510 selected");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
                 // do nothing
             }
         });
@@ -283,6 +319,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                             // Notify spinner that list data set has been altered
                             adapter.notifyDataSetChanged();
+                            adapterLocations.notifyDataSetChanged();
 
                             // return to final state
                             toLayoutStateThree(1);
@@ -296,7 +333,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         String recipientName = topEntry.getText().toString();
                         String recipientEmailAddress = midEntry.getText().toString();
 
-                        String recipientLocation = btmEntry.getText().toString();
+                        // String recipientLocation = btmEntry.getText().toString();
+                        String recipientLocation = locationOptions.getSelectedItem().toString();
 
                         if (!entryChecks(recipientName, recipientEmailAddress)) {
                             return;
@@ -319,6 +357,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                             // Notify the spinner list that values have been updated
                             adapter.notifyDataSetChanged();
+                            adapterLocations.notifyDataSetChanged();
                         }
 
                         // Change view to what you expect next
@@ -355,7 +394,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 senderData = new PackageData("DemoSender", "demosender@gmail.com");
                 recipientData = new PackageData("DemoRecipient", "demorecipient@gmail.com");
-                recipientData.setDeliveryLocation("508");
+                recipientData.setDeliveryLocation("D3m0");
 
                 Log.i(TAG, "Details confirmed");
 
@@ -508,7 +547,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         btmField.setVisibility(View.GONE);
 
         // Bottom entry editText should be visible
-        btmEntry.setVisibility(View.GONE);
+        // btmEntry.setVisibility(View.GONE);
+
+        // Location dropdown should not be visible
+        locationOptions.setVisibility(View.GONE);
 
         // Problem button should not be visible
         problemButton.setVisibility(View.GONE);
@@ -527,6 +569,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 confirmTopEnt.setVisibility(View.GONE);
                 confirmMidEnt.setVisibility(View.GONE);
                 confirmBtmEnt.setVisibility(View.GONE);
+                // locationOptions.setVisibility(View.GONE);
 
                 // Top and Mid EditTexts need to be made visible and should display name and email address data
                 topEntry.setText(senderData.getName());
@@ -559,7 +602,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 btmField.setVisibility(View.VISIBLE);
 
                 // Brings up EditText for inserting delivery location
-                btmEntry.setVisibility(View.VISIBLE);
+                // btmEntry.setVisibility(View.VISIBLE);
+
+                // Make locations dropdown visible for selecting delivery location
+                locationOptions.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 // go to state 2 from state 3 (recipient details)
@@ -567,7 +613,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 // Confirmation textViews should not be visible
                 confirmTopEnt.setVisibility(View.GONE);
                 confirmMidEnt.setVisibility(View.GONE);
+
                 confirmBtmEnt.setVisibility(View.GONE);
+                // locationOptions.setVisibility(View.GONE);
 
                 // Make top, middle and bottom EditTexts visible with existing data
                 topEntry.setText(recipientData.getName());
@@ -576,8 +624,12 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 midEntry.setText(recipientData.getEmailAddress());
                 midEntry.setVisibility(View.VISIBLE);
 
-                btmEntry.setText(recipientData.getDeliveryLocation());
-                btmEntry.setVisibility(View.VISIBLE);
+                // btmEntry.setText(recipientData.getDeliveryLocation());
+                // btmEntry.setVisibility(View.VISIBLE);
+
+                // Set dropdown to preset option
+                locationOptions.setSelection(adapterLocations.getPosition(recipientData.getDeliveryLocation()));
+                locationOptions.setVisibility(View.VISIBLE);
 
                 // Problem button should not be visible
                 problemButton.setVisibility(View.GONE);
@@ -598,7 +650,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // When confirming details, user cannot edit their entries -> EditTexts are hidden
         topEntry.setVisibility(View.GONE);
         midEntry.setVisibility(View.GONE);
-        btmEntry.setVisibility(View.GONE);
+
+        // btmEntry.setVisibility(View.GONE);
+        locationOptions.setVisibility(View.VISIBLE);
 
         // Make confirmation TextViews visible
         confirmTopEnt.setVisibility(View.VISIBLE);
@@ -631,6 +685,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 // This textView should not be visible if you are coming from state 1 (user details)
                 confirmBtmEnt.setVisibility(View.GONE);
+                // locationOptions.setVisibility(View.GONE);
                 break;
             case 2:
                 // go to state 3 from state 2
@@ -642,6 +697,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 confirmBtmEnt.setText(recipientData.getDeliveryLocation());
                 confirmBtmEnt.setVisibility(View.VISIBLE);
+                // locationOptions.setSelection(adapterLocations.getPosition(recipientData.getDeliveryLocation()));
+                // locationOptions.setVisibility(View.VISIBLE);
 
                 btmField.setVisibility(View.VISIBLE);
                 break;
@@ -679,6 +736,4 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // unregister receiver from this activity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverLockerComm);
     }
-
-
 }

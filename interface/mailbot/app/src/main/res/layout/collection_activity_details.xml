@@ -153,7 +153,16 @@
                     android:textSize="@dimen/_10sdp"
                     android:visibility="gone"/>
 
-                <EditText
+                <Spinner
+                    android:id="@+id/locationSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_10sdp"
+                    android:visibility="gone"/>
+
+                <!--<EditText
                     android:id="@+id/deliveryLocation"
                     android:layout_width="@dimen/_120sdp"
                     android:layout_height="wrap_content"
@@ -161,7 +170,7 @@
                     android:textColor="#ffffff"
                     android:visibility="gone"
                     android:singleLine="true"
-                    android:maxLines="1"/>
+                    android:maxLines="1"/>-->
 
                 <TextView
                     android:id="@+id/confirmBtmEntry"

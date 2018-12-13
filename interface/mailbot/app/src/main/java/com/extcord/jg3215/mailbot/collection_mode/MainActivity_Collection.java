@@ -47,7 +47,7 @@ public class MainActivity_Collection extends AppCompatActivity {
     // Shows lockerState string
     TextView lockerTextView;
 
-    // Integers used to represent the type of mail that is being sent
+    // Integers used to represent the type of mail that is being sent - moved to LockerManager
     /* private static final int LETTER_STANDARD = 1;
     private static final int LETTER_LARGE = 2;
     private static final int PARCEL = 3; */
@@ -269,6 +269,7 @@ public class MainActivity_Collection extends AppCompatActivity {
 
         lockerTextView = (TextView) findViewById(R.id.testLockerManager);
         lockerTextView.setText(mLockerManager.getLockerState());
+        lockerTextView.setVisibility(View.GONE);
 
         largeLetterView = (ImageView) findViewById(R.id.largeLetter);
         largeLetterView.setOnClickListener(new View.OnClickListener() {
@@ -478,12 +479,17 @@ public class MainActivity_Collection extends AppCompatActivity {
 
             String dLocation = lockerItems.getDeliveryLocation();
 
-            if (index != 6) {
+            if (!dLocation.equals("D3m0")) {
+                locationList.append(dLocation);
+                locationList.append(" ");
+            }
+
+            /* if (index != 6) {
                 locationList.append(dLocation);
                 locationList.append(" ");
             } else {
                 locationList.append(dLocation);
-            }
+            } */
 
             Log.i(TAG, "Index = " + String.valueOf(index));
             Log.i(TAG, "Location at this index = " + dLocation);
