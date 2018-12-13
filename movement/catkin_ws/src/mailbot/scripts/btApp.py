@@ -52,14 +52,20 @@ def openAllLatches(pins=None):
 def at_location(data, talker):
     talker.tmp = str(data.data)
 
+def path_solved(data, talker):
+    talker.path_solved = True
+
 open_locker_topic = 'openLocker'
 delivery_locations_topic = 'deliveryLocations'
 delivery_complete_topic = 'deliveryComplete'
 
 at_location_topic = ('atLocation', at_location)
+solved_path_topic = ('solvedPath', path_solved)
 
 class Talker(object):
     def __init__(self, publishers, subscribers):
+        self.path_solved = False
+
         self.publishers = {}
         for topic in publishers:
             self.publishers[topic] = rospy.Publisher(topic, String)
@@ -84,7 +90,7 @@ class Talker(object):
             return self.tmp
 
 publishers = [open_locker_topic, delivery_locations_topic, delivery_complete_topic]
-subscribers = [at_location_topic]
+subscribers = [at_location_topic, solved_path_topic]
 
 talker = Talker(publishers, subscribers)
 
@@ -123,7 +129,10 @@ def getLocationList(btSocket):
         else:
             print appMsg
             # should print a space delimited list of locations
-            talker.publish(appMsg, delivery_locations_topic)
+            while not talker.path_solved:
+                talker.publish(appMsg, delivery_locations_topic)
+                time.sleep(5.0)
+            talker.path_solved = False
             return appMsg
         time.sleep(0.01)
 
