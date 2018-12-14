@@ -132,7 +132,9 @@ def getLocationList(btSocket):
             while not talker.path_solved:
                 talker.publish(appMsg, delivery_locations_topic)
                 time.sleep(5.0)
+                print('path not solved yet')
             talker.path_solved = False
+            print('path solved')
             return appMsg
         time.sleep(0.01)
 

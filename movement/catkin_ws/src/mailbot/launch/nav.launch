@@ -7,14 +7,17 @@
 
   <!-- RTABMAPPING LOCALIZATION -->
     <!-- Allow visualization -->
-    <arg name="rtabmapviz"              default="true" />
+    <arg name="rtabmapviz"              default="false" />
     <arg name="rviz"                    default="false" />
     <!-- Localization-only mode -->
     <arg name="localization"            default="true"/>
     <!-- Corresponding config files -->
     <arg name="gui_cfg"                 default="~/.ros/rtabmap_gui.ini" />
     <arg name="rviz_cfg"                default="$(find rtabmap_ros)/launch/config/rgbd.rviz" />
-    <arg name="database_path"           default="~/.ros/rtabmap.db"/> <!--   Where stores & loads database (e.g. map)-->
+
+    <!--   Where stores & loads database (e.g. map)-->
+    <!-- <arg name="database_path"           default="~/.ros/rtabmap.db"/>  -->
+    <arg name="database_path"           default="~/MailBot-Maps/11-12-18v2/rtabmap.db"/>
 
     <include file="$(find mailbot)/launch/rtabmap_mailbot.launch">
       <!-- We now can pass in the values that are set above into the launch file -->
@@ -25,6 +28,12 @@
       <arg name="rtabmapviz"              value="$(arg rtabmapviz)" />
       <arg name="rviz"                    value="$(arg rviz)" />
       <arg name="database_path"           value="$(arg database_path)" />
+
+
+      <!-- If we mapping we want different values -->
+      <arg name="range_max" type="double" default="10"/>
+      <arg name="range_min" type="double" default="0.15"/>
+      <arg name="inf_is_valid" type="double" default="true"/>
     </include>
 
 

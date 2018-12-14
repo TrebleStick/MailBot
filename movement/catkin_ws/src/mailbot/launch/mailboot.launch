@@ -1,20 +1,30 @@
 <launch>
+	<!-- This is the ultimate launch file  -->
 
+	<!--  Boot up robot sensors -->
 	<include file="$(find mailbot)/launch/boot.launch"/>
+
+	<!-- Delay the start of the move_base (requires map)  -->
+	<include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
+		<arg name="time" value="35" /> <!-- in seconds -->
+		<arg name="pkg" value="mailbot" />
+		<arg name="file" value="move_base.launch" />
+		<arg name="value" value="" />
+	</include>
+
+	<!-- Boot up Kinect -->
 	<include file="$(find mailbot)/launch/kinectBoot.launch"/>
 
-	<!-- <node pkg="depthimage_to_laserscan" name="depthimage_to_laserscan" type="depthimage_to_laserscan"> -->
-		<!-- <remap from="image" to="camera/depth/image_raw"/>
-		<remap from="scan" to="depth_scan"/>
-		<param name="output_frame_id" value="camera_depth_frame" />
-		<param name="range_min" value="0.45" /> -->
-	<!-- </node> -->
+	<!-- Start the Navigation -->
+	<include file="$(find mailbot)/launch/nav.launch"/>
 
+	<!--  delayed move base should start now -->
 
+	<!--  Start the bluetooth -->
+	<!-- <include file="$(find mailbot)/launch/btApp.launch"/> -->
 
-	<node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node"  name="pointcloud_to_laserscan" args="cloud_in:=/RosAria/sonar_pointcloud2" />
-
- <!-- map_server map_server map.yaml -->
-	<node pkg="map_server" type="map_server"  name="map_serverX" args="$(find mailbot)/maps/map.yaml" />
+	<!-- Start Goal Solver & Senderss -->
+	<node pkg="mailbot" type="tspSolver.py" name="tspSolver"/>
+	<node pkg="mailbot" type="locationQueueMoveBase.py" name="locationQMoveBase"/>
 
 </launch>

@@ -12,6 +12,7 @@ currentLoc = -1
 def callback2(data2):
     # global anyLoc
     # anyLoc = True
+    global pub
     global globNodes
     global counter
     global currentLoc
@@ -20,6 +21,31 @@ def callback2(data2):
     # pub = rospy.Publisher('Location', String)
     if(counter == len(globNodes)):
         counter = 0
+        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+        client.wait_for_server()
+        #Sketch
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.pose.position.x = goalX
+        goal.target_pose.pose.position.y = goalY
+        goal.target_pose.pose.orientation.z = goalZ
+        goal.target_pose.pose.orientation.w = goalW
+
+
+        client.send_goal(goal)
+        wait = client.wait_for_result()
+        if not wait:
+            rospy.logerr("Action server not available!")
+            rospy.signal_shutdown("Action server not available!")
+        else:
+            # currentLoc = globNodes[counter]
+            print("at loading bay")
+            pub = rospy.Publisher('atLocation', String)
+            test_str = str("LoadingBay")
+            rospy.loginfo(test_str)
+            pub.publish(test_str)
+            return client.get_result()
         # pub.publish("Route completed")
     else:
         # pub.publish(str(globNodes[counter]))
@@ -45,6 +71,11 @@ def callback2(data2):
         else:
             currentLoc = globNodes[counter]
             print("at ", currentLoc)
+            pub = rospy.Publisher('atLocation', String)
+            test_str = rm.indexToRoom(int(currentLoc))
+            test_str = str(test_str)
+            rospy.loginfo(test_str)
+            pub.publish(test_str)
             return client.get_result()
             # return globNodes[counter]
     # else:
@@ -58,6 +89,7 @@ def callback(data):
     print(nodes)
     # nodes = [int(i) for i in nodes]
     global globNodes
+    global pub
     globNodes = nodes
 
 
@@ -87,6 +119,10 @@ def callback(data):
     else:
         currentLoc = globNodes[counter]
         print("at ", currentLoc)
+        test_str = rm.indexToRoom(int(currentLoc))
+        test_str = str(test_str)
+        rospy.loginfo(test_str)
+        pub.publish(test_str)
         return client.get_result()
         # return globNodes[counter]
     # print the path cost
@@ -101,6 +137,7 @@ def listener():
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
+    global pub
     pub = rospy.Publisher('atLocation', String)
     result = rospy.Subscriber("solvedPath", String, callback)
     result2 = rospy.Subscriber("deliveryComplete", String, callback2)
@@ -109,25 +146,7 @@ def listener():
 
 
 
-    if (True):
-        # post at location
-        print("yo")
-        print(result)
-        test_str = rm.indexToRoom(int(currentLoc))
-        test_str = str(test_str)
-        rospy.loginfo(test_str)
-        pub.publish(test_str)
-    if (True):
-        # post at location
-        print("yo2")
 
-        print(result2)
-        pub = rospy.Publisher('atLocation', String)
-        test_str = rm.indexToRoom(int(currentLoc))
-        test_str = str(test_str)
-        rospy.loginfo(test_str)
-        pub.publish(test_str)
-        # print(result2)
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 

@@ -46,14 +46,19 @@
   <arg name="scan_cloud_topic"        default="/scan_cloud"/>
 
 
+  <!-- If we mapping we want different values -->
+  <arg name="range_max" default="4.0"/>
+  <arg name="range_min" default="0.15"/>
+  <arg name="inf_is_valid" default="false"/>
+
     <!-- Kinect cloud to laser scan -->
     <node if="$(arg fakeLasers)" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
       <remap from="image"     to="/camera/depth_registered/image_raw"/>
       <remap from="camera_info" to="/camera/depth_registered/camera_info"/>
       <remap from="scan" to="/kinect_scan"/>
-      <param name="range_max" type="double" value="10"/>
-      <param name="range_min" type="double" value="0.15"/>
-      <param name="inf_is_valid" value="true"/>
+      <param name="range_max" type="double" value="$(arg range_max)"/>
+      <param name="range_min" type="double" value="$(arg range_min)"/>
+      <param name="inf_is_valid" value="$(arg inf_is_valid)"/>
 
     </node>
 
