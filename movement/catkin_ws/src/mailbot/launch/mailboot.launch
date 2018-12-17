@@ -24,7 +24,7 @@
 	<!-- <include file="$(find mailbot)/launch/btApp.launch"/> -->
 
 	<!-- Start Goal Solver & Senderss -->
-	<node pkg="mailbot" type="tspSolver.py" name="tspSolver"/>
-	<node pkg="mailbot" type="locationQueueMoveBase.py" name="locationQMoveBase"/>
+	<!-- <node pkg="mailbot" type="tspSolver.py" name="tspSolver"/> -->
+	<!-- <node pkg="mailbot" type="locationQueueMoveBase.py" name="locationQMoveBase"/> -->
 
 </launch>

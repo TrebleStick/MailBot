@@ -1,0 +1,12 @@
+# max_obstacle_height: 0.80  # assume something like an arm is mounted on top of the robot
+
+# Obstacle Cost Shaping (http://wiki.ros.org/costmap_2d/hydro/inflation)
+robot_radius: 0.32  # distance a circular robot should be clear of the obstacle (kobuki: 0.18)
+holonomic_robot: false
+
+obstacle_range: 3.0
+raytrace_range: 10.0
+# footprint: [ [0.254, -0.230], [-0.254, -0.230], [-0.254, 0.230], [0.254, 0.230] ] # [[x0, y0], [x1, y1], ... [xn, yn]]
+inflation_radius: 0.2
+
+#  most of this is overridden in the local and global costmap files

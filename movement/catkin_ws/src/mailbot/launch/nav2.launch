@@ -1,4 +1,3 @@
-
 <launch>
 <!-- Convenience launch file to launch odometry, rtabmap and rtabmapviz nodes at once -->
 
@@ -7,7 +6,7 @@
 
   <!-- RTABMAPPING LOCALIZATION -->
     <!-- Allow visualization -->
-    <arg name="rtabmapviz"              default="true" />
+    <arg name="rtabmapviz"              default="false" />
     <arg name="rviz"                    default="false" />
     <!-- Localization-only mode -->
     <arg name="localization"            default="true"/>
@@ -16,20 +15,37 @@
     <arg name="rviz_cfg"                default="$(find rtabmap_ros)/launch/config/rgbd.rviz" />
 
     <!--   Where stores & loads database (e.g. map)-->
-    <!-- <arg name="database_path"           default="~/.ros/rtabmap.db"/>  -->
+    <!-- <arg name="database_path"           default="~/.ros/rtabmap.db"/> -->
     <arg name="database_path"           default="~/MailBot-Maps/11-12-18v2/rtabmap.db"/>
+
+  <!-- Kinect Short & Long Range Laser Scans -->
+    <!-- Short -->
+    <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan_shortRange">
+      <remap from="image"     to="/camera/depth_registered/image_raw"/>
+      <remap from="camera_info" to="/camera/depth_registered/camera_info"/>
+      <remap from="scan" to="/kinect_scan_shortRange"/>
+      <param name="scan_height" type="double" value="220"/>  <!-- How many vertical pixels to combine -->
+      <param name="range_max" type="double" value="1.5"/>
+      <param name="range_min" type="double" value="0.15"/>
+    </node>
+    <!-- Long -->
+    <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan_longRange">
+      <remap from="image"     to="/camera/depth_registered/image_raw"/>
+      <remap from="camera_info" to="/camera/depth_registered/camera_info"/>
+      <remap from="scan" to="/kinect_scan_longRange"/>
+      <param name="scan_height" type="double" value="10"/> <!-- How many vertical pixels to combine to create the laserscan -->
+      <param name="range_max" type="double" value="12"/>
+      <param name="range_min" type="double" value="3.6"/>
+    </node>
 
     <include file="$(find mailbot)/launch/rtabmap_mailbot.launch">
       <!-- We now can pass in the values that are set above into the launch file -->
-
       <arg name="fakeLasers"              value="$(arg fakeLasers)"/>
       <arg name="localization"            value="$(arg localization)"/>
       <!-- Allow visualization -->
       <arg name="rtabmapviz"              value="$(arg rtabmapviz)" />
       <arg name="rviz"                    value="$(arg rviz)" />
       <arg name="database_path"           value="$(arg database_path)" />
-
-
       <!-- If we mapping we want different values -->
       <arg name="range_max" type="double" default="10"/>
       <arg name="range_min" type="double" default="0.15"/>
