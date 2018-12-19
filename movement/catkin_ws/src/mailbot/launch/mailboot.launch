@@ -16,15 +16,15 @@
 	<include file="$(find mailbot)/launch/kinectBoot.launch"/>
 
 	<!-- Start the Navigation -->
-	<include file="$(find mailbot)/launch/nav.launch"/>
+	<include file="$(find mailbot)/launch/nav2.launch"/>
 
 	<!--  delayed move base should start now -->
 
 	<!--  Start the bluetooth -->
-	<!-- <include file="$(find mailbot)/launch/btApp.launch"/> -->
+	<include file="$(find mailbot)/launch/btApp.launch"/>
 
 	<!-- Start Goal Solver & Senderss -->
-	<!-- <node pkg="mailbot" type="tspSolver.py" name="tspSolver"/> -->
-	<!-- <node pkg="mailbot" type="locationQueueMoveBase.py" name="locationQMoveBase"/> -->
+	<node pkg="mailbot" type="tspSolver.py" name="tspSolver"/>
+	<node pkg="mailbot" type="locationQueueMoveBase.py" name="locationQMoveBase"/>
 
 </launch>

@@ -13,11 +13,13 @@ global_costmap:
 
 
   obstacle_layer_kinect:
-    observation_sources: kinect_laserscan kinect_laserscan_shortRange kinect_laserscan_longRange
-    kinect_laserscan: {sensor_frame: camera_link, data_type: LaserScan, topic: kinect_scan, marking: true, clearing: true, obstacle_range: 3.0, raytrace_range: 6.5, inf_is_valid: false}
-    kinect_laserscan_shortRange: {sensor_frame: camera_link, data_type: LaserScan, topic: kinect_scan_shortRange, marking: true, clearing: false, obstacle_range: 3.0, raytrace_range: 6.5, inf_is_valid: false}
-    kinect_laserscan_longRange: {sensor_frame: camera_link, data_type: LaserScan, topic: kinect_scan_longRange, marking: true, clearing: true, obstacle_range: 3.0, raytrace_range: 6.5, inf_is_valid: false}
-    kinect: {sensor_frame: camera_link, data_type: PointCloud2, topic: camera/depth_registered/points, marking: true, clearing: true, inf_is_valid: true}
+    # observation_sources: kinect_laserscan kinect_laserscan_shortRange kinect_laserscan_longRange
+    # observation_sources: kinect_laserscan_shortRange kinect_laserscan_longRange
+    observation_sources: kinect_laserscan
+    kinect_laserscan: {sensor_frame: camera_link, data_type: LaserScan, topic: kinect_scan, marking: true, clearing: true, obstacle_range: 3.0, raytrace_range: 6.5, inf_is_valid: true}
+    # kinect_laserscan_shortRange: {sensor_frame: camera_link, data_type: LaserScan, topic: kinect_scan_shortRange, marking: true, clearing: false, obstacle_range: 3.0, raytrace_range: 6.5, inf_is_valid: false}
+    # kinect_laserscan_longRange: {sensor_frame: camera_link, data_type: LaserScan, topic: kinect_scan_longRange, marking: true, clearing: true, obstacle_range: 3.0, raytrace_range: 6.5, inf_is_valid: false}
+    # kinect: {sensor_frame: camera_link, data_type: PointCloud2, topic: camera/depth_registered/points, marking: true, clearing: true, inf_is_valid: true}
 
   inflation_layer:
     cost_scaling_factor: 4.0

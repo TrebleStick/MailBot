@@ -9,13 +9,15 @@ import numpy as np
 import rospy
 from std_msgs.msg import String
 import rooms as rm
+import subprocess
 
 def callback(data):
     # Read node distances from file
     # File location is in Home
     roomlist = [508, 507, 510]
     pub = rospy.Publisher('solvedPath', String, queue_size=10)
-    d = pd.read_csv("weights.csv", header=None)
+    csvPath = "~/Documents/catkin_ws/src/mailbot/"
+    d = pd.read_csv("/".join([csvPath, "/config/weights.csv"]), header=None)
     d  = d.values
 
     rospy.loginfo("Received locations")
