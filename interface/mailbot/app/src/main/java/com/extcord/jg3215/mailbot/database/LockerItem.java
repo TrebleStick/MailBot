@@ -7,7 +7,12 @@ import android.arch.persistence.room.PrimaryKey;
 import com.extcord.jg3215.mailbot.PackageData;
 
 /**
- * Created by IChinweze on 27/11/2018.
+ * NAME:        LockerItem.java
+ * PURPOSE:     This script defines the fields that each entry to the database has
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
  */
 
 @Entity (tableName = "lockers")

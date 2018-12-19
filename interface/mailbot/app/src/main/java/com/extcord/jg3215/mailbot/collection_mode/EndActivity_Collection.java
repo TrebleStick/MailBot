@@ -15,7 +15,22 @@ import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 import com.extcord.jg3215.mailbot.email.eMailService;
 
+/**
+ * NAME:        EndActivity_Collection.java
+ * PURPOSE:     If the locker is not full, the application will start this activity after LockerActivity
+ *              given the mail item fits in the locker. Here, the user can end their interaction with
+ *              MailBot using the returnButton or send another mail item to the same recipient or
+ *              another using the reDeliverButton. The reDeliverButton retrieves a fragment activity
+ *              that allows the user to select a mail item size as with MainActivity
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Runs the EndActivityDialogFragment on top of EndActivity
+ * REVISION:    13/12/2018
+ */
+
 public class EndActivity_Collection extends FragmentActivity implements EndActivityDialogFragment.EndActivityDialogListener {
+
+    private static final String TAG = "EndActivity";
 
     // Integers used to represent the type of mail that is being sent
     /* private static final int LETTER_STANDARD = 1;
@@ -27,14 +42,13 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
     private PackageData recipientData;
     private String pinCode;
 
+    // Extra but might be changed if user opts to send another mail item
     private int packageType;
 
-    Button toSameRecipientButton;
+    Button reDeliverButton;
     Button returnButton;
 
     private LockerManager mLockerManager;
-
-    private static final String TAG = "EndActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +104,8 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
 
         sendEmails();
 
-        toSameRecipientButton = (Button) findViewById(R.id.btnToSameRecipient);
-        toSameRecipientButton.setOnClickListener(new View.OnClickListener() {
+        reDeliverButton = (Button) findViewById(R.id.btnToSameRecipient);
+        reDeliverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Empty the package type variable so it can be reset
@@ -254,7 +268,7 @@ public class EndActivity_Collection extends FragmentActivity implements EndActiv
                             recipientData.getEmailAddress());
                     dialog.dismiss();
                 } catch (Exception e) {
-                    Log.e("mylog", "Error: " + e.getMessage());
+                    Log.e(TAG, "Error: " + e.getMessage());
                 }
             }
         });

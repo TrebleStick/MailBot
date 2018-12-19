@@ -9,7 +9,19 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
- * Created by IChinweze on 19/11/2018.
+ * NAME:        StopWatch.java
+ * PURPOSE:     This class runs a stopwatch timer thread that can be used to signal the end of some
+ *              timed period. It is currently used to signal:
+ *                  1) Standard countdown timer
+ *                  2) A timeout for the bluetooth scan
+ *                  3) A timeout for waiting for user response after knocking in EnRouteActivity
+ *
+ *              This thread can be stopped from the main UI thread by altering the volatile isExecuting
+ *              boolean variable.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Runs a separate thread
+ * REVISION:    13/12/2018
  */
 
 public class StopWatch {

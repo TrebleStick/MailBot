@@ -20,25 +20,44 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * NAME:        LockerActivity_Collection.java
+ * PURPOSE:     User confirms that the mail item fits into the lockers otherwise, they are re-directed
+ *              to the MainActivity, where they can try again. If it fits, the lockerIndex, senderData,
+ *              recipientData, PIN code and packageType gathered from previous activities are committed
+ *              to the database, using the lockerIndex as the primary key.
+ *
+ *              If the locker is not full, the application will go to EndActivity where the user can
+ *              provide another mail item quickly or end their interaction with the interface. If the
+ *              locker is full, the application transitions to delivery mode by command of the
+ *              MainActivity.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       The database should not be accessed on the main UI thread. AsyncTask handles the process
+ *              on an asynchronous thread.
+ * REVISION:    13/12/2018
+ */
+
 public class LockerActivity_Collection extends AppCompatActivity {
+
+    private final static String TAG = "LockerActivity";
 
     // The TextViews for the two options given at the start of this activity
         // 'Parcel fits' vs 'Parcel does not fit'
     TextView badFitView;
     TextView goodFitView;
 
+    private LockerManager mLockerManager;
+
+    private Context mContext;
+
+    // Extras - data from previous activity
     private int packageType;
     private int lockerIndex;
     private String pinCode;
 
-    private final static String TAG = "LockerActivity";
-
     private PackageData senderData;
     private PackageData recipientData;
-
-    private LockerManager mLockerManager;
-
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +109,6 @@ public class LockerActivity_Collection extends AppCompatActivity {
             public void onClick (View view){
                 Log.i(TAG, "badFitView text pressed");
                 if (packageType != LockerManager.PARCEL) {
-                    // TODO: Check that this badFit button works as intended
                     Log.i(TAG, "Need to attempt to use a bigger locker");
                     Toast.makeText(LockerActivity_Collection.this, getResources().getString(R.string.badFitSuggestion), Toast.LENGTH_SHORT).show();
                     finish();

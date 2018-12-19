@@ -26,7 +26,16 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 /**
- * Created by javigeis on 12/11/2018.
+ * NAME:        PasswordActivity_Delivery.java
+ * PURPOSE:     This activity is where the mail item recipient can input the PIN code they received
+ *              via email. The tablet sends a request to the PC to open the relevant locker. If the
+ *              locker is opened successfully (ie correct PIN has been entered), the application goes
+ *              to OpenLockerActivity. If the incorrect PIN is given consistently, the delivery attempt
+ *              is marked as unsuccessful and the application goes to UnsuccessfulActivity.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
  */
 
 public class PasswordActivity_Delivery extends AppCompatActivity {
@@ -182,8 +191,8 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         Bundle extras = new Bundle();
 
         // Adds this extra detail to the intent which indicates:
-        // The data given to MailBot about the sender
-        // The data given to MailBot about the recipient
+            // The data given to MailBot about the sender
+            // The data given to MailBot about the recipient
 
         extras.putParcelable(senderDataTag, SenderDetails);
         extras.putParcelable(recipientDataTag, RecipientDetails);
@@ -209,13 +218,11 @@ public class PasswordActivity_Delivery extends AppCompatActivity {
         // Adds this extra detail to the intent which indicates:
             // The data given to MailBot about the sender
             // The data given to MailBot about the recipient
-
         extras.putParcelable(senderDataTag, SenderDetails);
         extras.putParcelable(recipientDataTag, RecipientDetails);
 
         // Add all the extras content to the intent
         toUnsuccessfulIntent.putExtras(extras);
-
 
         startActivity(toUnsuccessfulIntent);
         finish();

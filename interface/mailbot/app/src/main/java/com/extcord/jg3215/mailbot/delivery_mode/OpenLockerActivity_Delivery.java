@@ -1,6 +1,5 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
-import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,15 +17,21 @@ import com.extcord.jg3215.mailbot.BluetoothConnectionService;
 import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
-import com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection;
-import com.extcord.jg3215.mailbot.database.LockerItem;
-import com.extcord.jg3215.mailbot.database.LockerItemDatabase;
 import com.extcord.jg3215.mailbot.email.eMailService;
 
 import java.nio.charset.Charset;
 
 /**
- * Created by javigeis on 12/11/2018.
+ * NAME:        OpenLockerActivity_Delivery.java
+ * PURPOSE:     The recipient has the choice of attempting to re-open the locker or completing the
+ *              delivery. If the delivery is completed, it will return to EnRouteActivity and MailBot
+ *              will begin travelling to the next location. Emails are sent to the recipient and sender
+ *              updating them as to the outcome of the delivery attempt (success). Emails are delivered
+ *              on an asynchronous thread.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
  */
 
 public class OpenLockerActivity_Delivery extends AppCompatActivity {
@@ -131,8 +136,8 @@ public class OpenLockerActivity_Delivery extends AppCompatActivity {
         }
 
         //Set the opened locker number in speech bubble in LockerActivity_Collection
-        TextView LockerText = (TextView) findViewById(R.id.textLockerOpened);
-        LockerText.setText("That/'s the correct password! Locker " + String.valueOf(lockerID) + " containing your mail item has been opened! Please retrieve your item, and then close the locker.");
+        TextView LockerText = (TextView) findViewById(R.id.openLockerDel);
+        LockerText.setText("That's the correct password! Locker " + String.valueOf(lockerID) + " containing your mail item has been opened! Please retrieve your item, and then close the locker.");
         
         mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
 

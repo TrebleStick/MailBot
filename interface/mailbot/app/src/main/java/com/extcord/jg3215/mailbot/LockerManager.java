@@ -7,11 +7,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
- * Created by IChinweze on 22/11/2018.
- * LockerManager objects allow manipulation of a seven digit string used to represent locker state
- * from any activity. The digits are stored in a file that can be accessed from each activity (called
- * a sharedPreferences file). There are seven lockers so each digit refers to a specific locker.
- * There are 4 small lockers, 2 medium lockers and 1 large one.
+ * NAME:        LockerManager.java
+ * PURPOSE:     LockerManager objects allow manipulation of a seven digit string used to represent
+ *              locker state from any activity. The digits are stored in a file that can be accessed
+ *              from each activity (called a sharedPreferences file). There are seven lockers so each
+ *              digit refers to a specific locker. There are 4 small lockers, 2 medium lockers and 1
+ *              large one.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Manages a SharedPreference file
+ * REVISION:    13/12/2018
  */
 
 public class LockerManager implements SharedPreferences.OnSharedPreferenceChangeListener {

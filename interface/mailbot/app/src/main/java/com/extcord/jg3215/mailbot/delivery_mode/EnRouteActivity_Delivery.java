@@ -1,6 +1,5 @@
 package com.extcord.jg3215.mailbot.delivery_mode;
 
-import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,12 +10,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,10 +31,21 @@ import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 
 /**
- * Created by javigeis on 12/11/2018.
+ * NAME:        EnRouteActivity_Delivery.java
+ * PURPOSE:     This is the base activity for delivery mode. Until all possible deliveries have been
+ *              attempted, the application will start delivery mode in this activity and return to it
+ *              once a delivery has been attempted. This activity remains unchanged until it receives
+ *              a message from the PC telling it that it has reached one of the delivery locations.
+ *              It plays a 'knock-knock' sound and presents a prompt asking the recipient whether they
+ *              are expecting mail. If the press the prompt, they are taken to PasswordActivity where
+ *              they enter the PIN code. If no-one responds to the prompt after 2 minutes, MailBot will
+ *              log the delivery as a failure.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
  */
 
 public class EnRouteActivity_Delivery extends AppCompatActivity{
@@ -70,7 +78,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
 
     private LockerItemDatabase lockerItemDatabase;
 
-    // Listen for message (Serial communication) that MailBot is at destination
+    // Listen for message (Bluetooth communication) that MailBot is at destination
     private BroadcastReceiver mBroadcastReceiverArrival = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -182,7 +190,6 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "Intent to play knocking sound received");
 
-            // TODO: Check that this plays music out of the speakers!
             AudioManager audioManager = (AudioManager) (EnRouteActivity_Delivery.this).getSystemService(Context.AUDIO_SERVICE);
             if (audioManager != null) {
                 // Turns tablet speakerphone on
@@ -217,7 +224,7 @@ public class EnRouteActivity_Delivery extends AppCompatActivity{
         Log.i(TAG, "onCreate() method called");
 
         mLockerManager = new LockerManager(this);
-        if (!mLockerManager.getLockerState().equals("0000000")) {
+        if (!mLockerManager.getLockerState().equals(LockerManager.EMPTY_LOCKER)) {
             mContext = this;
             // mBluetoothConnection.setmContext(mContext);
             mBluetoothConnection = BluetoothConnectionService.getBcsInstance();

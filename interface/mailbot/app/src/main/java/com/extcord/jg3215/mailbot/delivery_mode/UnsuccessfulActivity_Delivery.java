@@ -22,7 +22,15 @@ import com.extcord.jg3215.mailbot.email.eMailService;
 import java.nio.charset.Charset;
 
 /**
- * Created by javigeis on 12/11/2018.
+ * NAME:        UnsuccessfulActivity_Delivery.java
+ * PURPOSE:     The application reaches this activity if there was no response to the knocking in
+ *              EnRouteActivity or if an incorrect PIN was entered three times. Emails are sent to the
+ *              sender and recipient regarding the outcome of the delivery attempt. The tablet will
+ *              notify the PC that a delivery attempt has been completed.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
  */
 
 public class UnsuccessfulActivity_Delivery extends AppCompatActivity {

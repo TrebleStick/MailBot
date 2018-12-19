@@ -32,10 +32,29 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * NAME:        MainActivity_Collection.java
+ * PURPOSE:     This is the main activity that runs for the lifetime of the app. The single instance
+ *              of the database that is used is created here. The bluetooth connection with the PC is
+ *              initiated here and a single instance of this service provider exists for the lifetime
+ *              of the application.
+ *
+ *              While this activity allows users to select a locker size, it is in collection mode.
+ *              The locker size selected is conveyed through the packageType variable that is passed
+ *              through activities and changed where appropriate. When the locker is full, this activity
+ *              pushes the application into delivery mode, where MailBot can go and deliver mail.
+ *              LockerManager object is used to check whether there is any space left in MailBot for
+ *              any items of the size selected by the user.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Single Instance activity
+ * REVISION:    13/12/2018
+ */
+
 public class MainActivity_Collection extends AppCompatActivity {
 
-    // I assume Android Studio provides security against memory leaks for Rooms - WRONG LMAO
-    // Database is a singleton object
+    // I assume Android Studio provides security against memory leaks for Rooms - WRONG
+        // Database is a singleton object
     private final static String DATABASE_NAME = "lockerDB";
     private LockerItemDatabase lockerItemDatabase;
 
@@ -483,13 +502,6 @@ public class MainActivity_Collection extends AppCompatActivity {
                 locationList.append(dLocation);
                 locationList.append(" ");
             }
-
-            /* if (index != 6) {
-                locationList.append(dLocation);
-                locationList.append(" ");
-            } else {
-                locationList.append(dLocation);
-            } */
 
             Log.i(TAG, "Index = " + String.valueOf(index));
             Log.i(TAG, "Location at this index = " + dLocation);

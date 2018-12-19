@@ -17,6 +17,17 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
+/**
+ * NAME:        BluetoothConnectionService.java
+ * PURPOSE:     This class establishes a server-client Bluetooth socket connection between the tablet
+ *              and the PC using RF communication. A single instance of this object is created for
+ *              the lifetime of the application.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Used as a Singleton
+ * REVISION:    13/12/2018
+ */
+
 public class BluetoothConnectionService {
 
     private static final String TAG = "BluetoothConnectionServ";

@@ -26,10 +26,31 @@ import com.extcord.jg3215.mailbot.R;
 import java.nio.charset.Charset;
 import java.util.Random;
 
+/**
+ * NAME:        DetailsActivity_Collection.java
+ * PURPOSE:     This activity consists of three states:
+ *                  1) STATE_USER_DETAILS
+ *                      The user is prompted to provide their name and email address. This information
+ *                      is stored in the senderData object.
+ *                  2) STATE_RECIPIENT_DETAILS
+ *                      The user is prompted to provide the recipient's name, email address and the
+ *                      location where the mail item should be delivered. This information is stored
+ *                      in the recipientData object.
+ *                  3) STATE_CONFIRMATION
+ *                      The user is able to review the details they have given and correct them if
+ *                      necessary.
+ *
+ *              LockerManager object is used to figure out the next available locker index for the
+ *              user to put a mail item in. Then the application communicates with the PC and requests
+ *              that the corresponding locker is opened. Once it is opened, the application generates
+ *              a PIN and transitions to LockerActivity.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
+ */
 
 public class DetailsActivity_Collection extends AppCompatActivity {
-
-    // TODO: Get delivery locations
 
     // Sometimes "Search" appears in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
@@ -187,7 +208,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Sender data, Name: " + senderData.getName() + ", Email Address: " + senderData.getEmailAddress());
 
                         confirmBtmEnt.setVisibility(View.GONE);
-                        // locationOptions.setVisibility(View.GONE);
+                        locationOptions.setVisibility(View.GONE);
                         btmField.setVisibility(View.GONE);
 
                         confirmTopEnt.setText(storedData[0]);
@@ -200,7 +221,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Recipient data, Name: " + recipientData.getName() + ", Email Address: " + recipientData.getEmailAddress() + ", Delivery Location: " + recipientData.getDeliveryLocation());
 
                         confirmBtmEnt.setVisibility(View.VISIBLE);
-                        // locationOptions.setVisibility(View.VISIBLE);
+                        locationOptions.setVisibility(View.GONE);
                         btmField.setVisibility(View.VISIBLE);
 
                         confirmTopEnt.setText(storedData[2]);
@@ -652,7 +673,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         midEntry.setVisibility(View.GONE);
 
         // btmEntry.setVisibility(View.GONE);
-        locationOptions.setVisibility(View.VISIBLE);
+        // locationOptions.setVisibility(View.VISIBLE);
 
         // Make confirmation TextViews visible
         confirmTopEnt.setVisibility(View.VISIBLE);
@@ -685,7 +706,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 // This textView should not be visible if you are coming from state 1 (user details)
                 confirmBtmEnt.setVisibility(View.GONE);
-                // locationOptions.setVisibility(View.GONE);
+                locationOptions.setVisibility(View.GONE);
                 break;
             case 2:
                 // go to state 3 from state 2
@@ -698,7 +719,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 confirmBtmEnt.setText(recipientData.getDeliveryLocation());
                 confirmBtmEnt.setVisibility(View.VISIBLE);
                 // locationOptions.setSelection(adapterLocations.getPosition(recipientData.getDeliveryLocation()));
-                // locationOptions.setVisibility(View.VISIBLE);
+
+                locationOptions.setVisibility(View.GONE);
 
                 btmField.setVisibility(View.VISIBLE);
                 break;
