@@ -9,4 +9,9 @@
 
 	<node pkg="tf" type="static_transform_publisher" name="sonar_tf" args="0 0 0 0 0 0  /base_link /sonar 100" />
 
+	<node pkg="tf" type="static_transform_publisher" name="lidar_tf" args="0.25 0 0.35 0 0 0  /base_link /laser 100" />
+
+	<node pkg="tf" type="static_transform_publisher" name="scan_tf" args="0.25 0 0.35 0 0 0  /base_link /scan 100" />
+
+
 </launch>

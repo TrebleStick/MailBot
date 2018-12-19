@@ -4,49 +4,92 @@ import ast
 from std_msgs.msg import String
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+import rooms as rm
 
-goalList = [(1, 2), (2, 3), (3, 4), (4, 5), (5, 6)]
+goalList = [(22.662, 38.485, 0.9788, 0.2046), (17.18, 26.793, 0.9728, 0.2314), (15.436, -0.1924, 21.067, 0.9813)]
+currentLoc = -1
 
 def callback2(data2):
+    # global anyLoc
+    # anyLoc = True
+    global pub
     global globNodes
     global counter
+    global currentLoc
+    # if(int(data2.data) == globNodes[counter]):
+    counter += 1
+    # pub = rospy.Publisher('Location', String)
+    if(counter == len(globNodes)):
+        counter = 0
+        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+        client.wait_for_server()
+        #Sketch
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.pose.position.x = goalX
+        goal.target_pose.pose.position.y = goalY
+        goal.target_pose.pose.orientation.z = goalZ
+        goal.target_pose.pose.orientation.w = goalW
 
-    if(int(data2.data) == globNodes[counter]):
-        counter += 1
-        # pub = rospy.Publisher('Location', String)
-        if(counter == len(globNodes)):
-            counter = 0
-            # pub.publish("Route completed")
+
+        client.send_goal(goal)
+        wait = client.wait_for_result()
+        if not wait:
+            rospy.logerr("Action server not available!")
+            rospy.signal_shutdown("Action server not available!")
         else:
-            # pub.publish(str(globNodes[counter]))
-            client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-            client.wait_for_server()
-            #Sketch
-            goalList = globNodes[counter]
-            goalX, goalW = goalList
-            goal = MoveBaseGoal()
-            goal.target_pose.header.frame_id = "map"
-            goal.target_pose.header.stamp = rospy.Time.now()
-            goal.target_pose.pose.position.x = goalX
-            goal.target_pose.pose.orientation.w = goalW
-
-            client.send_goal(goal)
-            wait = client.wait_for_result()
-            if not wait:
-                rospy.logerr("Action server not available!")
-                rospy.signal_shutdown("Action server not available!")
-            else:
-                return client.get_result()
+            # currentLoc = globNodes[counter]
+            print("at loading bay")
+            pub = rospy.Publisher('atLocation', String)
+            test_str = str("LoadingBay")
+            rospy.loginfo(test_str)
+            pub.publish(test_str)
+            return client.get_result()
+        # pub.publish("Route completed")
     else:
-        print("Not at current goal location")
+        # pub.publish(str(globNodes[counter]))
+        client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+        client.wait_for_server()
+        #Sketch
+        goalindex = globNodes[counter]
+        goalX, goalY, goalZ, goalW = goalList[goalindex]
+        goal = MoveBaseGoal()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.pose.position.x = goalX
+        goal.target_pose.pose.position.y = goalY
+        goal.target_pose.pose.orientation.z = goalZ
+        goal.target_pose.pose.orientation.w = goalW
+
+
+        client.send_goal(goal)
+        wait = client.wait_for_result()
+        if not wait:
+            rospy.logerr("Action server not available!")
+            rospy.signal_shutdown("Action server not available!")
+        else:
+            currentLoc = globNodes[counter]
+            print("at ", currentLoc)
+            pub = rospy.Publisher('atLocation', String)
+            test_str = rm.indexToRoom(int(currentLoc))
+            test_str = str(test_str)
+            rospy.loginfo(test_str)
+            pub.publish(test_str)
+            return client.get_result()
+            # return globNodes[counter]
+    # else:
+    #     print("Not at current goal location")
 
 def callback(data):
-
+    # global anyLoc
+    # anyLoc = True
     # nodes = data.data.split()
     nodes = ast.literal_eval(data.data)
     print(nodes)
     # nodes = [int(i) for i in nodes]
     global globNodes
+    global pub
     globNodes = nodes
 
 
@@ -56,12 +99,17 @@ def callback(data):
     # pub.publish(str(globNodes[0]))
     client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
     client.wait_for_server()
-    goalList = globNodes[counter]
+    goalindex = globNodes[counter]
+    goalX, goalY, goalZ, goalW = goalList[goalindex]
+
     goal = MoveBaseGoal()
     goal.target_pose.header.frame_id = "map"
     goal.target_pose.header.stamp = rospy.Time.now()
-    goal.target_pose.pose.position.x = goalList.x
-    goal.target_pose.pose.orientation.w = goalList.w
+    goal.target_pose.pose.position.x = goalX
+    goal.target_pose.pose.position.y = goalY
+    goal.target_pose.pose.orientation.z = goalZ
+    goal.target_pose.pose.orientation.w = goalW
+
 
     client.send_goal(goal)
     wait = client.wait_for_result()
@@ -69,24 +117,35 @@ def callback(data):
         rospy.logerr("Action server not available!")
         rospy.signal_shutdown("Action server not available!")
     else:
+        currentLoc = globNodes[counter]
+        print("at ", currentLoc)
+        test_str = rm.indexToRoom(int(currentLoc))
+        test_str = str(test_str)
+        rospy.loginfo(test_str)
+        pub.publish(test_str)
         return client.get_result()
+        # return globNodes[counter]
     # print the path cost
     # print(path_cost(d, path))
     # print(path)
 
 
 def listener():
-
+    # anyLoc = False
     # In ROS, nodes are uniquely named. If two nodes with the same
     # node are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
+    global pub
+    pub = rospy.Publisher('atLocation', String)
+    result = rospy.Subscriber("solvedPath", String, callback)
+    result2 = rospy.Subscriber("deliveryComplete", String, callback2)
+
     rospy.init_node('locationQueue', anonymous=True)
 
 
-    rospy.Subscriber("solvedPath", String, callback)
-    rospy.Subscriber("atLocation", String, callback2)
+
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()

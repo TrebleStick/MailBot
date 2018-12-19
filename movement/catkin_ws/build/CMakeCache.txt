@@ -887,6 +887,12 @@ rostest_DIR:PATH=/opt/ros/kinetic/share/rostest/cmake
 //The directory containing a CMake configuration file for rostime.
 rostime_DIR:PATH=/opt/ros/kinetic/share/rostime/cmake
 
+//Value Computed by CMake
+rplidar_ros_BINARY_DIR:STATIC=/home/human/Documents/catkin_ws/build/rplidar_ros
+
+//Value Computed by CMake
+rplidar_ros_SOURCE_DIR:STATIC=/home/human/Documents/catkin_ws/src/rplidar_ros
+
 //The directory containing a CMake configuration file for sensor_msgs.
 sensor_msgs_DIR:PATH=/opt/ros/kinetic/share/sensor_msgs/cmake
 

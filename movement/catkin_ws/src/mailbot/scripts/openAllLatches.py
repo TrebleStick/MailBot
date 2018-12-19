@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+import sys
 from serial import Serial
 import time
 #----------------ROS-NOT TESTED-------------#
@@ -25,8 +27,13 @@ import time
 Linux_port = '/dev/ttyACM0'
 Windows_port = 'COM3'
 
-pins = ['1','2','3','4','5','6','7']
-
+if len(sys.argv) > 1 :
+    pins = (sys.argv[1:])  # ignore first argument (script name)
+else :
+    pins = ['1','2','3','4','5','6','7']
+     # These are actually the latch numbers, the arduino code +1 to each of these to get the correct pins
+print('Opening the following latches:')
+print(pins)
 channel = Serial(Linux_port, baudrate = 9600, timeout = 2)
 
 # channel.open()
@@ -38,20 +45,13 @@ else :
 time.sleep(2)
 
 
-#-------CALIBRATE--------#
-print('writing comms init to channel')
-channel.write('9'.encode('utf-8'))
-time.sleep(1)
 
-# data = channel.readline()
-# if (data[0]-48) == 9 :
-#     print('woop')
 
 #------------DEMO-ALL-LATCHES--------------#
 for i in pins :
     channel.write(i.encode('utf-8'))
     time.sleep(2)
-    print(i)
+    print('Latch: ',i,', wrote: ', i.encode('utf-8'))
     # print(channel.readline()[0] - 48)
 
 print('Latch demo complete')

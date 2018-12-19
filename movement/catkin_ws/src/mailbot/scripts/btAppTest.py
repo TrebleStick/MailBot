@@ -63,7 +63,7 @@ def notifyArrival(btSocket):
         elif str(appMsg) == "ref":
             print str(appMsg)
             # should print ref
-            btSocket.send("l,1")
+            btSocket.send("l,508")
             # should really be sending l,destinationNumber
             break
         time.sleep(0.01)
@@ -83,9 +83,9 @@ def getDeliveryComplete(btSocket):
         else:
             print str(appMsg)
             # should print a space delimited list of locations
-            return appMsg
+            # return appMsg
+            break
         time.sleep(0.01)
-
 
 uuid = "00001105-0000-1000-8000-00805F9B34FB"
 # tabAddress = "74:04:2b:e8:19:86"
@@ -95,6 +95,8 @@ service_matches = []
 
 while not service_matches:
     service_matches = bluetooth.find_service( name = 'MYAPP', address = tabAddress )
+
+    give me the puussss$$$$yyyyyy b0ss
 
 print service_matches
 
@@ -117,20 +119,34 @@ sock.connect((host, port))
 
 start = False
 waitingToArrive = False
+test = 0
 # sock.send("hello!!")
 while 1:
+
+    if waitingToArrive:
+        # gets here when it is waiting to arrive at a location
+        print "Waiting to arrive"
+        # arrivalCount = 0
+        time.sleep(3)
+        if test < 2:
+            print "not test"
+            notifyArrival(sock)
+            # arrivalCount = arrivalCount + 1
+            # print "Arrival count = " + str(arrivalCount)
+            test = True
+            # should wait for some message from ROS
+            # if at location do notifyArrival(sock)
 
     try:
         print "getting data"
         data = sock.recv(1024)
-        if len(data) == 0:
-            continue
+        # sock.recv blocks lmao
         print("received [%s]" % data)
-        # try:
-        #     talker(str(data))
-        # except rospy.ROSInterruptException:
-        #     pass
-        #     # break
+            # try:
+            #     talker(str(data))
+            # except rospy.ROSInterruptException:
+            #     pass
+            #     # break
 
         if not start:
             # Should only come here if the app and computer have not connected
@@ -138,28 +154,30 @@ while 1:
             print str(data)
             if str(data) == "hey":
                 start = True
-            continue
+                print "started"
+                continue
 
         # should always come here once the app and computer have connected
-        print "starting"
         if not waitingToArrive:
             if str(data) == "0507":
                 getLockerToOpen(sock)
-                continue
             elif str(data) == "0203":
                 locationList = getLocationList(sock)
                 print str(locationList)
                 # waitingToArrive means the MailBot is now moving
                 # it is waiting to arrive at a mail item destination
                 waitingToArrive = True
-                continue
+                print "waitingToArrive = true"
+            continue
         else:
-            # gets here when it is waiting to arrive at a location
-            arrivalCount = 0
-            # should wait for some message from ROS?
+            if str(data) == "0507":
+                getLockerToOpen(sock)
+            if str(data) == "0605":
+                getDeliveryComplete(sock)
+            continue
 
     except IOError:
+        print "Error"
         pass
     time.sleep(0.01)
-
 sock.close()

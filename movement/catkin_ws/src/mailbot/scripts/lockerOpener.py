@@ -1,7 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 from std_msgs.msg import String
-
 from serial import Serial
 import time
 #----------------ROS-NOT TESTED-------------#
@@ -29,13 +28,20 @@ import time
 def callback(data):
     Linux_port = '/dev/ttyACM0'
     Windows_port = 'COM3'
-    print("test")
+    print('test')
     latchToOpen = int(data.data)
     # latchToOpen = data.data
 
     pins = ['1','2','3','4','5','6','7']
+    print('Opening latch: ', latchToOpen, ', on Pin:', pins[latchToOpen] )
+
 
     channel = Serial(Linux_port, baudrate = 9600, timeout = 2)
+
+    #-------CALIBRATE--------#
+    # print('writing comms init to channel')
+    # channel.write('9'.encode('utf-8'))
+    # time.sleep(1)
 
     # channel.open()
     if channel.is_open :
@@ -46,12 +52,13 @@ def callback(data):
     time.sleep(1)
 
     #-----------SINGLE-LATCH-SCRIPT-----------#
-    channel.write('6'.encode('utf-8'))
+    # channel.write('6'.encode('utf-8'))
+    # time.sleep(0.5)
+    channel.write(pins[latchToOpen].encode('utf-8'))
     time.sleep(2)
     # channel.write('6'.encode('utf-8'))
 
     print(pins[latchToOpen].encode('utf-8'))
-    print(latchToOpen)
     time.sleep(2)
     #---------------CLOSE---------------------#
 
@@ -60,7 +67,6 @@ def callback(data):
         print('Channel close unsuccessful')
     else :
         print('Channel closed')
-
 
 def listener():
 
@@ -78,4 +84,5 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
+    print('Waiting on atLocation Topic')
     listener()
