@@ -3,8 +3,15 @@ package com.extcord.jg3215.mailbot.email;
 import java.security.AccessController;
 import java.security.Provider;
 
-/**
- * Created by IChinweze on 27/11/2018.
+/*
+ * NAME:        JSSEProvider.java
+ * PURPOSE:     The Java Secure Socket Extension (JSSE) enables secure Internet communications. This
+ *              script selects HarmonyJSSE as our secure socket extension and defines all the necessary
+ *              details.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    19/12/2018
  */
 
 public final class JSSEProvider extends Provider {

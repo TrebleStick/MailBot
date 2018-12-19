@@ -21,8 +21,17 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
-/**
- * Created by IChinweze on 27/11/2018.
+/*
+ * NAME:        eMailService.java
+ * PURPOSE:     eMailService defines and guides all the background functionality of sending e-mails.
+ *              Starts by defining the GMail host as the e-mailing host for the application, and
+ *              carries the necessary authentication steps and security measures. This is all sim-
+ *              plified so the function sendMail can be called, with all the specifications of the
+ *              e-mail (i.e. body text, address, subject...) in a simple way from any other activity.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    19/12/2018
  */
 
 public class eMailService extends javax.mail.Authenticator {
@@ -45,7 +54,7 @@ public class eMailService extends javax.mail.Authenticator {
         // Properties are like hashMaps where the key and value are strings
         Properties props = new Properties();
 
-        // What dat setProperty do?
+        // Set Gmail as host
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", mailHost);
 
@@ -67,18 +76,9 @@ public class eMailService extends javax.mail.Authenticator {
     public synchronized void sendMail(String subject, String body, String senderMail, String recipientMail) throws Exception {
         try {
 
-            // Code for mail including pin code - first one needed for the demo - BODY TEXT EDIT MOVED TO ENDACTIVITY
-
-        /*    body = "Dear " + recipientName + "\n\nI am MailBot and I have received a mail item for you"
-                    + " from " + sender + ". It will be delivered within the next half hour to your"
-                    + " office. Your password for collecting it will be:\n\n" + PINcode + "\n\nReme"
-                    + "mber the password - it will be needed to open the locker containing your mai"
-                    + "l.\n\nSee you soon!\n\nMailBot";*/
-
             MimeMessage message = new MimeMessage(session);
             DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
 
-            //message.setFrom(new InternetAddress(senderMail)); --- this doesn't change anything?
             message.setSubject(subject);
             message.setText(body);
             message.setDataHandler(handler);
