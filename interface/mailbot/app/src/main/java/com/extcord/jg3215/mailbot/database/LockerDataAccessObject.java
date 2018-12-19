@@ -9,7 +9,12 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 /**
- * Created by IChinweze on 27/11/2018.
+ * NAME:        LockerItem.java
+ * PURPOSE:     This script defines the functions that can be applied to the database.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
  */
 
 @Dao

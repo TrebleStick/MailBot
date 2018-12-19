@@ -7,7 +7,14 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * Created by IChinweze on 27/11/2018.
+ * NAME:        LockerItemDatabase.java
+ * PURPOSE:     This class specifies the database object as a singleton object (ie only one instance
+ *              for the lifetime of the application). It creates the instance of the database that is
+ *              accessed by the main UI thread.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Abstract class
+ * REVISION:    13/12/2018
  */
 
 @Database(entities = LockerItem.class, version = 1)
