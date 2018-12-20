@@ -33,20 +33,32 @@ How to Use:
       2. `kinectBoot.launch`: Initialises the Kinect 1. Additionally, the bottom of this file intialiases a static transform for the location of the camera.
       3. `nav2.launch`: Initialises RTAB-Map and sensor related transforms
           * The `.db` specified in arg `database_path` is generated beforehand using `rtabmap_mailbot.launch`
-      4. `move_base.launch`: Initialises AMCL and 
+      4. `move_base.launch`: Initialises AMCL and
       5. `btApp.launch`: Initialises the ROS side of bluetooth communications
-      6. `tspSolver`: Receives delivery locations by bluetooth and figures out the best path based on `weights.csv`. 
+      6. `tspSolver`: Receives delivery locations by bluetooth and figures out the best path based on `weights.csv`.
             * **NOTE: The location of `weights.csv` should be changed in the tspSolver script, variable name: `csvPath`**
             * `weights.csv`: A lower-left triangular matrix that specifies the 'cost' of going to a given location. Each row/column would correspond to a defined room. e.g. (0,0) = ( start room, end room -1 ) time to go from Room 0 to Room 1
       7. `locationQueueMoveBase`: Associates delivery locations to co-ordinates that are sent to the ROS Navigation Stack. Ensures goals are sent at the appropriate time by communicating with the interface.
 
 Quality of Life Scripts:
   1. `teleop.launch` - keyboard based teleoperation.
-  
+
 Incomplete or Deprecated Scripts:
   1. `rplidar.launch`, `laserscan_config.launch` & `view_rplidar.launch`: initialises LIDAR and filters out certain laser data.
   2. `gazeboMai.launch`: Spawns Gazebo model of P3-AT
   3. `rtabMap-fakeOdom.launch`: Uses visual odometry for RTAB-Map
+
+
+  ### ROS architecture description
+  ![alt text](CodeArch.png)
+  - Bluetooth Node - Scripts/`BTApp.py`: Connects to tablet via bluetooth. Receives string of locations to visit and passes these to TSP solver on /deliveryLocations. Listens for /atLocation and notifies tablet. When a delivery is complete it posts to /deliveryComplete, to notify the queue. Sends serial commands to the Arduino to unlock locker latches.
+  - Arduino Script - Hardware/latch/`latch.ino`: Loaded to the Arduino. When it receives a value via serial it opens the corresponding locker
+  - TSP Solver - Scripts/`tspSolver.py`: Takes a string containing a list of locations e.g. 507 508 510 from topic /deliveryLocations and posts a solved route based on an input cost matrix '`Weights.csv`' to /solvedPaths
+  - Goal Queue - Scripts/`locationQueueMoveBase.py`: Takes a list of locations from /solvedPaths and passes the first location as a goal (MoveBaseGoal) to the navigation stack as an action. When it receives a result it will post that location to /atLocation. It then waits for a /deliveryComplete post.
+  - Navigation Stack: Consists of many packages, transforms, config files. Takes a map, odom data, kinect sensor info etc. and a goal from Goal Queue and outputs twist messages to Rosaria to control the robot.
+  - RosAria: Framework used to interact with the P3AT to provide it with twist messages and such.
+
+
 
 ## Hardware related  - `MailBot/hardware`
 ###
