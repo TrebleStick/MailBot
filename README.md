@@ -1,12 +1,33 @@
 # MailBot
 EE4-60: Human Centered Robotics [Imperial College London]. 2018-2019.
 
-## Installation
+1. [ROS Architecture Description](#rosOverview)
+2. [Setup](#Setup)
+   1. [Interface](#interface)
+   2. [ROS](#ros)
+   3. [Hardware](#hardware)
 
-### Interface - `MailBot/interface`
+## ROS architecture description <a name="rosOverview"></a>
+  ![alt text](CodeArch.png)
+  - Bluetooth Node - Scripts/`BTApp.py`: Connects to tablet via bluetooth. Receives string of locations to visit and passes these to TSP solver on /deliveryLocations. Listens for /atLocation and notifies tablet. When a delivery is complete it posts to /deliveryComplete, to notify the queue. Sends serial commands to the Arduino to unlock locker latches.
+  - Arduino Script - Hardware/latch/`latch.ino`: Loaded to the Arduino. When it receives a value via serial it opens the corresponding locker
+  - TSP Solver - Scripts/`tspSolver.py`: Takes a string containing a list of locations e.g. 507 508 510 from topic /deliveryLocations and posts a solved route based on an input cost matrix '`Weights.csv`' to /solvedPaths
+  - Goal Queue - Scripts/`locationQueueMoveBase.py`: Takes a list of locations from /solvedPaths and passes the first location as a goal (MoveBaseGoal) to the navigation stack as an action. When it receives a result it will post that location to /atLocation. It then waits for a /deliveryComplete post.
+  - Navigation Stack: Consists of many packages, transforms, config files. Takes a map, odom data, kinect sensor info etc. and a goal from Goal Queue and outputs twist messages to Rosaria to control the robot.
+  - RosAria: Framework used to interact with the P3AT to provide it with twist messages and such.
+
+
+
+## Setup <a name="Setup"></a>
+
+### Interface - `MailBot/interface` <a name="interface"></a>
 Android application created for the Lenovo Tab 2 A-10 70F (Android Version:6), on Android Studio (3.1).
 
-### ROS - `MailBot/movement`
+The Android Studio Project folder is: `MailBot/interface/mailbot`. This can be used to export an .apk for installation.
+
+`MailBot/interface/Bluetooth`: cotains some old bluetooth testing scripts.
+
+### ROS - `MailBot/movement` <a name="ros"></a>
 The `MailBot/movement/` folder contains the catkin workspace `catkin_ws`.
 The system used was Ubuntu 16.04 running ROS1 (Kinetic).
   1. `apt-get` related installs (detailed in : `AnyInstalls.odt`):
@@ -46,26 +67,15 @@ Quality of Life Scripts:
 
 Incomplete or Deprecated Scripts:
   1. `rplidar.launch`, `laserscan_config.launch` & `view_rplidar.launch`: initialises LIDAR and filters out certain laser data.
-  2. `gazeboMai.launch`: Spawns Gazebo model of P3-AT
+  2. `gazeboMail.launch`: Spawns Gazebo model of P3-AT
   3. `rtabMap-fakeOdom.launch`: Uses visual odometry for RTAB-Map
 
 
+## Hardware related  - `MailBot/hardware` <a name="hardware"></a>
+Bill of Materials: `MailBot/hardware/BoM.pdf`
 
+Latches Arduino code: `MailBot/hardware/Arduino-latch-code/`
 
-  ### ROS architecture description
-  ![alt text](CodeArch.png)
-  - Bluetooth Node - Scripts/`BTApp.py`: Connects to tablet via bluetooth. Receives string of locations to visit and passes these to TSP solver on /deliveryLocations. Listens for /atLocation and notifies tablet. When a delivery is complete it posts to /deliveryComplete, to notify the queue. Sends serial commands to the Arduino to unlock locker latches.
-  - Arduino Script - Hardware/latch/`latch.ino`: Loaded to the Arduino. When it receives a value via serial it opens the corresponding locker
-  - TSP Solver - Scripts/`tspSolver.py`: Takes a string containing a list of locations e.g. 507 508 510 from topic /deliveryLocations and posts a solved route based on an input cost matrix '`Weights.csv`' to /solvedPaths
-  - Goal Queue - Scripts/`locationQueueMoveBase.py`: Takes a list of locations from /solvedPaths and passes the first location as a goal (MoveBaseGoal) to the navigation stack as an action. When it receives a result it will post that location to /atLocation. It then waits for a /deliveryComplete post.
-  - Navigation Stack: Consists of many packages, transforms, config files. Takes a map, odom data, kinect sensor info etc. and a goal from Goal Queue and outputs twist messages to Rosaria to control the robot.
-  - RosAria: Framework used to interact with the P3AT to provide it with twist messages and such.
+Latches Schematic: `MailBot/hardware/Latch_Setup.png`
 
-
-
-## Hardware related  - `MailBot/hardware`
-###
-(Bill of Materials + Tecnical Drawing / Laser Cutting things)
-### Latches
-### MOSFETs
-### MDF (Schematics)
+Laser Cutter Design Files: `MailBot/hardware/Locker Laser Cutting Design files`
