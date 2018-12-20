@@ -49,6 +49,8 @@ Incomplete or Deprecated Scripts:
   3. `rtabMap-fakeOdom.launch`: Uses visual odometry for RTAB-Map
 
 
+
+
   ### ROS architecture description
   ![alt text](CodeArch.png)
   - Bluetooth Node - Scripts/`BTApp.py`: Connects to tablet via bluetooth. Receives string of locations to visit and passes these to TSP solver on /deliveryLocations. Listens for /atLocation and notifies tablet. When a delivery is complete it posts to /deliveryComplete, to notify the queue. Sends serial commands to the Arduino to unlock locker latches.
