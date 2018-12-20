@@ -10,27 +10,24 @@ goalList = [(22.662, 38.485, 0.9788, 0.2046), (17.18, 26.793, 0.9728, 0.2314), (
 currentLoc = -1
 
 def callback2(data2):
-    # global anyLoc
-    # anyLoc = True
+
     global pub
     global globNodes
     global counter
     global currentLoc
-    # if(int(data2.data) == globNodes[counter]):
     counter += 1
-    # pub = rospy.Publisher('Location', String)
     if(counter == len(globNodes)):
         counter = 0
         client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
         client.wait_for_server()
-        #Sketch
+        # Send to depot location if all deliveries are complete
         goal = MoveBaseGoal()
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = goalX
-        goal.target_pose.pose.position.y = goalY
-        goal.target_pose.pose.orientation.z = goalZ
-        goal.target_pose.pose.orientation.w = goalW
+        goal.target_pose.pose.position.x = 22.662
+        goal.target_pose.pose.position.y = 38.485
+        goal.target_pose.pose.orientation.z = 0.9788
+        goal.target_pose.pose.orientation.w = 0.2046
 
 
         client.send_goal(goal)
@@ -39,7 +36,6 @@ def callback2(data2):
             rospy.logerr("Action server not available!")
             rospy.signal_shutdown("Action server not available!")
         else:
-            # currentLoc = globNodes[counter]
             print("at loading bay")
             pub = rospy.Publisher('atLocation', String)
             test_str = str("LoadingBay")
@@ -124,22 +120,16 @@ def callback(data):
         rospy.loginfo(test_str)
         pub.publish(test_str)
         return client.get_result()
-        # return globNodes[counter]
-    # print the path cost
-    # print(path_cost(d, path))
-    # print(path)
 
 
 def listener():
-    # anyLoc = False
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # node are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
+
     global pub
+    # Publish when arrived at a location
     pub = rospy.Publisher('atLocation', String)
+    # Listen for list of locations to travel to
     result = rospy.Subscriber("solvedPath", String, callback)
+    # Listen for Interface script being complete before moving to next location
     result2 = rospy.Subscriber("deliveryComplete", String, callback2)
 
     rospy.init_node('locationQueue', anonymous=True)
