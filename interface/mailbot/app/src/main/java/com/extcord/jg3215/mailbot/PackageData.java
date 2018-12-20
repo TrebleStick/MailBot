@@ -3,22 +3,27 @@ package com.extcord.jg3215.mailbot;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * NAME:        PackageData.java
+ * PURPOSE:     This class is used to store data as the user enters it to the application. It is later
+ *              saved to the database. It is parcelable so that it can be passed between activities
+ *              rather than sent as a long list of primitive types.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Parcelable class object
+ * REVISION:    13/12/2018
+ */
+
 // Make it parcelable so that its instances can be passed as extras between activities
 public class PackageData implements Parcelable{
-    // TODO: Check that is/is not the best way to format data to be sent along
     private String name;
     private String emailAddress;
-
-    // TODO: Check what the format of the delivery location is going to be
     private String deliveryLocation;
 
-    private boolean photoOptionState;
-
     // Constructor
-    public PackageData(String userName, String userEmail) {
-        name = userName;
-        emailAddress = userEmail;
-        // photoOptionState = optionState;
+    public PackageData(String name, String emailAddress) {
+        this.name = name;
+        this.emailAddress = emailAddress;
     }
 
     // Set methods might only be necessary for delivery location
@@ -45,8 +50,6 @@ public class PackageData implements Parcelable{
     public String getDeliveryLocation() {
         return this.deliveryLocation;
     }
-
-    public boolean getPhotoOptionState() {  return photoOptionState;}
 
     public int describeContents() {
         return 0;

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/postRed"
+    tools:context="com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        >
+
+
+        <ImageView
+            android:id="@+id/mailbotEnd"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_40sdp"
+            android:src="@mipmap/mailbot_nocap"
+            />
+
+        <ImageView
+            android:id="@+id/speechbubbleEnd"
+            android:layout_width="@dimen/_230sdp"
+            android:layout_height="@dimen/_370sdp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_50sdp"
+            android:src="@mipmap/speechbubble" />
+
+        <TextView
+
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_110sdp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/_27sdp"
+            android:layout_marginTop="@dimen/_75sdp"
+            android:text="@string/endActivitySpeech"
+            android:textAlignment="center"
+            android:textColor="@color/postRed"
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="bold" />
+
+
+        <!--<TextView
+            android:id="@+id/textEnd"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="370dp"
+            android:layout_toEndOf="@id/mailbotEnd"
+            android:text="Click anywhere to start again!"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:visibility="invisible"/>-->
+
+        <Button
+            android:id="@+id/btnToSameRecipient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_140sdp"
+            android:text="@string/toSameRecipient" />
+
+        <Button
+            android:id="@+id/btnStartAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/_50sdp"
+            android:layout_alignTop="@+id/btnToSameRecipient"
+            android:text="@string/exitProcess" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

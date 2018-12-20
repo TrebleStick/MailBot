@@ -14,7 +14,14 @@ import android.widget.ImageView;
 import com.extcord.jg3215.mailbot.R;
 
 /**
- * Created by IChinweze on 16/11/2018.
+ * NAME:        EndActivityDialogFragment.java
+ * PURPOSE:     This class provides the dialog fragment that overlays EndActivity with a skeleton
+ *              for its functionality. The proper functionality is specified in EndActivity by the
+ *              methods from the interface here that it implements.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:       Single Instance activity
+ * REVISION:    13/12/2018
  */
 
 public class EndActivityDialogFragment extends DialogFragment {
@@ -39,7 +46,7 @@ public class EndActivityDialogFragment extends DialogFragment {
 
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.collection1_activity_end_dialog, null);
+        final View view = inflater.inflate(R.layout.collection_activity_end_dialog, null);
 
         // Attaches a listener to this image in the fragment view
         final ImageView letterImage = (ImageView) view.findViewById(R.id.smallLockerImageView);

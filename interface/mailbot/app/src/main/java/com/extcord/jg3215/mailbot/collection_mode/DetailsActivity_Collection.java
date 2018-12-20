@@ -3,7 +3,9 @@ package com.extcord.jg3215.mailbot.collection_mode;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
@@ -11,23 +13,53 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.extcord.jg3215.mailbot.BluetoothConnectionService;
+import com.extcord.jg3215.mailbot.LockerManager;
 import com.extcord.jg3215.mailbot.PackageData;
 import com.extcord.jg3215.mailbot.R;
 
+import java.nio.charset.Charset;
+import java.util.Random;
+
+/**
+ * NAME:        DetailsActivity_Collection.java
+ * PURPOSE:     This activity consists of three states:
+ *                  1) STATE_USER_DETAILS
+ *                      The user is prompted to provide their name and email address. This information
+ *                      is stored in the senderData object.
+ *                  2) STATE_RECIPIENT_DETAILS
+ *                      The user is prompted to provide the recipient's name, email address and the
+ *                      location where the mail item should be delivered. This information is stored
+ *                      in the recipientData object.
+ *                  3) STATE_CONFIRMATION
+ *                      The user is able to review the details they have given and correct them if
+ *                      necessary.
+ *
+ *              LockerManager object is used to figure out the next available locker index for the
+ *              user to put a mail item in. Then the application communicates with the PC and requests
+ *              that the corresponding locker is opened. Once it is opened, the application generates
+ *              a PIN and transitions to LockerActivity.
+ *
+ * AUTHORS:     Ifeanyi Chinweze, Javi Geis
+ * NOTES:
+ * REVISION:    13/12/2018
+ */
+
 public class DetailsActivity_Collection extends AppCompatActivity {
 
-    // TODO: Fix appearance of "Search" in the place of "Delivery Location" in state 2
+    // Sometimes "Search" appears in the place of "Delivery Location" in state 2
         // It is a bug that seems to appear in random places and I cannot figure out why
         // Can be fixed by changing the string's value and then changing it back after building
 
     // Denotes what kind of package is being sent: small letter, large letter or parcel
     private int packageType;
+
+    private int lockerIndex;
 
     // Denotes the state the activity is in at that moment in time
     private int state;
@@ -42,8 +74,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     private static final String TAG = "DetailsActivity";
 
-    private static final String[] inputDetailList = {"Sender Details", "Recipient Details"};
-
     // Sends the user back to the main menu
     Button cancelButton;
 
@@ -52,6 +82,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     // User selects this button if there is an error with the details entered
     Button problemButton;
+
+    // Demo button to automatically fill the fields
+    Button demoButton;
 
     // indicates whether user is in a state because they came from problem button listener
     private boolean fromProblemButtonListener = false;
@@ -63,15 +96,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     EditText midEntry;
 
     // Used to give recipient location -> 2nd state only
-    EditText btmEntry;
+    // EditText btmEntry;
 
     // Bottom field
     TextView btmField;
-
-    // Used to allow the sender to say whether or not they want to take a photo -> 1st state only
-    // What are you going to do if they check this option?
-    // TODO: Check if photo is still happening?
-    CheckBox takePhotoOption;
 
     // TextViews shown when confirming given details
     TextView confirmTopEnt;
@@ -81,26 +109,52 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     // Spinner is a dropdown list that presents loads up details associated with selected person (sender or recipient)
     Spinner inputDetails;
     private int spinnerListItem;
+    private static final String[] inputDetailList = {"Sender Details", "Recipient Details"};
 
     ArrayAdapter<String> adapter;
     // data obtained from the user about the sender and the recipient
     // senderName, senderEmail, recipientName, recipientEmail, recipientLocation
     private String[] storedData = new String [5];
 
+    // Spinner is a dropdown of locations that user can choose for delivery (so long as they do not press the demo button
+    Spinner locationOptions;
+    private int locationItem;
+    private static final String[] locationList = {"507", "508", "510"};
+
+    ArrayAdapter<String> adapterLocations;
+
     // Package details - could make this one class
     private PackageData senderData;
     private PackageData recipientData;
 
-    // Listen for response (Serial communication) to open locker command
-    // TODO: Register and unregister Broadcast Receivers br0
-    BroadcastReceiver mBroadcastReceiverLockerOpen = new BroadcastReceiver() {
+    private LockerManager mLockerManager;
+
+    private BluetoothConnectionService mBluetoothConnection;
+
+    // Broadcast Receiver flags when a message is received on the Bluetooth input stream
+    private BroadcastReceiver mBroadcastReceiverLockerComm = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String text = intent.getStringExtra("openLocker");
+            String text = intent.getStringExtra("theMessage");
             Log.i(TAG, "Received: " + text);
 
-            // TODO: Go to the next activity once the locker has been opened
-            // toLockerActivity();
+            switch (text) {
+                case "1409":
+                    String requestLO = "RLO";
+                    byte[] rloBytes = requestLO.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(rloBytes);
+                    Log.i(TAG, "Written: " + requestLO + " to output stream");
+                    break;
+                case "num":
+                    String lockToOpen = String.valueOf(lockerIndex + 1);
+                    byte[] lockNumBytes = lockToOpen.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(lockNumBytes);
+                    Log.i(TAG, "Written: " + lockToOpen + " to output stream");
+
+                    // Assume locker opens once requested
+                    toLockerActivity();
+                    break;
+            }
         }
     };
 
@@ -108,9 +162,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.collection1_activity_details);
-
-        // Removed the navigation bar code because it makes this activity look weird as it is created
+        setContentView(R.layout.collection_activity_details);
+        hideNavigationBar();
 
         // Keeps track of which mode the activity is in:
             // 1. User entering their own details
@@ -118,15 +171,22 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // 3. Confirming details with user
         state = 1;
 
+        // mBluetoothConnection.setmContext(this);
+        mBluetoothConnection = BluetoothConnectionService.getBcsInstance();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiverLockerComm, new IntentFilter("incomingMessage"));
+
+        mLockerManager = new LockerManager(this);
+
         topEntry = (EditText) findViewById(R.id.topEntry);
         midEntry = (EditText) findViewById(R.id.midEntry);
-        btmEntry = (EditText) findViewById(R.id.deliveryLocation);
+        // btmEntry = (EditText) findViewById(R.id.deliveryLocation);
+        // btmEntry.setVisibility(View.GONE);
 
-        // Bottom field in state 1 -> Take Photo?
-        takePhotoOption = (CheckBox) findViewById(R.id.choosePhoto);
         // Bottom field in state 2 -> Delivery Location
         // Bottom field only visible for recipient details spinner
         btmField = (TextView) findViewById(R.id.bottomField);
+        btmField.setVisibility(View.GONE);
 
         confirmTopEnt = (TextView) findViewById(R.id.confirmTopEntry);
         confirmMidEnt = (TextView) findViewById(R.id.confirmMidEntry);
@@ -148,6 +208,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Sender data, Name: " + senderData.getName() + ", Email Address: " + senderData.getEmailAddress());
 
                         confirmBtmEnt.setVisibility(View.GONE);
+                        locationOptions.setVisibility(View.GONE);
                         btmField.setVisibility(View.GONE);
 
                         confirmTopEnt.setText(storedData[0]);
@@ -160,11 +221,13 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         Log.i(TAG, "Recipient data, Name: " + recipientData.getName() + ", Email Address: " + recipientData.getEmailAddress() + ", Delivery Location: " + recipientData.getDeliveryLocation());
 
                         confirmBtmEnt.setVisibility(View.VISIBLE);
+                        locationOptions.setVisibility(View.GONE);
                         btmField.setVisibility(View.VISIBLE);
 
                         confirmTopEnt.setText(storedData[2]);
                         confirmMidEnt.setText(storedData[3]);
                         confirmBtmEnt.setText(storedData[4]);
+                        // locationOptions.setSelection(adapterLocations.getPosition(storedData[4]));
                         break;
                     default:
                         Log.i(TAG, "Item list exception: i = " + String.valueOf(i));
@@ -178,13 +241,39 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             }
         });
 
+        // Add a dropdown
+        locationOptions = (Spinner) findViewById(R.id.locationSpinner);
+        adapterLocations = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, locationList);
+        locationOptions.setAdapter(adapterLocations);
+        locationOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position) {
+                    case 0:
+                        Log.i(TAG, "Room 507 selected");
+                        break;
+                    case 1:
+                        Log.i(TAG, "Room 508 selected");
+                        break;
+                    case 2:
+                        Log.i(TAG, "Room 510 selected");
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do nothing
+            }
+        });
+
         cancelButton = (Button) findViewById(R.id.buttonCancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             // Method that is called once click listener registers that button has been clicked
             public void onClick(View view) {
                 Log.i(TAG, "Cancel button pressed");
-                // TODO: Tell Robot that the process has been cancelled
                 // Takes the user back to the main menu - not the previous state
                 finish();
             }
@@ -251,6 +340,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                             // Notify spinner that list data set has been altered
                             adapter.notifyDataSetChanged();
+                            adapterLocations.notifyDataSetChanged();
 
                             // return to final state
                             toLayoutStateThree(1);
@@ -264,8 +354,8 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         String recipientName = topEntry.getText().toString();
                         String recipientEmailAddress = midEntry.getText().toString();
 
-                        // TODO: Ensure that delivery Location is in the right format
-                        String recipientLocation = btmEntry.getText().toString();
+                        // String recipientLocation = btmEntry.getText().toString();
+                        String recipientLocation = locationOptions.getSelectedItem().toString();
 
                         if (!entryChecks(recipientName, recipientEmailAddress)) {
                             return;
@@ -288,6 +378,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                             // Notify the spinner list that values have been updated
                             adapter.notifyDataSetChanged();
+                            adapterLocations.notifyDataSetChanged();
                         }
 
                         // Change view to what you expect next
@@ -299,30 +390,63 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                         break;
                     case STATE_CONFIRMATION:
                         Log.i(TAG, "Details confirmed");
-                        // TODO: Send a serial message to the computer to request locker opening
 
-                        toLockerActivity();
+                        mLockerManager.setSelectLockerIndex(packageType);
+                        lockerIndex = mLockerManager.getSelectLockerIndex();
+                        Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(lockerIndex + 1));
+
+                        // Sends a serial message to ROS to request locker opening
+                        String startCommCode = "0507";
+                        byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                        mBluetoothConnection.write(startBytes);
                         break;
                 }
             }
         });
 
-        Bundle endActivityData = this.getIntent().getExtras();
-        if (endActivityData != null) {
+        //for demo purposes, fills up all fields and goes forward
+        demoButton = (Button) findViewById(R.id.demobutton);
+        demoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            // Method that is called once click listener registers that button has been clicked
+            public void onClick(View view) {
+
+                Log.i(TAG, "Demo button pressed");
+
+                senderData = new PackageData("DemoSender", "demosender@gmail.com");
+                recipientData = new PackageData("DemoRecipient", "demorecipient@gmail.com");
+                recipientData.setDeliveryLocation("D3m0");
+
+                Log.i(TAG, "Details confirmed");
+
+                mLockerManager.setSelectLockerIndex(packageType);
+                lockerIndex = mLockerManager.getSelectLockerIndex();
+                Log.i(TAG, "Locker chosen for mail item = " + String.valueOf(lockerIndex + 1));
+
+                // Sends a serial message to ROS to request locker opening
+                String startCommCode = "0507";
+                byte[] startBytes = startCommCode.getBytes(Charset.defaultCharset());
+                mBluetoothConnection.write(startBytes);
+
+            }
+        });
+
+        Bundle otherActivityData = this.getIntent().getExtras();
+        if (otherActivityData != null) {
             // Gets the package type that is being delivered from the intent
             try {
-                packageType = endActivityData.getInt("packageType");
+                packageType = otherActivityData.getInt("packageType");
                 Log.i(TAG, "Package Type: " + String.valueOf(packageType));
             } catch (NullPointerException e) {
                 Log.i(TAG, "No package data provided from endActivity: " + e.getMessage());
             }
 
-            if (endActivityData.getBoolean("dataProvided")) {
+            if (otherActivityData.getBoolean("dataProvided")) {
                 // Object data already provided by the user
                 Log.i(TAG, "Data has already been provided by the user");
 
                 try {
-                    senderData = endActivityData.getParcelable("senderData");
+                    senderData = otherActivityData.getParcelable("senderData");
 
                     if (senderData != null) {
                         Log.i(TAG, "Sender data: User Name: " + senderData.getName() + ", User Email: " + senderData.getEmailAddress());
@@ -336,10 +460,10 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 }
 
                 try {
-                    recipientData = endActivityData.getParcelable("recipientData");
+                    recipientData = otherActivityData.getParcelable("recipientData");
 
                     if (recipientData != null) {
-                        Log.i(TAG, " data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
+                        Log.i(TAG, "Recipient data: Recipient Name: " + recipientData.getName() + ", Recipient Email: " + recipientData.getEmailAddress() + ", Recipient Location: " + recipientData.getDeliveryLocation());
 
                         // Update string array that is used to present object data
                         storedData[2] = recipientData.getName();
@@ -352,19 +476,40 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 // Takes the user to the third state of this activity
                 toLayoutStateThree(1);
-                // Needs to be done or the checkBox will be there, haunting you
-                takePhotoOption.setVisibility(View.GONE);
             }
-        } else {
-            throw new NullPointerException("No data provided from endActivity");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+    }
+
+    private void hideNavigationBar() {
+        Log.i(TAG, "hideNavigationBar() method called");
+        this.getWindow().getDecorView()
+                .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                );
     }
 
     private void toLockerActivity() {
         Log.i(TAG, "toLockerActivity() method called");
+
+        // PIN code generator
+        String pinCode = createPIN();
+
         String packageTag = "packageType";
         String senderDataTag = "senderData";
         String recipientDataTag = "recipientData";
+        String lockerIndexTag = "lockerIndex";
+        String pinTag = "pinCode";
 
         Intent lockerActivityIntent = new Intent(this, LockerActivity_Collection.class);
 
@@ -375,15 +520,18 @@ public class DetailsActivity_Collection extends AppCompatActivity {
             // The kind of package the user is sending
             // The data given to MailBot about the sender
             // The data given to MailBot about the recipient
+            // The locker that is storing the mail item
         extras.putInt(packageTag, packageType);
         extras.putParcelable(senderDataTag, senderData);
         extras.putParcelable(recipientDataTag, recipientData);
+        extras.putInt(lockerIndexTag, lockerIndex);
+        extras.putString(pinTag, pinCode);
 
         // Add all the extras content to the intent
         lockerActivityIntent.putExtras(extras);
 
         startActivity(lockerActivityIntent);
-        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag);
+        Log.i(TAG, "To Locker Activity with the extras: " + packageTag + ", " + senderDataTag + ", " + recipientDataTag + ", " + lockerIndexTag);
         finish();
     }
 
@@ -416,8 +564,14 @@ public class DetailsActivity_Collection extends AppCompatActivity {
     }
 
     private void toLayoutStateOne(int callCase) {
-        // Bottom TextView text should have "Take photo"
-        btmField.setText(getResources().getString(R.string.userChoosePhoto));
+        // Bottom field textView should not be visible
+        btmField.setVisibility(View.GONE);
+
+        // Bottom entry editText should be visible
+        // btmEntry.setVisibility(View.GONE);
+
+        // Location dropdown should not be visible
+        locationOptions.setVisibility(View.GONE);
 
         // Problem button should not be visible
         problemButton.setVisibility(View.GONE);
@@ -436,13 +590,7 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 confirmTopEnt.setVisibility(View.GONE);
                 confirmMidEnt.setVisibility(View.GONE);
                 confirmBtmEnt.setVisibility(View.GONE);
-
-                // Take Photo checkBox should be visible
-                takePhotoOption.setVisibility(View.VISIBLE);
-
-                // Bottom field textView should be visible
-                    // It would not be if problem button was selected on Sender Details
-                btmField.setVisibility(View.VISIBLE);
+                // locationOptions.setVisibility(View.GONE);
 
                 // Top and Mid EditTexts need to be made visible and should display name and email address data
                 topEntry.setText(senderData.getName());
@@ -458,7 +606,6 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
     private void toLayoutStateTwo(int callCase) {
         // callCase refers to which state you call this method from
-
         // toLayoutStateTwo means that you are preparing the activity to receive recipient details
         TextView bubbleText = (TextView) findViewById(R.id.speechBubbleText);
         bubbleText.setText(getResources().getString(R.string.bubbleRecipientDetails));
@@ -473,11 +620,13 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 btmField.setText(getResources().getString(R.string.fieldLocation));
                 Log.i(TAG, "Bottom Field set to: " + getResources().getString(R.string.fieldLocation));
 
-                // Gets rid of take photo checkbox
-                takePhotoOption.setVisibility(View.GONE);
+                btmField.setVisibility(View.VISIBLE);
 
                 // Brings up EditText for inserting delivery location
-                btmEntry.setVisibility(View.VISIBLE);
+                // btmEntry.setVisibility(View.VISIBLE);
+
+                // Make locations dropdown visible for selecting delivery location
+                locationOptions.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 // go to state 2 from state 3 (recipient details)
@@ -485,7 +634,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 // Confirmation textViews should not be visible
                 confirmTopEnt.setVisibility(View.GONE);
                 confirmMidEnt.setVisibility(View.GONE);
+
                 confirmBtmEnt.setVisibility(View.GONE);
+                // locationOptions.setVisibility(View.GONE);
 
                 // Make top, middle and bottom EditTexts visible with existing data
                 topEntry.setText(recipientData.getName());
@@ -494,8 +645,12 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 midEntry.setText(recipientData.getEmailAddress());
                 midEntry.setVisibility(View.VISIBLE);
 
-                btmEntry.setText(recipientData.getDeliveryLocation());
-                btmEntry.setVisibility(View.VISIBLE);
+                // btmEntry.setText(recipientData.getDeliveryLocation());
+                // btmEntry.setVisibility(View.VISIBLE);
+
+                // Set dropdown to preset option
+                locationOptions.setSelection(adapterLocations.getPosition(recipientData.getDeliveryLocation()));
+                locationOptions.setVisibility(View.VISIBLE);
 
                 // Problem button should not be visible
                 problemButton.setVisibility(View.GONE);
@@ -516,7 +671,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         // When confirming details, user cannot edit their entries -> EditTexts are hidden
         topEntry.setVisibility(View.GONE);
         midEntry.setVisibility(View.GONE);
-        btmEntry.setVisibility(View.GONE);
+
+        // btmEntry.setVisibility(View.GONE);
+        // locationOptions.setVisibility(View.VISIBLE);
 
         // Make confirmation TextViews visible
         confirmTopEnt.setVisibility(View.VISIBLE);
@@ -543,15 +700,13 @@ public class DetailsActivity_Collection extends AppCompatActivity {
                 // Bottom field should not be visible in this case
                 btmField.setVisibility(View.GONE);
 
-                // This checkbox should not be visible
-                takePhotoOption.setVisibility(View.GONE);
-
                 // Manually update these textViews
                 confirmTopEnt.setText(senderData.getName());
                 confirmMidEnt.setText(senderData.getEmailAddress());
 
                 // This textView should not be visible if you are coming from state 1 (user details)
                 confirmBtmEnt.setVisibility(View.GONE);
+                locationOptions.setVisibility(View.GONE);
                 break;
             case 2:
                 // go to state 3 from state 2
@@ -563,6 +718,9 @@ public class DetailsActivity_Collection extends AppCompatActivity {
 
                 confirmBtmEnt.setText(recipientData.getDeliveryLocation());
                 confirmBtmEnt.setVisibility(View.VISIBLE);
+                // locationOptions.setSelection(adapterLocations.getPosition(recipientData.getDeliveryLocation()));
+
+                locationOptions.setVisibility(View.GONE);
 
                 btmField.setVisibility(View.VISIBLE);
                 break;
@@ -571,12 +729,33 @@ public class DetailsActivity_Collection extends AppCompatActivity {
         Log.i(TAG, "Layout changed to state: "+ String.valueOf(state));
     }
 
+    private String createPIN() {
+        Log.i(TAG, "createPIN() method called");
+
+        StringBuilder createCode = new StringBuilder("");
+        for (int pCounter = 1; pCounter <= 4; pCounter++) {
+            Random rn = new Random();
+            // Generate random number from 0 to 9
+            int digit = rn.nextInt(10);
+            createCode.append(String.valueOf(digit));
+        }
+        Log.i(TAG, "PIN Code: " + createCode.toString());
+        return createCode.toString();
+    }
+
     protected void onDestroy() {
         super.onDestroy();
 
-        // TODO: Check that this does not mess up what is sent to next activity
         // Here to make sure that there is no remaining object data when new instances are made and to free up memory
         recipientData = null;
         senderData = null;
+
+        if (mLockerManager != null) {
+            mLockerManager.unregisterListener();
+            mLockerManager = null;
+        }
+
+        // unregister receiver from this activity
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiverLockerComm);
     }
 }

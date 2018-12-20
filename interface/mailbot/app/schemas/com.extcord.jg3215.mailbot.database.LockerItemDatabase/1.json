@@ -1,0 +1,69 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "1daf384e6cbe6fa1ad64ee681c4bd491",
+    "entities": [
+      {
+        "tableName": "lockers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`locker_no` INTEGER NOT NULL, `senderName` TEXT, `senderEmail` TEXT, `recipientName` TEXT, `recipientEmail` TEXT, `delivery_location` TEXT, `PINcode` TEXT, PRIMARY KEY(`locker_no`))",
+        "fields": [
+          {
+            "fieldPath": "lockerNo",
+            "columnName": "locker_no",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderName",
+            "columnName": "senderName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "senderEmail",
+            "columnName": "senderEmail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recipientName",
+            "columnName": "recipientName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recipientEmail",
+            "columnName": "recipientEmail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deliveryLocation",
+            "columnName": "delivery_location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "PINcode",
+            "columnName": "PINcode",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "locker_no"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1daf384e6cbe6fa1ad64ee681c4bd491\")"
+    ]
+  }
+}

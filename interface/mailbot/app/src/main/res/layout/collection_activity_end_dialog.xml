@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/postRed">
+
+    <!--<TextView
+        android:id="@+id/popupTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/popupTitle"
+        android:textColor="@android:color/background_light"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"/>-->
+
+    <!--android:layout_below="@id/popupTitleText"-->
+    <LinearLayout
+        android:id="@+id/imagePanel"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_centerHorizontal="true">
+
+        <RelativeLayout
+            android:id="@+id/smallLocker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/smallLockerImageView"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@mipmap/email_smashicons"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_20sdp"/>
+            <TextView
+                android:id="@+id/letterTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/smallLockerImageView"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:text="@string/letterStandardText"
+                android:textColor="@android:color/background_light"
+                android:gravity="center"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mediumLocker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp">
+
+            <ImageView
+                android:id="@+id/medLockerImageView"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@mipmap/email_smashicons"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/medLockerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/medLockerImageView"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="@string/letterLargeText"
+                android:textColor="@android:color/background_light"
+                android:gravity="center"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/largeLocker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp">
+
+            <ImageView
+                android:id="@+id/largeLockerImageView"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:src="@mipmap/box_freepik"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/largeLockerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/largeLockerImageView"
+                android:text="@string/parcelText"
+                android:gravity="center"
+                android:textColor="#ffffff"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

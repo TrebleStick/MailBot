@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/postRed"
+    tools:context="com.extcord.jg3215.mailbot.collection_mode.MainActivity_Collection">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Spinner
+            android:id="@+id/detailSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speechBubble"
+            android:layout_alignStart="@id/speechBubble"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/botFace"
+            android:layout_width="@dimen/_180sdp"
+            android:layout_height="@dimen/_160sdp"
+            android:layout_marginStart="@dimen/_40sdp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/mailbot_nocap" />
+
+        <RelativeLayout
+            android:id="@+id/speechBubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_30sdp">
+
+            <ImageView
+                android:id="@+id/speechBubbleMain"
+                android:layout_width="@dimen/_210sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:src="@mipmap/speechbubble" />
+
+            <TextView
+                android:id="@+id/speechBubbleText"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:text="@string/infoDetailsActivity"
+                android:textAlignment="center"
+                android:textColor="@color/postRed"
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/textFieldAndEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speechBubble"
+            android:layout_toRightOf="@+id/botFace"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_20sdp">
+
+            <LinearLayout
+                android:id="@+id/topFieldPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/topField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_25sdp"
+                    android:text="@string/fieldName"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_10sdp" />
+
+                <EditText
+                    android:id="@+id/topEntry"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:layout_marginStart="@dimen/_50sdp"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:imeOptions="actionNext"/>
+
+                <TextView
+                    android:id="@+id/confirmTopEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:textColor="#ffffff"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/midFieldPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/topFieldPanel">
+
+                <TextView
+                    android:id="@+id/midField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_25sdp"
+                    android:text="@string/fieldEmail"
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="#ffffff"/>
+
+                <EditText
+                    android:id="@+id/midEntry"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:textColor="#ffffff"
+                    android:maxLines="1"
+                    android:inputType="textEmailAddress"/>
+
+                <TextView
+                    android:id="@+id/confirmMidEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:visibility="gone"
+                    android:textColor="#ffffff"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bottomFieldPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/midFieldPanel"
+                android:textColor="#ffffff">
+
+                <TextView
+                    android:id="@+id/bottomField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_25sdp"
+                    android:text="@string/fieldLocation"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_10sdp"
+                    android:visibility="gone"/>
+
+                <Spinner
+                    android:id="@+id/locationSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/_10sdp"
+                    android:visibility="gone"/>
+
+                <!--<EditText
+                    android:id="@+id/deliveryLocation"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:textColor="#ffffff"
+                    android:visibility="gone"
+                    android:singleLine="true"
+                    android:maxLines="1"/>-->
+
+                <TextView
+                    android:id="@+id/confirmBtmEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:textColor="#ffffff"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/buttonForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/speechBubble"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="@string/btnNext" />
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/botFace"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="@string/btnCancel" />
+
+        <Button
+            android:id="@+id/buttonProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/buttonForward"
+            android:layout_marginEnd="@dimen/_210sdp"
+            android:text="@string/btnProblem"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/demobutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/botFace"
+            android:layout_alignStart="@+id/botFace"
+            android:layout_marginBottom="23dp"
+            android:text="Demo" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
