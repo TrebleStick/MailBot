@@ -38,6 +38,7 @@ How to Use:
       6. `tspSolver`: Receives delivery locations by bluetooth and figures out the best path based on `weights.csv`.
             * **NOTE: The location of `weights.csv` should be changed in the tspSolver script, variable name: `csvPath`**
             * `weights.csv`: A lower-left triangular matrix that specifies the 'cost' of going to a given location. Each row/column would correspond to a defined room. e.g. (0,0) = ( start room, end room -1 ) time to go from Room 0 to Room 1
+            * Uses https://github.com/dmishin/tsp-solver
       7. `locationQueueMoveBase`: Associates delivery locations to co-ordinates that are sent to the ROS Navigation Stack. Ensures goals are sent at the appropriate time by communicating with the interface.
 
 Quality of Life Scripts:
