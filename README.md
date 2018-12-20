@@ -1,12 +1,12 @@
 # MailBot
-EE4-60: Human Centered Robotics [Imperial College London]
+EE4-60: Human Centered Robotics [Imperial College London]. 2018-2019.
 
 ## Installation
 
-### Interface
+### Interface - `MailBot/interface`
 Android application created for the Lenovo Tab 2 A-10 70F (Android Version:6), on Android Studio (3.1).
 
-### ROS
+### ROS - `MailBot/movement`
 The `MailBot/movement/` folder contains the catkin workspace `catkin_ws`.
 The system used was Ubuntu 16.04 running ROS1 (Kinetic).
   1. `apt-get` related installs (detailed in : `AnyInstalls.odt`):
@@ -41,14 +41,15 @@ How to Use:
       7. `locationQueueMoveBase`: Associates delivery locations to co-ordinates that are sent to the ROS Navigation Stack. Ensures goals are sent at the appropriate time by communicating with the interface.
 
 Quality of Life Scripts:
-  1.`teleop.launch` - keyboard based teleoperation.
+  1. `teleop.launch` - keyboard based teleoperation.
   
 Incomplete or Deprecated Scripts:
   1. `rplidar.launch`, `laserscan_config.launch` & `view_rplidar.launch`: initialises LIDAR and filters out certain laser data.
   2. `gazeboMai.launch`: Spawns Gazebo model of P3-AT
   3. `rtabMap-fakeOdom.launch`: Uses visual odometry for RTAB-Map
 
-## Hardware related
+## Hardware related  - `MailBot/hardware`
+###
 (Bill of Materials + Tecnical Drawing / Laser Cutting things)
 ### Latches
 ### MOSFETs
