@@ -3,7 +3,9 @@ EE4-60: Human Centered Robotics [Imperial College London]. 2018-2019.
 
 MailBot is an internal mail delivery service for the Electrical and Electronic Engineering department at Imperial College London. Sending a parcel to the office of your academic tutor has never been easier.
 
-![MailBot Demo](https://i.imgur.com/h4XgAUF.jpg)
+[<img src="http://www.google.com.au/images/nav_logo7.png">](http://google.com.au/)
+
+![MailBot Demo](i.imgur.com/h4XgAUF.jpg)
 [Click to see a video of how it works!](https://youtu.be/Y5FuADUiCRM)
 
 1. [ROS Architecture Description](#rosOverview)
